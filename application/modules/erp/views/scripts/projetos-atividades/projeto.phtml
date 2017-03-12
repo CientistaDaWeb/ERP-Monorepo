@@ -1,0 +1,175 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    echo $this->partial('partials/btAdicionar.phtml', array(
+        'controller' => $this->controller,
+        'module' => $this->module,
+        'message' => $this->model->getOption('buttons', 'add'),
+        'parent_id' => $this->data['parent_id']
+    ));
+    $ProjetosCategoriasModel = new ProjetosCategorias_Model();
+    $categorias = $ProjetosCategoriasModel->listagem();
+    ?>
+    <div class="margemB margemT">
+        <table class="listagem">
+            <tr>
+                <th><b>Aplicar template por categoria</b></th>
+            </tr>
+            <tr>
+                <td>Categoria</td>
+                <td><select name="categoria_template_id" id="categoria_template_id">
+                        <?php foreach ($categorias AS $categoria): ?>
+                            <option value="<?php echo $categoria['id']; ?>"><?php echo $categoria['categoria']; ?></option>
+                        <?php endforeach; ?>
+                    </select></td>
+                <td align="center"><button type="button" id="aplicarAlteracoesTemplate">Aplicar</button></td>
+            </tr>
+        </table>
+    </div>
+    <?php if (!empty($this->items)): ?>
+        <form id="concluirAtividadesForm">
+            <table class="listagem">
+                <thead>
+                    <tr class="ui-widget-header">
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Categoria</th>
+                        <th>Status</th>
+                        <th>Tempo</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th colspan="9" align="right"><button type="submit" id="concluirAtividades">Concluir Atividades</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $total['total'] = 0;
+                    foreach ($this->items AS $item):
+                        $item = $this->model->adjustToView($item);
+                        $total['total'] += $item['tempo'];
+                        ?>
+                        <tr>
+                            <td align="center"><input type="checkbox" value="<?php echo $item['id']; ?>" name="atividade_id[]" class="itemDel" /></td>
+                            <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                            <td align="center"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                            <td><?php echo $item['nome']; ?></td>
+                            <td><?php echo nl2br($item['descricao']); ?></td>
+                            <td><?php echo $item['categoria']; ?></td>
+                            <td><?php echo $item['status']; ?></td>
+                            <td align="center"><?php echo $item['tempo']; ?></td>
+                            <td>
+                                <?php
+                                if ($item['iniciado']):
+                                    ?>
+                                    <button class="btStop <?php echo $this->controller; ?>" type="button" source="<?php echo $item['iniciado']; ?>">Parar Atividade</button>
+                                <?php else: ?>
+                                    <button class="btPlay <?php echo $this->controller; ?>" type="button" source="<?php echo $item['id']; ?>">Iniciar Atividade</button>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="7">Total</th>
+                        <td align="center" colspan="2"><?php echo $total['total']; ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <div id="Projetos-Atividades-TempoModal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <script type="text/javascript" src="/js/submodulo.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#ProjetosTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id: '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+                $('#Projetos-Atividades-TempoModal').dialog({
+                    modal: true,
+                    autoOpen: false,
+                    show: "slide",
+                    hide: "slide",
+                    width: '600',
+                    close: function() {
+                        $('#ProjetosTabs').tabs("load", $('#ProjetosTabs').tabs('option', 'selected'));
+                        $('#Projetos-Atividades-TempoModal').html('');
+                    }
+                });
+                $('#aplicarAlteracoesTemplate').die('click').unbind('click').click(function() {
+                    var categoria = $('#categoria_template_id').select().val();
+                    $.get('<?php echo'/' . $this->module . '/save/Templates/Adicionar-Template/' . $this->data['parent_id'] . '/'; ?>' + categoria,
+                            function(data) {
+                                if (data != '') {
+                                    $('#<?php echo $this->controller; ?>Modal').html(data);
+                                }
+                                $('#ProjetosTabs').tabs("load", $('#ProjetosTabs').tabs('option', 'selected'));
+                            });
+
+                });
+                $('#concluirAtividades').die('click').unbind('click').click(function() {
+                    $('#concluirAtividadesForm').ajaxSubmit({
+                        success: function() {
+                            $('#ProjetosTabs').tabs("load", $('#ProjetosTabs').tabs('option', 'selected'));
+                        },
+                        type: 'post',
+                        url: "/erp/submodulo/Projetos-Atividades/concluir/",
+                        target: '#<?php echo $this->controller; ?>Modal'
+                    });
+                    return false;
+                });
+                $('.btPlay').die('click').unbind('click').click(function() {
+                    var source = $(this).attr('source');
+                    $.get('<?php echo'/' . $this->module . '/save/Projetos-Atividades-Tempo/iniciar/'; ?>' + source,
+                            function(data) {
+                                if (data != '') {
+                                    $('#Projetos-Atividades-TempoModal').html(data);
+                                }
+                                $('#ProjetosTabs').tabs("load", $('#ProjetosTabs').tabs('option', 'selected'));
+                            });
+                });
+                $('.btStop').die('click').unbind('click').click(function() {
+                    var source = $(this).attr('source');
+                    $.get('<?php echo'/' . $this->module . '/submodulo/Projetos-Atividades-Tempo/parar/'; ?>' + source,
+                            function(data) {
+                                if (data != '') {
+                                    $('#Projetos-Atividades-TempoModal').html(data).dialog('open');
+                                    $('#ProjetosAtividadesTempoForm').die('submit').unbind('submit').submit(function() {
+                                        $(this).ajaxSubmit({
+                                            type: 'post',
+                                            url: "/erp/submodulo/Projetos-Atividades-Tempo/formulario/",
+                                            target: '#Projetos-Atividades-TempoModal',
+                                            success: function() {
+                                                $('#ProjetosTabs').tabs("load", $('#ProjetosTabs').tabs('option', 'selected'));
+                                            }
+                                        });
+                                        return false;
+                                    });
+                                }
+                            });
+                });
+            });
+        </script>
+    <?php endif; ?>
+</div>

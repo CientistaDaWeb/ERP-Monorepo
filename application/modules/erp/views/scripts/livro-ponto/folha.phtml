@@ -1,0 +1,54 @@
+<form id="salvaPonto" method="POST">
+    <table class="listagem">
+        <input type="hidden" name="mes" value="<?php echo $this->mes; ?>" />
+        <input type="hidden" name="ano" value="<?php echo $this->ano; ?>" />
+        <input type="hidden" name="usuario_id" value="<?php echo $this->usuario_id; ?>" />
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Entrada Manhã</th>
+                <th>Saída Manhã</th>
+                <th>Entrada Tarde</th>
+                <th>Saída Tarde</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            for ($i = 1; $i <= 31; $i++):
+                if (checkdate($this->mes, $i, $this->ano)):
+                    $data = $this->ano . '-' . $this->mes . '-' . substr('0' . $i, -2);
+                    ?>
+                <input type="hidden" value="<?php echo $data; ?>" name="pontos[<?php echo $data; ?>][data]" />
+                <tr>
+                    <td align="center"><?php echo $i . '/' . $this->mes . '/' . $this->ano; ?></td>
+                    <td align="center"><input type="text" name="pontos[<?php echo $data; ?>][manha][entrada]" class="filter hour" value="<?php echo (!empty($this->items[$data][0]['hora'])) ? $this->items[$data][0]['hora'] : ''; ?>" />
+                    <td align="center"><input type="text" name="pontos[<?php echo $data; ?>][manha][saida]" class="filter hour"  value="<?php echo (!empty($this->items[$data][1]['hora'])) ? $this->items[$data][1]['hora'] : ''; ?>" />
+                    <td align="center"><input type="text" name="pontos[<?php echo $data; ?>][tarde][entrada]" class="filter hour"  value="<?php echo (!empty($this->items[$data][2]['hora'])) ? $this->items[$data][2]['hora'] : ''; ?>" />
+                    <td align="center"><input type="text" name="pontos[<?php echo $data; ?>][tarde][saida]" class="filter hour" value="<?php echo (!empty($this->items[$data][3]['hora'])) ? $this->items[$data][3]['hora'] : ''; ?>" />
+                </tr>
+                <?php
+            endif;
+        endfor;
+        ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4"></td>
+                <td align="center"><button type="submit">Salvar Ponto</button></td>
+            </tr>
+        </tfoot>
+    </table>
+</form>
+<div id="retorno"></div>
+<script>
+    $(function () {
+        $('#salvaPonto').submit(function (e) {
+            e.preventDefault();
+            $(this).ajaxSubmit({
+                target: '#retorno',
+                url: '/<?php echo $this->module . '/submodulo/' . $this->controller . '/salva-dados'; ?>'
+            });
+            return false;
+        });
+    });
+</script>

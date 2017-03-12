@@ -1,0 +1,7 @@
+<?php echo $this->partial('emails/header.phtml'); ?>
+<p>Novo compromisso inserido!</p>
+<p><b>Titulo:</b> <?php echo $this->conteudo['titulo']; ?></p>
+<p><b>Local:</b> <?php echo $this->conteudo['local']; ?></p>
+<p><b>Data:</b> <?php echo $this->conteudo['data']; ?> - <?php echo $this->conteudo['hora']; ?></p>
+<p><b>Descrição:</b> <?php echo nl2br($this->conteudo['descricao']); ?></p>
+<?php echo $this->partial('emails/footer.phtml'); ?>

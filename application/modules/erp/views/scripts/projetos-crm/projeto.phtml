@@ -1,0 +1,101 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    echo $this->partial('partials/btAdicionar.phtml', array(
+        'controller' => $this->controller,
+        'module' => $this->module,
+        'message' => $this->model->getOption('buttons', 'add')
+    ));
+    $cores = array(
+      'P' => 'fundo-ppci',
+      'H' => 'fundo-hidro',
+      'A' => 'fundo-atendimento',
+    );
+
+    ?>
+    <div class="modal" id="ProjetosCrmModal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+    <?php if (!empty($this->items)): ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th>Data</th>
+                    <th>Funcionário</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $cor = $cores[$item['tipo']];
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr class="<?php echo $cor ?>">
+                        <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td><?php echo $item['data']; ?></td>
+                        <td><?php echo $item['nome']; ?></td>
+                        <td><?php echo nl2br($item['descricao']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <?php $AgendaModel = new UsuariosCompromissos_Model(); ?>
+        <div id="<?php echo $this->controller; ?>ModalAgenda" class="modal" title="<?php echo $AgendaModel->getOption('title'); ?>"></div>
+        <script src="/js/submodulo.js"> </script>
+        <script>
+            $(function(){
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#ProjetosTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id : '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+                $().submodulo({
+                    controller: 'Agenda',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#ProjetosTabs',
+                    modal: '#<?php echo $this->controller; ?>ModalAgenda',
+                    form: '#UsuariosCompromissosForm'
+                });
+                $('#<?php echo $this->controller; ?>ModalAgenda').dialog({
+                    modal: true,
+                    autoOpen: false,
+                    show: "slide",
+                    hide: "slide",
+                    width: '600',
+                    close: function(){
+                        $('#ProjetosTabs').tabs("load",$('#ProjetosTabs').tabs('option', 'selected'));
+                        $('#<?php echo $this->controller; ?>ModalAgenda').html('');
+                    }
+                });
+                $('.btConverter').die('click').unbind('click').click(function(){
+                    var id = $(this).attr('source');
+                    $.get(
+                    '/<?php echo $this->module; ?>/submodulo/Agenda/converter/',
+                    {'atendimento_id': id},
+                    function(data){
+                        $('#<?php echo $this->controller; ?>ModalAgenda').html(data).dialog('open');
+                    }
+                );
+                });
+            });
+        </script>
+    <?php endif; ?>
+</div>

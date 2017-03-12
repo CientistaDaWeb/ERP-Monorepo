@@ -1,0 +1,125 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<div class="hidden">
+    <form method="post" id="Form_Relatorio_Orcamento">
+        <table class="listagem">
+            <tr>
+                <th>Data Inicial</th>
+                <th><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></th>
+                <th>Data Final</th>
+                <th><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></th>
+                <th rowspan="10">
+                    <button type="submit">Filtrar</button><br /><br />
+                    <button type="button" id="btImprimir">Imprimir</button>
+                    <!--<button type="button" id="btSalvaPdf">Salvar em PDF</button> -->
+                </th>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <th><select name="status">
+                        <option value="">Todos</option>
+                        <?php foreach ($this->model->listOptions('status') AS $id => $stat): ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['status'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $stat; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+                <th>Funcionário</th>
+                <th><select name="usuario_id">
+                        <option value="">Todos</option>
+                        <?php
+                        $UsuariosModel = new Usuarios_Model();
+                        foreach ($UsuariosModel->fetchPair() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['usuario_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+            <tr>
+                <th>Cliente</th>
+                <th><select name="cliente_id">
+                        <option value="">Todos</option>
+                        <?php
+                        $ClientesModel = new Clientes_Model();
+                        foreach ($ClientesModel->fetchPair() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['cliente_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+                <th>Empresa</th>
+                <th><select name="empresa_id">
+                        <option value="">Todos</option>
+                        <?php
+                        $EmpresasModel = new Empresas_Model();
+                        foreach ($EmpresasModel->fetchPair() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['empresa_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+        </table>
+    </form>
+</div>
+<?php if (!empty($this->items)): ?>
+    <div class="print">
+        <table class="listagem">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Código</th>
+                    <th>Cliente</th>
+                    <th>Empresa</th>
+                    <th>Funcionário</th>
+                    <th>Nº OS</th>
+                    <th>Nº Fat.</th>
+                    <th>Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $WM = new WS_Money();
+                $total = array('os' => 0, 'fat' => 0, 'saldo' => 0);
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    $total['os'] += $item['nOS'];
+                    $total['fat'] += $item['nFat'];
+                    $total['saldo'] += ($item['totFat'] - $item['totOs']);
+                    ?>
+                    <tr>
+                        <td align="center"><?php echo $item['status']; ?></td>
+                        <td align="center"><?php echo $item['data_emissao']; ?></td>
+                        <td align="center"><a class="buttonLink hidden" target="_blank" href="/<?php echo $this->module; ?>/Orcamentos/formulario/<?php echo $item['id']; ?>" title="<?php echo $this->model->getOption('buttons', 'go'); ?>"><?php echo $this->model->getOption('buttons', 'go'); ?></a> <?php echo $item['id']; ?></td>
+                        <td><a class="buttonLink hidden" target="_blank" href="/<?php echo $this->module; ?>/Clientes/formulario/<?php echo $item['cliente_id']; ?>" title="<?php echo $ClientesModel->getOption('buttons', 'go'); ?>"><?php echo $ClientesModel->getOption('buttons', 'go'); ?></a> <?php echo $item['cliente']; ?></td>
+                        <td><?php echo $item['empresa']; ?></td>
+                        <td><?php echo $item['nome']; ?></td>
+                        <td><?php echo $item['nOS']; ?></td>
+                        <td><?php echo $item['nFat']; ?></td>
+                        <td><?php echo $item['saldo']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th align="right" colspan="6">Totais</th>
+                    <th><?php echo $total['os']; ?></th>
+                    <th><?php echo $total['fat']; ?></th>
+                    <th><?php echo WS_Money::adjustToView($total['saldo']); ?></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $("#btSalvaPdf").click(function(){
+                var form = $("#Form_Relatorio_Orcamento");
+                form.attr("target","_blank").attr("action",'/<?php echo $this->module; ?>/save/Relatorio-Orcamentos/pdf/');
+                form.submit();
+                form.attr("target","_self").attr("action",'');
+            });
+        });
+    </script>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>

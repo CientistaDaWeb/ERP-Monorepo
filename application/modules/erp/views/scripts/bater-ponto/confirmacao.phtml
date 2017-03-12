@@ -1,0 +1,7 @@
+<div class="alignCenter">
+    <?php if ($this->dados['usuario']): ?>
+        <p>Gostaria de dar <b><?php echo $this->dados['tipo']; ?></b> no ponto de <b><?php echo $this->dados['usuario']['nome']; ?></b> em <?php echo $this->dados['data']; ?>?</p>
+        <br />
+    <?php endif; ?>
+    <?php echo $this->form; ?>
+</div>

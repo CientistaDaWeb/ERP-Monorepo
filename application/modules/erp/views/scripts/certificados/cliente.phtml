@@ -1,0 +1,42 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <?php if (!empty($this->items)): ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th>Código</th>
+                    <th>Volume</th>
+                    <th>Tipo de Efluente</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <td align="center"><a class="botao btVisualizar" href="/<?php echo $this->module . '/' . $this->controller . '/verpdf/' . $item['id']; ?>" title="<?php echo $this->model->getOption('buttons', 'view'); ?>" target="_blank"><?php echo $this->model->getOption('buttons', 'view'); ?></a></td>
+                        <td align="center"><?php echo $item['orcamento_id']; ?>.<?php echo $item['sequencial']; ?></td>
+                        <td align="center"><?php echo $item['quantidade']; ?></td>
+                        <td><?php echo $item['tipo_efluente']; ?></td>
+                    </tr>
+                    <?php
+                endforeach;
+                ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    ?>
+</div>

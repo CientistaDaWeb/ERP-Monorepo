@@ -1,0 +1,9 @@
+<?php echo $this->partial('emails/header.phtml'); ?>
+<p>Olá, <b><?php echo $this->conteudo['contato']; ?></b>,</p>
+<p>Para que possamos aprimorar cada vez mais nosso atendimento e serviço gostaríamos de contar com sua participação em nossa pesquisa de satisfação referente ao certificado <b><?php echo $this->conteudo['certificado']; ?></b>!</p>
+<p>São apenas 5 perguntas!</p>
+<p>Para isso basta que clicar no botão abaixo:</p>
+<p><a href="http://www.acquasana.com.br/cliente/pesquisa/<?php echo $this->conteudo['codigo']; ?>" style="background-color:#002340; color: #FFF; font-weight: bold; text-decoration: none; text-align: center; padding: 10px 20px;">Responder à Pesquisa de Satisfação</a></p>
+<p>Ou copie e cole essa url em seu navegador de preferência: http://www.acquasana.com.br/cliente/pesquisa/<?php echo $this->conteudo['codigo']; ?></p>
+<p>Att,<br />Equipe Acquasana</p>
+<?php echo $this->partial('emails/footer.phtml'); ?>

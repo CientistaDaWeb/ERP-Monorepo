@@ -1,0 +1,32 @@
+#menu{
+    background: #3E7D9F;
+    height: 35px;
+}
+#menu-vertical{
+    background: #3E7D9F;
+}
+
+.sf-menu {
+    width: 100%;
+}
+.sf-menu a {
+    border-left: 1px solid #899B30;
+    padding:  .75em 1em;
+    text-decoration:none;
+}
+.sf-menu a, .sf-menu a:visited  {
+    color: #FFF;
+}
+.sf-menu li{
+    background: #3E7D9F;
+}
+.sf-menu li ul li, .sf-menu li:hover, sf-menu li a:hover, .sf-menu li.active{
+    background: #899B30;
+}
+.sf-menu ul li:hover, .sf-menu ul li.sfHover, .sf-menu ul li a:focus, .sf-menu ul li a:hover, .sf-menu ul li a:active, .sf-menu ul li.active a{
+    background: #3E7D9F;
+    outline: 0;
+}
+.sf-vertical a{
+    border-top:	 1px solid #CFDEFF;
+}

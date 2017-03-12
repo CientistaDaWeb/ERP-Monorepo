@@ -1,0 +1,36 @@
+body{
+    font-family: 'garuda' !important;
+    font-size: 10px !important;
+}
+.hidden, #ZFDebug, .hidden *{
+    display: none;
+}
+h1{
+    font-size: 22px;
+    font-weight: bold;
+    background: none;
+    border: 0;
+}
+h2{
+    font-size: 18px;
+}
+.listaItens{
+    margin: 10px 0 20px;
+}
+.listaItens li{
+    list-style: decimal;
+    list-style-position: inside;
+    padding-left: 10px;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #CCC;
+}
+.quebraPagina{
+    page-break-before: always;
+}
+#endereco{
+    width: 270px;
+}
+#fachada{
+    width: 300px;
+}

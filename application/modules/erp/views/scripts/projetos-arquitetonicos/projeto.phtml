@@ -1,0 +1,160 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    echo $this->partial('partials/btAdicionar.phtml', array(
+        'controller' => $this->controller,
+        'module' => $this->module,
+        'message' => $this->model->getOption('buttons', 'add'),
+        'parent_id' => $this->data['parent_id']
+    ));
+    $ProjetosArquitetonicosArquivosModel = new ProjetosArquitetonicosArquivos_Model();
+    ?>
+    <?php if (!empty($this->items)): ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td><?php echo $item['data_recebimento']; ?></td>
+                        <td><?php echo nl2br($item['descricao']); ?></td>
+                        <td>
+                            <?php
+                            echo $this->partial('partials/btAdicionar.phtml', array(
+                                'controller' => 'Projetos-Arquitetonicos-Arquivos',
+                                'module' => $this->module,
+                                'message' => $ProjetosArquitetonicosArquivosModel->getOption('buttons', 'add'),
+                                'parent_id' => $item['id']
+                            ));
+                            ?>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5"><h2>Arquivos</h2></td>
+                    </tr>
+                    <?php
+                    $arquivos = $ProjetosArquitetonicosArquivosModel->getByProject($item['id']);
+                    if (!empty($arquivos)):
+                        ?>
+                        <tr>
+                            <td colspan="5">
+                                <table class="listagem">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>Envio</th>
+                                            <th>Descrição</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        foreach ($arquivos AS $arquivo) :
+                                            $arquivo = $ProjetosArquitetonicosArquivosModel->adjustToView($arquivo);
+                                            ?>
+                                            <tr>
+                                                <td align="center"><button class="btEditar Projetos-Arquitetonicos-Arquivos" source="<?php echo $arquivo['id']; ?>"><?php echo $ProjetosArquitetonicosArquivosModel->getOption('buttons', 'edit'); ?></button></td>
+                                                <td align="center"><button class="btExcluir Projetos-Arquitetonicos-Arquivos" source="<?php echo $arquivo['id']; ?>"><?php echo $ProjetosArquitetonicosArquivosModel->getOption('buttons', 'delete'); ?></button></td>
+                                                <td><?php echo $arquivo['created']; ?></td>
+                                                <td><?php echo nl2br($arquivo['descricao']); ?></td>
+                                                <td>
+                                                    <?php if(!empty($arquivo['arquivo'])): ?>
+                                                    <a href="/uploads/projetos-arquitetonicos/<?php echo $arquivo['arquivo']; ?>" title="<?php echo $arquivo['arquivo']; ?>" target="_blank">Baixar</a>
+                                                    <?php else: ?>
+                                                    <div class="error">Nenhum arquivo enviado!</div>
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        endforeach;
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <?php
+                    else:
+                        ?>
+                        <tr>
+                            <td colspan="5"><div class="error">Sem nenhum arquivo enviado!</div></td>
+                        </tr>
+                    <?php
+                    endif;
+                    ?>
+                    <tr>
+                        <td colspan="5"><hr /></td>
+                    </tr>
+                    <?php
+                endforeach;
+                ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <div id="Projetos-Arquitetonicos-ArquivosModal" class="modal" title="<?php echo $ProjetosArquitetonicosArquivosModel->getOption('title'); ?>"></div>
+        <script type="text/javascript" src="/js/submodulo.js"> </script>
+        <script type="text/javascript">
+            $(function(){
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#ProjetosTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id : '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+                /*
+                $('#ProjetosArquitetonicosArquivosModal').die('dialog').unbind('dialog').dialog({
+                    modal: true,
+                    autoOpen: false,
+                    show: "slide",
+                    hide: "slide",
+                    width: '600',
+                    close: function(){
+                        if('#ProjetosTabs'){
+                            $('#ProjetosTabs').tabs("load",$('#ProjetosTabs').tabs('option', 'selected'));
+                            $(this).html('');
+                        }
+                    }
+                });
+                $(".btInserirArquivo").unbind('click').die('click').click(function(){
+
+                });
+                 */
+                $().submodulo({
+                    controller: 'Projetos-Arquitetonicos-Arquivos',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#ProjetosTabs',
+                    modal: '#Projetos-Arquitetonicos-ArquivosModal',
+                    form: '#ProjetosArquitetonicosArquivosForm',
+                    parent_id : '<?php echo (!empty($item['id'])) ? $item['id'] : ''; ?>'
+                });
+            });
+        </script>
+    <?php endif; ?>
+</div>

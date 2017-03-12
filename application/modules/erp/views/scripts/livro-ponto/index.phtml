@@ -1,0 +1,53 @@
+<h1>Livro Ponto</h1>
+<form method="POST" id="pegaFolha">
+    <table class="listagem">
+        <thead>
+            <tr>
+                <?php
+                $UsuariosModel = new Usuarios_Model();
+                $usuarios = $UsuariosModel->buscaPonto();
+                if ($usuarios):
+                    ?>
+                    <th>Usuário</th>
+                    <td><select id="usuario_id" name="usuario_id">
+                            <?php foreach ($usuarios AS $item): ?>
+                                <option value="<?php echo $item['id']; ?>"><?php echo $item['nome']; ?></option>
+                            <?php endforeach; ?>
+                        </select></td>
+                <?php endif; ?>
+                <th>Mês</th>
+                <td>
+                    <select name="mes">
+                        <?php for ($i = 1; $i <= 12; $i++):
+                            ?>
+                            <option value="<?php echo substr('0' . $i, -2); ?>" <?php echo (substr('0' . $i, -2) == date('m')) ? 'selected="selected"' : ''; ?>><?php echo $i; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </td>
+                <th>Ano</th>
+                <td>
+                    <select name="ano">
+                        <?php for ($i = 2012; $i <= 2025; $i++):
+                            ?>
+                            <option value="<?php echo $i; ?>" <?php echo ($i == date('Y')) ? 'selected="selected"' : ''; ?>><?php echo $i; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                </td>
+                <th><button type="submit">Abrir agenda</button></th>
+            </tr>
+        </thead>
+    </table>
+</form>
+<div id="retornoSalva"></div>
+<script>
+    $(function () {
+        $('#pegaFolha').submit(function (e) {
+            e.preventDefault();
+            $(this).ajaxSubmit({
+                target: '#retornoSalva',
+                url: '/<?php echo $this->module . '/submodulo/' . $this->controller . '/folha'; ?>'
+            });
+            return false;
+        });
+    });
+</script>

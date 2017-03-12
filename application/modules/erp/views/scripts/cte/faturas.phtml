@@ -1,0 +1,118 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    $ContasReceberModel = new ContasReceber_Model();
+    if ($this->cte['status'] <= 2):
+        if (!empty($this->faturasNaoProcessadas)):
+            ?>
+            <div class="empty alignCenter">
+                Selecionadas <?php echo count($this->items); ?> de <?php echo count($this->faturasNaoProcessadas); ?> contas.
+            </div>
+            <form id="AdicionarFaturaCte" method="POST">
+                <input type="hidden" value="<?php echo $this->cte['id']; ?>" name="cte_id" id="cte_id" />
+                <table class="listagem">
+                    <tbody>
+                        <tr>
+                            <td colspan="4"><select id="fatura_id" name="fatura_id">
+                                    <?php
+                                    foreach ($this->faturasNaoProcessadas AS $fatura):
+                                        $fatura = $ContasReceberModel->adjustToView($fatura);
+                                        ?>
+                                        <option value="<?php echo $fatura['id']; ?>"><?php echo $fatura['data_vencimento']; ?> - <?php echo $fatura['valor']; ?></option>
+                                    <?php endforeach; ?>
+                                </select></td>
+                            <th><button type="submit" >Adicionar Fatura a CTE</button></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+            <hr />
+            <?php
+        endif;
+    endif;
+    if (!empty($this->items)):
+        ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <?php if ($this->cte['status'] == 2): ?>
+                        <th></th>
+                    <?php endif; ?>
+                    <th>Data</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $total = 0;
+                foreach ($this->items AS $item):
+                    $total += $item['valor'];
+                    $item = $ContasReceberModel->adjustToView($item);
+                    ?>
+                    <tr>
+                        <?php if ($this->cte['status'] == 2): ?>
+                            <td align="center"><button class="btExcluir ContasReceber" source="<?php echo $item['id']; ?>"><?php echo $ContasReceberModel->getOption('buttons', 'delete'); ?></button></td>
+                        <?php endif; ?>
+                        <td><?php echo $item['data_vencimento']; ?></td>
+                        <td><?php echo $item['valor']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <?php if ($this->cte['status'] == 2): ?>
+                        <th></th>
+                    <?php endif; ?>
+                    <th>Total</th>
+                    <th><?php echo WS_Money::adjustToView($total); ?></th>
+                </tr>
+            </tfoot>
+        </table>
+    <?php else: ?>
+        <div class="empty margemT">Nenhuma fatura inserida na CTE.</div>
+    <?php
+    endif;
+    if ($this->noLayout):
+        ?>
+        <script>
+            $(function() {
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#CtesTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id: '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+                $('#AdicionarFaturaCte').die('submit').unbind('submit').submit(function() {
+                    $(this).ajaxSubmit({
+                        type: 'post',
+                        target: '#<?php echo $this->controller; ?>Modal',
+                        url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/addfatura/",
+                        success: function() {
+                            $('#CtesTabs').tabs("load", $('#CtesTabs').tabs('option', 'selected'));
+                        }
+                    });
+                    return false;
+                });
+                $('.btExcluir.ContasReceber').unbind('click').die('click').click(function() {
+                    var source = $(this).attr('source');
+                    $.ajax({
+                        type: 'POST',
+                        url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/removefatura/",
+                        data: {'fatura_id': source},
+                        success: function(data) {
+                            $("#<?php echo $this->controller; ?>Modal").html(data);
+                            $("#CtesTabs").tabs("load", $("#CtesTabs").tabs('option', 'selected'));
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+    <?php endif; ?>
+</div>

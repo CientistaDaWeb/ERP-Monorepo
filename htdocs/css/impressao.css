@@ -1,0 +1,68 @@
+*{
+    margin:0;
+    padding: 0;
+}
+body{
+    font-size: 90%;
+}
+#logo{
+    margin-bottom: 10px;
+}
+h2{
+    color: #026890;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #026890;
+}
+.listagem{
+    width: 100%;
+    border-collapse: collapse;
+    border: 0;
+    margin-top: 10px;
+}
+.listagem th, .listagem td{
+    padding: 3px 5px;
+    border: 1px solid #000;
+}
+.listagem th{
+    font-weight: bold;
+    color: #000;
+    background: #EEE;
+}
+.center{
+    text-align: center;
+}
+.margemB{
+    margin-bottom: 10px;
+}
+.margemT{
+    margin-top: 10px;
+}
+.margemR{
+    margin-right: 10px;
+}
+.margemL{
+    margin-left: 10px;
+}
+.float{
+    display: inline;
+}
+.float.left{
+    float: left;
+}
+.float.right{
+    float: right;
+}
+.clear{
+    clear: both;
+    display: block;
+}
+hr{
+    border: 0;
+    border-bottom: 1px solid #CCC;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+.invisivel{
+    display: none;
+}

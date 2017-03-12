@@ -1,0 +1,108 @@
+<?php
+if (!empty($this->items)):
+    ?>
+    <div class="hidden">
+        <button type="button" id="btImprimir">
+            Imprimir
+        </button>
+    </div>
+    <?php
+    foreach ($this->items AS $item):
+        $ZD = new Zend_Date($item['data_coleta']);
+        ?>
+        <div id="logo" class="center">
+            <a href="/erp"><img src="/images/logo.jpg" border="0" /></a>
+        </div>
+        <div class="float left">
+            <p><b><?php echo $item['empresa']; ?></b></p>
+            <p><?php echo $item['endereco']; ?>, <?php echo $item['numero']; ?> <?php echo $item['complemento']; ?> - <?php echo $item['bairro']; ?></p>
+            <p><?php echo $item['cep']; ?> <?php echo $item['cidade']; ?> - <?php echo $item['uf']; ?></p>
+            <p>Fone: <?php echo $item['telefone']; ?><?php
+        if (!empty($item['telefone2'])): echo ' | ' . $item['telefone2'];
+        endif;
+        ?><?php
+        if (!empty($item['telefone3'])): echo ' | ' . $item['telefone3'];
+        endif;
+        ?></p>
+            <p>E-mail: <?php echo $item['email']; ?></p>
+            <p><?php echo $item['website']; ?></p>
+        </div>
+        <p class="float right">
+            <b>Ordem de Serviço nº <?php echo $item['orcamento_id']; ?>.<?php echo $item['sequencial']; ?><br />
+                Data da Coleta: <?php echo $ZD->toString('dd/MM/YYYY'); ?> - <?php echo $item['hora_coleta']; ?></b>
+        </p>
+        <hr class="clear" />
+        <p><b>Cliente: <?php echo $item['cliente']; ?></b></p>
+        <p>Contato: <?php echo $item['contato']; ?></p>
+        <?php if (!empty($item['sindico'])): ?>
+            <p>Síndico: <?php echo $item['sindico']; ?></p>
+        <?php endif; ?>
+        <?php if (!empty($item['zelador'])): ?>
+            <p>Zelador: <?php echo $item['zelador']; ?></p>
+        <?php endif; ?>
+        <?php
+        if (!empty($item['enderecos'])):
+            foreach ($item['enderecos'] AS $endereco):
+                ?>
+                <br />
+                <p><?php echo $endereco['endereco']; ?>, <?php echo $endereco['numero']; ?> <?php echo $endereco['complemento']; ?> - <?php echo $endereco['bairro']; ?></p>
+                <p><?php echo $endereco['cep']; ?> <?php echo $endereco['cidade']; ?> - <?php echo $endereco['uf']; ?></p>
+                <?php
+            endforeach;
+        endif;
+        ?>
+        <p>Fone:
+            <?php
+            if (!empty($item['telefones'])):
+                foreach ($item['telefones'] AS $telefone):
+                    echo $telefone['categoria'] . ' - ' . $telefone['telefone'] . '<br />';
+                endforeach;
+            endif;
+            ?></p>
+        <hr class="clear" />
+        <?php if (!empty($item['servicos'])): ?>
+            <table class="listagem margemB">
+                <tr>
+                    <th>Código</th>
+                    <th>Serviço</th>
+                    <th>Quantidade</th>
+                </tr>
+                <?php foreach ($item['servicos'] AS $servico): ?>
+                    <tr>
+                        <td><?php echo $servico['id']; ?></td>
+                        <td><?php echo $servico['servico']; ?></td>
+                        <td align="right"><?php echo $servico['unidade']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        <?php endif; ?>
+        <br />
+        <p>Horas Trabalhadas: ____________</p>
+        <br />
+        <table class="listagem">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Assinatura do Cliente</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                for ($i = 0; $i < $item['numero_coletas']; $i++):
+                    ?>
+                    <tr>
+                        <td>&nbsp;<br/></td>
+                        <td>&nbsp;<br/></td>
+                    </tr>
+                <?php endfor; ?>
+            </tbody>
+        </table>
+        <br />
+        <p><b>Observações:</b><?php echo nl2br($item['observacoes']); ?></p>
+        <div class="breakline" />
+        <?php
+    endforeach;
+else:
+    echo '<div class="error">Nenhuma OS encontrada.</div>';
+endif;
+?>

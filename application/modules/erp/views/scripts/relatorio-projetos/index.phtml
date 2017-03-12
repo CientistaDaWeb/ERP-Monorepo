@@ -1,0 +1,115 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<div class="hidden">
+    <form method="post" id="Form_Relatorio_Contratos">
+        <table class="listagem">
+            <tr>
+                <th>Data Inicial</th>
+                <th><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></th>
+                <th>Data Final</th>
+                <th><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></th>
+                <th rowspan="6"><button type="submit">Filtrar</button></th>
+                <th rowspan="6"><button type="button" id="btImprimir">Imprimir</button></th>
+            </tr>
+            <tr>
+                <th>Usuário</th>
+                <th colspan="3"><select name="usuario_id">
+                        <option value="">Todos</option>
+                        <?php
+                        $UsuariosModel = new Usuarios_Model();
+                        foreach ($UsuariosModel->fetchPair() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['usuario_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+            <tr>
+                <th>Projeto</th>
+                <th><select name="projeto_id">
+                        <option value="">Todos</option>
+                        <?php
+                        $ProjetosModel = new Projetos_Model();
+                        foreach ($ProjetosModel->fetchPair() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['projeto_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+                <th>Categoria</th>
+                <th><select name="categoria_id">
+                        <option value="">Todos</option>
+                        <?php
+                        $ProjetosCategoriasModel = new ProjetosCategorias_Model();
+                        foreach ($ProjetosCategoriasModel->fetchPair() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['categoria_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+            <tr>
+                <th>Construtora</th>
+                <th><select name="construtora_id">
+                        <option value="">Todas</option>
+                        <?php
+                        $ConstrutorasModel = new Construtoras_Model();
+                        foreach ($ConstrutorasModel->fetchPair() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['construtora_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+                <th>Arquiteto</th>
+                <th><select name="arquiteto_id">
+                        <option value="">Todos</option>
+                        <?php
+                        $ArquitetosModel = new Arquitetos_Model();
+                        foreach ($ArquitetosModel->fetchPair() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['arquiteto_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="margem-t clear"></div>
+<?php if (!empty($this->items)): ?>
+    <table class="listagem">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Projeto</th>
+                <th>Categoria</th>
+                <th>Data de Início</th>
+                <th>Projetista PPCI</th>
+                <th>Projetista Hidro</th>
+                <th>Protocolo</th>
+                <th>Construtora</th>
+                <th>Arquiteto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $i = 0;
+            foreach ($this->items AS $item):
+                $item = $this->model->adjustToView($item);
+                $i ++;
+                ?>
+                <tr>
+                    <td><?php echo $i; ?></td>
+                    <td><?php echo $item['nome']; ?></td>
+                    <td><?php echo $item['categoria']; ?></td>
+                    <td><?php echo $item['data_inicio']; ?></td>
+                    <td><?php echo $item['projetista_ppci_nome']; ?></td>
+                    <td><?php echo $item['projetista_hidro_nome']; ?></td>
+                    <td><?php echo $item['numero_protocolo']; ?></td>
+                    <td><?php echo $item['construtora']; ?></td>
+                    <td><?php echo $item['arquiteto']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>

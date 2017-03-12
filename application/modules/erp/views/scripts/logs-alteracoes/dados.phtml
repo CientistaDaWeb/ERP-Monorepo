@@ -1,0 +1,43 @@
+<table class="listagem">
+    <tbody>
+        <tr>
+            <th class="ui-widget-header">Data</th>
+            <td><?php echo $this->item['created']; ?></td>
+        </tr>
+        <tr>
+            <th class="ui-widget-header">Usuário</th>
+            <td><?php echo $this->item['nome']; ?></td>
+        </tr>
+        <tr>
+            <th class="ui-widget-header">Página</th>
+            <td><?php echo $this->item['pagina']; ?></td>
+        </tr>
+        <tr>
+            <th class="ui-widget-header">Ip</th>
+            <td><?php echo $this->item['ip']; ?></td>
+        </tr>
+        <tr>
+            <th class="ui-widget-header">Dados</th>
+            <td>
+                <table class="listagem">
+                    <tbody>
+                        <?php foreach ($this->item['dados'] AS $key => $value): ?>
+                            <tr>
+                                <th><?php echo $key; ?></th>
+                                <td><?php echo $value; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <th class="ui-widget-header">Ação</th>
+            <td><?php echo $this->item['acao']; ?></td>
+        </tr>
+        <tr>
+            <th class="ui-widget-header">Tabela</th>
+            <td><?php echo $this->item['table']; ?></td>
+        </tr>
+    </tbody>
+</table>

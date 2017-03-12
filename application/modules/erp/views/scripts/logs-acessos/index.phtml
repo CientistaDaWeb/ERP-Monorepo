@@ -1,0 +1,53 @@
+<?php
+if (!($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+?>
+<?php if (!empty($this->items)): ?>
+    <table class="listagem" id="LogsAcessosListagem">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Usuário</th>
+                <th>IP</th>
+                <th>Navegador</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($this->items AS $item):
+                $item = $this->model->adjustToView($item);
+                ?>
+                <tr>
+                    <td><?php echo $item['created']; ?></td>
+                    <td><?php echo $item['nome']; ?></td>
+                    <td><?php echo $item['ip']; ?></td>
+                    <td><?php echo $item['navegador']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php
+else:
+    echo $this->partial('partials/empty.phtml', array(
+        'message' => $this->model->getOption('messages', 'empty')
+    ));
+endif;
+?>
+<script type="text/javascript">
+    $(function(){
+        $('#LogsAcessosListagem').dataTable({
+            "oLanguage": { "sUrl": "/js/dataTables/pt_BR.txt" },
+            "bJQueryUI": true,
+            "aaSorting": [[0,"desc"]],
+            "aoColumns":[
+                {"bSortable": true, "sType": "date-euro"},
+                {"bSortable": true},
+                {"bSortable": false},
+                {"bSortable": false}
+            ]
+        });
+    });
+</script>

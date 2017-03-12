@@ -1,0 +1,101 @@
+<?php
+if (!isset($this->noLayout)):
+    $title = $this->model->getOption('title');
+    if (!empty($this->data['orcamento_id'])):
+        $title .= ' (' . $this->data['orcamento_id'] . '.' . $this->data['sequencial'] . ')';
+    endif;
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $title
+    ));
+endif;
+?>
+<div class="margemB">
+    <?php if (!empty($this->data['orcamento_id'])): ?>
+        <a class="botao" href="/<?php echo $this->module; ?>/Orcamentos/formulario/<?php echo $this->data['orcamento_id']; ?>" target="_blank">Ir para o Orçamento</a>
+        <?php
+    endif;
+    if (!empty($this->data['cliente_id'])):
+        ?>
+        <a class="botao" href="/<?php echo $this->module; ?>/Clientes/formulario/<?php echo $this->data['cliente_id']; ?>" target="_blank">Ir para o Cliente</a>
+    <?php endif;
+    ?>
+    <a class="botao" href="/<?php echo $this->module; ?>/print/<?php echo $this->controller; ?>/visualizar/<?php echo $this->data['id']; ?>" target="_blank">Visualizar OS</a>
+    <a class="botao" href="/<?php echo $this->module; ?>/print/<?php echo $this->controller; ?>/relatorio/<?php echo $this->data['id']; ?>" target="_blank">Relatório da OS</a>
+</div>
+<div id="OrdensServicoTabs">
+    <ul>
+        <li><a href="#tabOS">Ordem de Serviço</a></li>
+        <li><a href="/<?php echo $this->module; ?>/submodulo/Servicos/ordemservico//<?php echo $this->data['id']; ?>">Serviços</a></li>
+        <li><a href="/<?php echo $this->module; ?>/submodulo/Mtr/ordemservico//<?php echo $this->data['id']; ?>">MTRs</a></li>
+        <li><a href="/<?php echo $this->module; ?>/submodulo/Ordem-Servico-Imagens/ordemservico//<?php echo $this->data['id']; ?>">Imagens</a></li>
+        <li><a href="/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/arquivos//<?php echo $this->data['id']; ?>">Arquivos</a></li>
+    </ul>
+    <div id="tabOS">
+        <div class="grid_12">
+            <?php
+            if (isset($this->data['status']) && ($this->data['status'] == 3) && 1 == 0):
+                $item = $this->data;
+                ?>
+                <table class="listagem">
+                    <tr>
+                        <th>Orçamento</th>
+                        <td><?php echo $item['orcamento_id']; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Empresa</th>
+                        <td><?php echo $item['empresa']; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Transportador</th>
+                        <td><?php echo $item['transportador']; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Data da Coleta</th>
+                        <td><?php echo $item['data_coleta']; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Número de Coletas</th>
+                        <td><?php echo $item['numero_coletas']; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Valor</th>
+                        <td><?php echo WS_Money::adjustToView($item['valor']); ?></td>
+                    </tr>
+                    <tr>
+                        <th>Desconto</th>
+                        <td><?php echo WS_Money::adjustToView($item['desconto']); ?></td>
+                    </tr>
+                    <tr>
+                        <th>Total</th>
+                        <td><?php echo WS_Money::adjustToView($item['valor'] - $item['desconto']); ?></td>
+                    </tr>
+                </table>
+                <div class="submodulo error ui-corner-all">Essa Ordem de Serviço já está concluída e não pode ser alterada!</div>
+                <?php if (!isset($this->noLayout)): ?>
+                    <button onclick="javascript: history.back();">Cancelar</button>
+                    <?php
+                endif;
+            else:
+                echo $this->form;
+            endif;
+            ?>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#OrdensServicoTabs").tabs({
+            spinner: carregando,
+            ajaxOptions: {
+                error: function (xhr, status, index, anchor) {
+                    if (status == 'error') {
+                        $(anchor.hash).html('Erro ao carregar o conteúdo');
+                    } else {
+                        $(anchor.hash).html(carregando);
+                    }
+                }
+            }
+<?php echo (empty($this->data['id'])) ? ",disabled: [1,2]" : ''; ?>
+        });
+    });
+</script>

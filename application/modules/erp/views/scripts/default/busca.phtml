@@ -1,0 +1,72 @@
+<?php if (!empty($this->model->_items)): ?>
+    <form method="post" action="/<?php echo $this->module; ?>/<?php echo $this->controller; ?>/excluir" class="formListagem">
+        <table class="listagem">
+            <thead class="ui-widget-header">
+                <tr>
+                    <?php
+                    foreach ($this->actions AS $key => $action):
+                        if ($key == 'delete'):
+                            echo $this->partial('partials/btExcluir.phtml', array(
+                                'message' => $this->model->getOption('buttons', 'delete')
+                            ));
+                        else:
+                            echo '<th class="buttonSpace"></th>';
+                        endif;
+                    endforeach;
+                    $fields = $this->model->getViewFields();
+                    foreach ($fields AS $key => $field):
+                        ?>
+                        <th><?php echo $field; ?></th>
+                        <?php
+                    endforeach;
+                    ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $i = 0;
+                foreach ($this->model->_items AS $item):
+                    if (($i % 2) == 0):
+                        $item['class'] = 'even';
+                    else:
+                        $item['class'] = 'odd';
+                    endif;
+                    $i++;
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr class="<?php echo $item['class']; ?>">
+                        <?php
+                        foreach ($this->actions AS $key => $action):
+                            echo $this->partial('partials/' . $action . '.phtml', array(
+                                'message' => $this->model->getOption('buttons', $key),
+                                'id' => $item['id'],
+                                'controller' => $this->controller,
+                                'module' => $this->module,
+                                'data' => $item,
+                            ));
+                        endforeach;
+                        foreach ($fields AS $key => $field):
+                            ?>
+                            <td><?php echo $item[$key]; ?></td>
+                            <?php
+                        endforeach;
+                        ?>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </form>
+    <?php
+    echo $this->paginationControl($this->model->_items, 'Sliding', 'default/paginator.phtml', array(
+        'module' => $this->module,
+        'controller' => $this->controller,
+        'model' => $this->model
+    ));
+    ?>
+    <?php
+else:
+    echo $this->partial('partials/empty.phtml', array(
+        'message' => $this->model->getOption('messages', 'empty')
+    ));
+endif;
+?>

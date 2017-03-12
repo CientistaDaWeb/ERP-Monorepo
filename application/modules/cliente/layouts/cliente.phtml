@@ -1,0 +1,135 @@
+<?php
+$configs = Zend_Registry::get('application');
+echo $this->doctype();
+?>
+<html lang="pt-br">
+    <head>
+        <?php
+        if (isset($this->model)):
+            $this->headTitle($this->model->getOption('title'));
+        endif;
+        $this->headTitle('Área Restrita do Cliente - Acquasana');
+        $this->headTitle()->setSeparator(' - ');
+        echo $this->headTitle();
+
+        /* Adiciona as Meta Tags */
+        $this->headMeta()
+                ->appendHttpEquiv('Content-Type', 'text/html;charset=UTF-8')
+                ->appendHttpEquiv('Content-Language', 'pt-BR')
+                ->appendName('author', 'Fernando Henrique - Webscientist')
+                ->appendName('robots', 'index,follow')
+                ->appendName('googlebot', 'index,follow')
+                ->appendName('google', 'notranslate')
+                ->appendName('Content-Language', 'pt-br')
+                ->appendName('reply-to', $configs->cliente->email)
+                ->appendName('google-site-verification', $configs->google->verification);
+        echo $this->headMeta();
+       /* Adiciona as Meta Tags */
+        $this->headLink()
+                ->appendStylesheet('/css/reset.css')
+                ->appendStylesheet('/css/fluid_grid.css')
+                ->appendStylesheet('/css/style.css')
+                ->appendStylesheet('/css/light/jquery-ui-1.8.23.custom.css')
+                ->appendStylesheet('/css/jquery.jgrowl.css')
+                ->appendStylesheet('/css/erp.css')
+                ->appendStylesheet('/css/superfish.css')
+                ->appendStylesheet('/css/menu.css')
+                ->appendStylesheet('/css/print.css', 'print')
+                ->appendStylesheet('/css/fullcalendar.css')
+                ->headLink(array('rel' => 'favicon', 'href' => '/favicon.ico'), 'PREPEND')
+                ->headLink(array('rel' => 'shortcut icon', 'href' => '/favicon.ico', 'type' => 'image/x-icon'), 'PREPEND');
+        echo $this->headLink();
+
+        $this->headScript()
+                ->appendFile('/js/jquery-1.8.0.min.js')
+                ->appendFile('/js/jquery-ui-1.8.23.custom.min.js')
+                ->appendFile('/js/jquery.jgrowl.js')
+                ->appendFile('/js/script.js')
+                ->appendFile('/js/superfish.js')
+                ->appendFile('/js/menu.js')
+                ->appendFile('/js/jquery.maskMoney.js')
+                ->appendFile('/js/jquery.maskedinput-1.3.min.js')
+                ->appendFile('/js/jquery.form.js')
+                ->appendFile('/js/jquery.livequery.js')
+                ->appendFile('/js/submodulo.js')
+                ->appendFile('/js/dataTables/jquery.dataTables.min.js')
+                ->appendFile('/js/dataTables/date-euro.js')
+                ->appendFile('/js/fullcalendar.js')
+                ->appendFile('/js/gcal.js')
+                ->appendFile('https://www.google.com/jsapi')
+        ;
+        echo $this->headScript();
+        if (!empty($configs->analytics->ua)) :
+            ?>
+            <script type="text/javascript">
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', '<?php echo $configs->analytics->ua; ?>']);
+                _gaq.push(['_trackPageview']);
+                (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+            </script>
+        <?php endif; ?>
+    </head>
+    <body id="wsadmin">
+        <div id="header">
+            <div class="container_12">
+                <div class="grid_2">
+                    <a href="/<?php echo $this->module; ?>" title="ERP <?php echo $configs->cliente->nome; ?>">
+                        <img src="/images/logo_ws.png" alt="<?php echo $configs->cliente->nome; ?>" />
+                    </a>
+                </div>
+                <div class="grid_7">
+                    <p class="title">Painel do Cliente <?php echo $configs->cliente->nome; ?></p>
+                </div>
+                <div class="grid_3 box-logado">
+                    <?php if (!empty($this->User)): ?>
+                        <p>Você está logado como:<br />
+                            <b><?php echo $this->User->razao_social; ?></b><br />
+                            <a href="/<?php echo $this->module; ?>/logout" id ="link-sair" title="Sair">Sair</a></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <div id="menu">
+            <div class="container_12">
+                <?php
+                if (!empty($this->User)):
+                    echo $this->ClienteMenu()->menu()->setUlClass('sf-menu');
+                endif;
+                ?>
+            </div>
+        </div>
+        <div id="content" class="ui-widget padding10">
+            <div class="container_12">
+                <div class="grid_12">
+                    <?php echo $this->layout()->content; ?>
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+            <div class="container_12">
+                <address>
+                    Acquasana Tratamento de Efluentes<br />
+                    Bento Gonçalves - RS &bull; <b>(54) 3055-3686</b>
+                </address>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function(){
+<?php if (!empty($this->controller)): ?>
+                $("button#cancelar").click(function(){
+                    window.location ="/<?php echo $this->module; ?>/<?php echo $this->controller; ?>";
+                });
+    <?php
+endif;
+//Exibe as mensagens
+$tpl = '$.jGrowl("%s", { theme: "%s", life: 10000 });';
+echo $this->flashMessenger('', $tpl);
+?>
+        });
+        </script>
+    </body>
+</html>

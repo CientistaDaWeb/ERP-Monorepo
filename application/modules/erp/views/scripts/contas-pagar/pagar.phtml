@@ -1,0 +1,52 @@
+<?php
+if (!($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+$item = $this->model->adjustToView($this->data);
+if (!empty($this->data['data_pagamento'])):
+    ?>
+    <table class="listagem">
+        <tbody>
+            <tr>
+                <th>Fornecedor</th>
+                <td><?php echo $item['fornecedor']; ?></td>
+            </tr>
+            <tr>
+                <th>Data de Vencimento</th>
+                <td><?php echo $item['data_vencimento']; ?></td>
+            </tr>
+            <tr>
+                <th>Valor</th>
+                <td><?php echo $item['valor']; ?></td>
+            </tr>
+            <tr>
+                <th>Data de Pagamento</th>
+                <td><?php echo $item['data_pagamento']; ?></td>
+            </tr>
+            <tr>
+                <th>Valor Pago</th>
+                <td><?php echo $item['valor_pago']; ?></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="empty">
+        Essa conta ja foi paga e não pode ser alterada.
+    </div>
+    <button onclick="javascript: history.back() ;">Cancelar</button>
+    <?php
+else:
+    ?>
+    <table class="listagem">
+        <tr>
+            <th>Data do Vencimento</th>
+            <th>Valor</th>
+        </tr>
+        <tr>
+            <td><?php echo $item['data_vencimento']; ?></td>
+            <td class="valor"><?php echo $item['valor']; ?></td>
+        </tr>
+    </table>
+    <?php echo $this->form; ?>
+<?php endif; ?>

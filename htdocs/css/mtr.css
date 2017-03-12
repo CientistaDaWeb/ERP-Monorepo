@@ -1,0 +1,181 @@
+#logo{
+    display: none;
+}
+.container_12{
+    width: 100%;
+    margin: 0;
+}
+.folha{
+    width: 21.4cm;
+    display: inline-block;
+    overflow: hidden;
+    padding-left: 0cm;
+    line-height: 0.6cm;
+    font-size: 14px;
+    margin-left: 0cm;
+}
+.campo{
+    overflow: hidden;
+    display: block;
+    height: 0.8cm;
+    padding-left: 0.5cm;
+}
+.box{
+    clear: both;
+    display: block;
+    overflow: hidden;
+}
+#box_gerador{
+}
+#gerador_razao_social{
+    width: 13.5cm;
+}
+#gerador_cnpj{
+    width: 5.5cm;
+}
+#gerador_endereco{
+    width: 13.5cm;
+}
+#gerador_municipio{
+    width: 5.5cm;
+}
+#gerador_responsavel{
+    width: 13.5cm;
+    display: block;
+}
+#gerador_telefone{
+    width: 4cm;
+}
+#gerador_ramal{
+    width: 1.5cm;
+}
+#box_residuos{
+    margin-top: 0.9cm;
+    height: 4.5cm;
+    overflow: hidden;
+}
+#box_residuos table{
+    border-collapse: colapse;
+}
+#box_residuos td{
+    text-align: center;
+    vertical-align: top;
+    margin: 0 0.07cm;
+    line-height: 0.8cm;
+    display: inline-block;
+    float: left;
+}
+#box_residuos .fonte{
+    width: 2.5cm
+}
+#box_residuos .descricao{
+    width: 7cm;
+}
+#box_residuos .unidade{
+    width: 2.5cm;
+    text-align: right;
+}
+#box_residuos .qtde{
+    width: 3cm;
+}
+#box_residuos .onu{
+    text-align: right;
+    width: 3cm;
+}
+#box_residuos .td{
+    width: 1.5cm;
+}
+#box_transportador{
+    margin-top: 0.2cm;
+}
+#transportador_razao_social{
+    width: 13.8cm;
+}
+#transportador_cnpj{
+    width: 5.2cm;
+}
+#transportador_endereco{
+    width: 10.5cm;
+}
+#transportador_cep{
+    width: 3cm;
+}
+#transportador_municipio{
+    width: 5.5cm;
+}
+#transportador_condutor{
+    width: 9.5cm;
+}
+#transportador_fone{
+    width: 5cm;
+}
+#transportador_lo{
+    width: 4.7cm;
+}
+#transportador_condutor_cpf{
+    width: 6cm;
+}
+#transportador_equipamento{
+    width: 8.5cm;
+}
+#transportador_placa{
+    width: 5cm;
+}
+
+#box_destinatario{
+    margin-top: 1cm;
+}
+#destinatario_razao_social{
+    width: 13.5cm;
+}
+#destinatario_razao_cnpj{
+    width: 5cm;
+}
+#destinatario_endereco{
+    width: 9cm;
+}
+#destinatario_cep{
+    width: 3.3cm;
+}
+#destinatario_municipio{
+    width: 5.6cm;
+}
+#destinatario_uf{
+    width: 1.2cm;
+}
+#destinatario_lo{
+    width: 6cm;
+    margin-left: 2.5cm
+}
+#destinatario_fepam{
+    width: 6.4cm;
+    margin-left: 4cm
+}
+#destinatario_motivo{
+    width: 18.5cm;
+    height: 1.4cm;
+}
+#destinatario_responsavel{
+    width: 9.4cm;
+}
+#destinatario_fone{
+    width: 4.6cm;
+}
+#destinatario_email{
+    width: 5.5cm;
+}
+#box_descricao{
+    height: 2.5cm;
+    margin-top: 0.7cm;
+    margin-left: 0.5cm;
+}
+#box_responsavel{
+    margin-top: 0.5cm;
+}
+#box_responsavel .campo{
+    width: 7.5cm;
+    margin-right: 9.9cm;
+    margin-left: 1cm;
+    margin-top: 0.4cm;
+    height:0.5cm;
+}

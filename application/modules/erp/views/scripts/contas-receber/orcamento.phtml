@@ -1,0 +1,231 @@
+<div class="grid_12">
+    <?php
+    if (!($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    /*
+      if (isset($this->model->_addButton)):
+      echo $this->partial('partials/btAdicionar.phtml', array(
+      'controller' => $this->controller,
+      'module' => $this->module,
+      'message' => $this->model->getOption('buttons', 'add')
+      ));
+      endif;
+     */
+    $totalGerar = 0;
+    if (!empty($this->items)):
+        ?>
+        <table class="listagem">
+            <thead>
+                <tr>
+                    <td colspan="12">
+                        <div class="error">Não esqueça de conferir o cep do endereço antes de gerar as faturas!</div>
+                    </td>
+                </tr>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Vencimento</th>
+                    <th>Valor</th>
+                    <th>Data do Pagamento</th>
+                    <th>Valor Pago</th>
+                    <th>Valor Retido</th>
+                    <th>CT-e</th>
+                    <th>CT-e Acqualife</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $WM = new WS_Money();
+                $total = 0;
+                $totalPago = 0;
+                $totalRetido = 0;
+                foreach ($this->items AS $item):
+                    $total += $item['valor'];
+                    $totalPago += $item['valor_pago'];
+                    $totalRetido += $item['valor_retido'];
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr class="<?php echo $item['class']; ?>">
+                        <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td align="center"><button class="btPagar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'pay'); ?></button></td>
+                        <td align="center"><?php echo $item['data_vencimento']; ?></td>
+                        <td class="valor"><?php echo $item['valor']; ?></td>
+                        <td><?php echo $item['data_pagamento']; ?></td>
+                        <td class="valor"><?php echo $item['valor_pago'] ?></td>
+                        <td class="valor"><?php echo $item['valor_retido']; ?></td>
+                        <td class="valor"><?php echo $item['cte_id']; ?></td>
+                        <td class="valor"><?php echo $item['cte_acqualife_id']; ?></td>
+                        <td class="valor"><?php echo $item['linkBoleto']; ?></td>
+                    </tr>
+                    <?php
+                endforeach;
+                $totalGerar = $this->valor_total - $total;
+                ?>
+                <tr class="ui-widget-header">
+                    <th colspan="9">Total em OS</th>
+                    <td colspan="3" class="valor"><?php echo WS_Money::adjustToView($this->valor_total); ?></td>
+                </tr>
+                <tr class="ui-widget-header">
+                    <th colspan="9">Total Emitido</th>
+                    <td colspan="3" class="valor"><?php echo WS_Money::adjustToView($total); ?></td>
+                </tr>
+                <tr class="ui-widget-header">
+                    <th colspan="9">Total Recebido</th>
+                    <td colspan="3" class="valor"><?php echo WS_Money::adjustToView($totalPago); ?></td>
+                </tr>
+                <tr class="ui-widget-header">
+                    <th colspan="9">Total Retido</th>
+                    <td colspan="3" class="valor"><?php echo WS_Money::adjustToView($totalRetido); ?></td>
+                </tr>
+                <tr class="ui-widget-header">
+                    <th colspan="9">Saldo</th>
+                    <td colspan="3" class="valor"><?php echo WS_Money::adjustToView($totalPago + $totalRetido - $total); ?></td>
+                </tr>
+                <?php if ($this->valor_total > $total): ?>
+                    <tr>
+                        <th colspan="12"><div class="empty alignCenter">
+                                Falta gerar <?php echo WS_Money::adjustToView($this->valor_total - $total); ?> em faturas para esse orçamento!
+                            </div></th>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <div class="empty">
+            <?php echo $this->model->getOption('messages', 'empty'); ?>
+        </div>
+    <?php
+    endif;
+    if (!empty($this->cliente['observacoes_faturamento'])):
+        ?>
+        <div class="warning margemT"><?php echo nl2br($this->cliente['observacoes_faturamento']); ?></div>
+        <?php
+    endif;
+    ?>
+    <table class="listagem">
+        <tbody>
+            <tr>
+                <td><h2>Gerar Faturas</h2></td>
+            </tr>
+            <?php if (!empty($this->os)):
+                ?>
+                <tr>
+                    <td><h3>Ordens de Serviço</h3></td>
+                </tr>
+                <tr>
+                    <td>
+                        <ul class="listade5">
+                            <?php foreach ($this->os AS $os): ?>
+                                <li><input type="checkbox" name="os[]" value="<?php echo $os['id']; ?>" class="osValor" valor="<?php echo $os['saldo']; ?>" /> <?php echo $os['orcamento_id'] . '.' . $os['sequencial'] . ' (' . WS_Money::adjustToView($os['saldo']) . ')'; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </td>
+                </tr>
+            <?php else: ?>
+                <tr>
+                    <td><div class="warning">Nenhuma OS a Faturar!</div></td>
+                </tr>
+            <?php endif; ?>
+            <tr>
+                <td class="valor">
+                    <label for="valor">Valor</label>
+                    <input type="text" class="filter money" name="valor" id="valor" value="<?php echo WS_Money::adjustToDb($totalGerar); ?>" />
+                    <label for="parcelas">Parcelas</label>
+                    <select name="parcelas" id="parcelas">
+                        <?php for ($i = 1; $i <= 12; $i++): ?>
+                            <option value="<?php echo $i; ?>" <?php echo($i == '3') ? 'selected="selected"' : ''; ?>><?php echo $i; ?></option>
+                        <?php endfor; ?>
+                    </select>
+                    <label>Periodicidade</label>
+                    <select name="periodicidade" id="periodicidade">
+                        <option value="30">Mensal</option>
+                        <option value="15">Quinzenal</option>
+                        <option value="7">Semanal</option>
+                    </select>
+                    <button type="button" id="gerarFaturasReceber">Gerar faturas</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <?php
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <div id="<?php echo $this->controller; ?>ModalParcelas" class="modal" title="Confira os dados"></div>
+        <script type="text/javascript" src="/js/submodulo.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#OrcamentosTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id: '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+                $('#ContasReceberPagarForm').die('submit').live('submit', function () {
+                    $(this).ajaxSubmit({
+                        type: 'post',
+                        url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/pagar/",
+                        success: function (data) {
+                            $('#<?php echo $this->controller; ?>Modal').html(data);
+                        }
+                    });
+                    return false;
+                });
+                $("#<?php echo $this->controller; ?>ModalParcelas").die('dialog').unbind('dialog').dialog({
+                    modal: true,
+                    autoOpen: false,
+                    show: "slide",
+                    hide: "slide",
+                    width: '600',
+                    close: function () {
+                        $('#OrcamentosTabs').tabs("load", $('#OrcamentosTabs').tabs('option', 'selected'));
+                    }
+                });
+                $('#gerarFaturasReceber').click(function () {
+                    var valor = $('#valor').val();
+                    var parcelas = $('#parcelas').val();
+                    var periodicidade = $('#periodicidade').val();
+                    var os = new Array();
+                    $('.osValor:checked').each(function () {
+                        os.push($(this).val());
+                    });
+                    $.get('/<?php echo $this->module . '/submodulo/' . $this->controller; ?>/gerarparcelas/',
+                            {'valor': valor, 'parcelas': parcelas, 'periodicidade': periodicidade, 'orcamento_id': '<?php echo $this->data['parent_id']; ?>', 'os': os},
+                            function (data) {
+                                $("#<?php echo $this->controller; ?>ModalParcelas").html(data).dialog('open');
+                            }
+                    );
+                });
+                $('#<?php echo $this->controller; ?>GerarParcelasForm').die('submit').live('submit', function () {
+                    $(this).ajaxSubmit({
+                        type: 'post',
+                        url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/salvarparcelas/",
+                        success: function (data) {
+                            $('#<?php echo $this->controller; ?>ModalParcelas').html(data);
+                            $('.osValor:checked').each(function () {
+                                $.get('/<?php echo $this->module . '/save/Ordens-Servico'; ?>/faturar/' + $(this).attr('value'));
+                            });
+                        }
+                    });
+                    return false;
+                });
+                $('.osValor').die('change').unbind('change').change(function () {
+                    var total = 0;
+
+                    $('.osValor:checked').each(function () {
+                        total += parseFloat($(this).attr('valor'));
+                    });
+                    $('#valor').val(total);
+                });
+            });
+        </script>
+    <?php endif; ?>
+</div>

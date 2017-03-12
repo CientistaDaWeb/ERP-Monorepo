@@ -1,0 +1,203 @@
+<?php
+$configs = Zend_Registry::get('application');
+echo $this->doctype();
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+    <head>
+        <?php
+        if (isset($this->view->title)):
+            $this->headTitle($this->view->title);
+        endif;
+        $this->headTitle('Acquasana Tratamento de Efluentes');
+        $this->headTitle()->setSeparator(' - ');
+        echo $this->headTitle();
+
+        /* Adiciona as Meta Tags */
+        $this->headMeta()
+                ->appendHttpEquiv('Content-Type', 'text/html;charset=UTF-8')
+                ->appendHttpEquiv('Content-Language', 'pt-BR')
+                ->appendName('author', 'Fernando Henrique - Webscientist')
+                ->appendName('robots', 'index,follow')
+                ->appendName('googlebot', 'index,follow')
+                ->appendName('google', 'notranslate')
+                ->appendName('Content-Language', 'pt-br')
+                ->appendName('reply-to', $configs->cliente->email)
+                ->appendName('google-site-verification', $configs->google->verification);
+        echo $this->headMeta();
+        /* Adiciona as Meta Tags */
+        $this->headLink()
+                ->appendStylesheet('/css/proxima-font-face.css')
+                ->appendStylesheet('/css/style.css')
+                ->appendStylesheet('/css/grid.css')
+                ->appendStylesheet('/css/site.css')
+                ->appendStylesheet('/css/jquery.jgrowl.css')
+                ->headLink(array('rel' => 'favicon', 'href' => '/favicon.ico'), 'PREPEND')
+                ->headLink(array('rel' => 'shortcut icon', 'href' => '/favicon.ico', 'type' => 'image/x-icon'), 'PREPEND');
+        echo $this->headLink();
+
+        $this->headScript()
+                ->appendFile('/js/jquery-1.8.0.min.js')
+                ->appendFile('/js/jquery-ui-1.8.23.custom.min.js')
+                ->appendFile('/js/jquery.jgrowl.js')
+                ->appendFile('/js/jquery.galleriffic.js')
+                ->appendFile('/js/jquery.opacityrollover.js')
+                ->appendFile('/js/superfish.js')
+                ->appendFile('/js/jquery.placeholder.js')
+        ;
+        echo $this->headScript();
+        if (!empty($configs->analytics->ua)) :
+            ?>
+            <script type="text/javascript">
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', '<?php echo $configs->analytics->ua; ?>']);
+                _gaq.push(['_trackPageview']);
+                (function() {
+                    var ga = document.createElement('script');
+                    ga.type = 'text/javascript';
+                    ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(ga, s);
+                })();
+            </script>
+        <?php endif; ?>
+        <script>
+            $(function() {
+                $('input, textarea').placeholder();
+                $(".sf-menu").superfish({
+                    animation: {
+                        height: 'show'
+                    },
+                    cssArrows: false,
+                    delay: 600
+                });
+                /*
+                 $('#menu_area_restrita, #menu_flutuante').hover(
+                 function() {
+                 $("#menu_flutuante").show();
+                 }, function() {
+                 $("#menu_flutuante").hide();
+                 }
+                 );
+                 */
+
+            });
+        </script>
+    </head>
+    <body>
+
+        <div id="fb-root"></div>
+        <script>
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id))
+                    return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/pt_BR/sdk.js#xfbml=1&appId=459292927530680&version=v2.0";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
+        <div id="header">
+            <div id="menunav">
+                <div class="container_12">
+                    <div class="grid_12">
+                        <?php echo $this->SiteMenu()->menu()->setUlClass('sf-menu'); ?>
+                        <div id="menu_area_restrita">
+                            <a href="/cliente">Área Restrita</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="container_12">
+                <div class="grid_12">
+                    <div id="menu_flutuante">
+                        <div id="form_login">
+                            <?php
+                            /*
+                              $form = new AuthCliente_Form();
+                              $form->setAction('/cliente/auth');
+                              echo $form;
+                             * */
+                            ?>
+                            <form method="POST" id="Form_Login" action="/cliente/auth" enctype="application/x-www-form-urlencoded">
+                                <input type="text" id="usuario" placeholder="LOGIN" />
+                                <input type="password" id="senha" placeholder="SENHA" />
+                                <button id="entrar" type="submit">ENVIAR</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <?php if (!isset($this->noHeader)): ?>
+                <div class="container_12">
+                    <div class="grid_12">
+                        <div id="header_content">
+                            <div id="logo">
+                                <a href="/" title="Home">
+                                    <img src="/css/images/bg_header.png" alt="Acquasana" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="container_12">
+                    <div class="grid_12">
+                        <img src="/css/images/index.png"  />
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php echo $this->layout()->content; ?>
+        <div id="footer">
+            <div class="container_12">
+                <div class="wrapper grid_12">
+                    <div class="grid_6 alpha">
+                        <address>
+                            54 3055.3686 . <a href="mailto:acquasana@acquasana.com.br">acquasana@acquasana.com.br</a><br />
+                            Bento Gonçalves . RS
+                        </address>
+                    </div>
+                    <div class="grid_2 prefix_1">
+                        <div class="fb-like" data-href="https://www.facebook.com/acquasanaefluentes" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
+                    </div>
+                    <div class="grid_3 omega">
+                        <ul id="links">
+                            <li><a href="/contato" class="email">E-mail</a></li>
+                            <li><a href="https://www.facebook.com/acquasanaefluentes" target="_blank" class="facebook">Facebook</a></li>
+                            <li><a href="tel:+555430553686" class="skype">Skype</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div id="assinaturaWS">
+            <a href="http://www.cientistadaweb.com.br" rel="developer" title="Cientista da Web" target="_blank">Desenvolvido pelo Cientista da Web</a>
+        </div>
+    </body>
+    <script type="text/javascript">
+        $(function() {
+<?php
+$tpl = '$.jGrowl("%s", { theme: "%s", life: 10000 });';
+echo $this->flashMessenger('', $tpl);
+?>
+        });
+        var $buoop = {}
+        $buoop.ol = window.onload;
+        window.onload = function() {
+            try {
+                if ($buoop.ol)
+                    $buoop.ol();
+            } catch (e) {
+            }
+            var e = document.createElement("script");
+            e.setAttribute("type", "text/javascript");
+            e.setAttribute("src", "http://browser-update.org/update.js");
+            document.body.appendChild(e);
+        }
+    </script>
+</html>

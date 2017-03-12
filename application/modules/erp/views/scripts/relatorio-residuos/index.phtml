@@ -1,0 +1,99 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<div class="hidden">
+    <form method="post" id="Form_Relatorio_Contratos">
+        <table class="listagem">
+            <tr>
+                <th>Data Inicial</th>
+                <th><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></th>
+                <th>Data Final</th>
+                <th><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></th>
+                <th rowspan="6"><button type="submit">Filtrar</button></th>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="margem-t clear"></div>
+<?php if (!empty($this->items)): ?>
+    <table class="listagem">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Resíduo</th>
+                <th>Tipo</th>
+                <th>OS</th>
+                <th>Volume</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $i = 0;
+            $qtde = $total = array('D' => 0, 'I' => 0, 'G' => 0, 'T' => 0);
+            foreach ($this->items AS $item):
+                $total[$item['tipo']] += $item['valor'] * $item['qtde'];
+                $qtde[$item['tipo']] += $item['qtde'];
+                $item = $this->model->adjustToView($item);
+                $i++;
+                ?>
+                <tr>
+                    <td><?php echo $i; ?></td>
+                    <td><?php echo $item['servico']; ?></td>
+                    <td><?php echo $item['tipo']; ?></td>
+                    <td align="center"><?php echo $item['orcamento_id']; ?>.<?php echo $item['sequencial']; ?> - <?php echo WS_Date::adjustToView($item['data_coleta']); ?></td>
+                    <td align="center"><?php echo $item['qtde']; ?> <?php echo $item['unidade']; ?></td>
+                    <td align="center"><?php echo WS_Money::adjustToView($item['valor']); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <div class="margem-t">
+        <table class="listagem">
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Quantidade</th>
+                    <th>Total</th>
+                    <th>% Faturado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Doméstico</th>
+                    <td align="center"><?php echo $qtde['D']; ?></td>
+                    <td align="center"><?php echo WS_Money::adjustToView($total['D']); ?></td>
+                    <td align="center">% <?php echo number_format($total['D'] * 100 / $this->faturado, 2, '.', ','); ?></td>
+                </tr>
+                <tr>
+                    <th>Industrial</th>
+                    <td align="center"><?php echo $qtde['I']; ?></td>
+                    <td align="center"><?php echo WS_Money::adjustToView($total['I']); ?></td>
+                    <td align="center">% <?php echo number_format($total['I'] * 100 / $this->faturado, 2, '.', ','); ?></td>
+                </tr>
+                <tr>
+                    <th>Genérico</th>
+                    <td align="center"><?php echo $qtde['G']; ?></td>
+                    <td align="center"><?php echo WS_Money::adjustToView($total['G']); ?></td>
+                    <td align="center">% <?php echo number_format($total['G'] * 100 / $this->faturado, 2, '.', ','); ?></td>
+                </tr>
+                <tr>
+                    <th>Transporte</th>
+                    <td align="center"><?php echo $qtde['T']; ?></td>
+                    <td align="center"><?php echo WS_Money::adjustToView($total['T']); ?></td>
+                    <td align="center">% <?php echo number_format($total['T'] * 100 / $this->faturado, 2, '.', ','); ?></td>
+                </tr>
+                <tr>
+                    <th>Ordem Serviço Total</th>
+                    <td align="center">-</td>
+                    <td align="center"><?php echo WS_Money::adjustToView($this->faturado); ?></td>
+                    <td align="center">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>

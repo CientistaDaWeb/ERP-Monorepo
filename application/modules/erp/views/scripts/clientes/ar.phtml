@@ -1,0 +1,118 @@
+<style>
+    #logo{
+        display: none;
+    }
+    .folha{
+        margin-left: 1.3cm;
+        width: 18cm;
+    }
+    .campo{
+        text-transform: uppercase;
+        letter-spacing: 0.33cm;
+        width: 13.6cm;
+        margin-left: 2.1cm;
+        margin-top: 0.2cm;
+        line-height: 0.68cm;
+        font-size: 12px;
+        float: left;
+        overflow: hidden;
+    }
+    #data{
+        margin-top: 2.5cm;
+        margin-bottom: 2.1cm;
+        font-size: 18px;
+        margin-left: 1.3cm;
+        overflow: hidden;
+    }
+    #data div{
+        float: left;
+        display: inline;
+    }
+    #dia, #mes, #ano{
+        text-align: center;
+        padding: 0 0.2cm;
+        width: 0.4cm;
+    }
+    #ano{
+        width: 0.8cm;
+    }
+    #dia, #mes{
+        margin-right: 0.1cm;
+    }
+    #razao_social, #endereco{
+        height: 1.3cm;
+    }
+    #cidade{
+        width: 11.1cm;
+    }
+    #uf{
+        width: 1cm;
+        margin-left: 0;
+    }
+    #cep{
+        letter-spacing: 0.66cm;
+        font-size: 18px;
+        margin-top: 0.3cm;
+    }
+    .breakline{
+        clear: both;
+    }
+    .cliente .campo{
+        width: 15cm;
+        letter-spacing: 0.23cm;
+        margin-left: 0.35cm;
+        height: 0.9cm;
+    }
+    input, textarea{
+        width: 100%;
+        padding: 0;
+        border: 0;
+        vertical-align: top;
+    }
+    #cliente_razao_social{
+        margin-top: 1.5cm;
+    }
+    #cliente_cep{
+        width: 3.7cm;
+    }
+    #cliente_cidade{
+        width: 6.3cm;
+        margin-left: 0;
+    }
+    #cliente_uf{
+        width: 0.90cm;
+        margin-left: 0;
+    }
+    #cliente_pais{
+        width: 4.2cm;
+        margin-left: 0;
+    }
+</style>
+<?php echo $this->partial('partials/instrucao_impressao.phtml'); ?>
+<?php if (!empty($this->empresa)): ?>
+    <div class="folha">
+        <div id="data">
+            <div id="dia"><input type="text" value="<?php echo date('d'); ?>" /></div>
+            <div id="mes"><input type="text" value="<?php echo date('m'); ?>" /></div>
+            <div id="ano"><input type="text" value="<?php echo date('Y'); ?>" /></div>
+        </div>
+        <textarea class="campo" id="razao_social"><?php echo $this->empresa['razao_social']; ?></textarea>
+        <textarea class="campo" id="endereco"><?php echo $this->empresa['endereco'] . ', ' . $this->empresa['numero'] . ' ' . $this->empresa['complemento']; ?></textarea>
+        <input type="text" class="campo" id="cidade" value="<?php echo $this->empresa['cidade']; ?>" />
+        <input type="text" class="campo" id="uf" value="<?php echo $this->empresa['uf']; ?>" />
+        <input type="text" class="campo" id="cep" value="<?php echo str_replace('-', '', $this->empresa['cep']); ?>" />
+    </div>
+    <?php
+endif;
+if (!empty($this->cliente)):
+    ?>
+    <div class="breakline"></div>
+    <div class="folha cliente">
+        <input id="cliente_razao_social" class="campo" value="<?php echo $this->cliente['razao_social']; ?>" />
+        <input id="cliente_endereco" class="campo" value="<?php echo $this->cliente['endereco']['endereco'] . ', ' . $this->cliente['endereco']['numero'] . ' ' . $this->cliente['endereco']['complemento']; ?>" />
+        <input id="cliente_cep" class="campo" value="<?php echo $this->cliente['endereco']['cep']; ?>" />
+        <input id="cliente_cidade" class="campo" value="<?php echo $this->cliente['endereco']['cidade']; ?>" />
+        <input id="cliente_uf" class="campo" value="<?php echo $this->cliente['endereco']['uf']; ?>" />
+        <input id="cliente_pais" class="campo" value="<?php echo $this->cliente['endereco']['pais']; ?>" />
+    </div>
+<?php endif; ?>

@@ -1,0 +1,47 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<div class="hidden">
+    <button type="button" id="btImprimir">Imprimir</button>
+</div>
+<?php if (!empty($this->items)): ?>
+    <form action="/<?php echo $this->module.'/print/'.$this->controller.'/etiquetas'; ?>" method="POST">
+        <div class="print">
+            <table class="listagem">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Cliente</th>
+                        <th>Último Orçamento</th>
+                        <th>Última Ordem de Serviço</th>
+                        <th>Administrador de Condomínio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($this->items AS $item):
+                        $item = $this->model->ajusteRelatorio($item);
+                        ?>
+                        <tr>
+                            <td><input type="checkbox" name="cliente_id[]" value="<?php echo $item['id']; ?>" /></td>
+                            <td><a class="buttonLink hidden" target="_blank" href="/<?php echo $this->module; ?>/Clientes/formulario/<?php echo $item['id']; ?>" title="<?php echo $this->model->getOption('buttons', 'go'); ?>"><?php echo $this->model->getOption('buttons', 'go'); ?></a> <?php echo $item['razao_social']; ?></td>
+                            <td align="center"><?php echo $item['orcamento']; ?></td>
+                            <td align="center"><?php echo $item['ordem_servico']; ?></td>
+                            <td><?php echo $item['administrador']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="4"></th>
+                        <td><button type="submit">Selecionar Clientes</button></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>

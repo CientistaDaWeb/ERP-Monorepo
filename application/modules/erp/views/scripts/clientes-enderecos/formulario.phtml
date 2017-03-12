@@ -1,0 +1,25 @@
+<?php
+if (!isset($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+echo $this->form;
+?>
+<script>
+<?php if (empty($this->data['municipio_id'])): ?>
+        $('#municipio_id').find('option').remove().end().append('<option value="">Selecione o estado</option>');
+<?php endif; ?>
+    $('#estado_id').die('change').unbind('change').change(function() {
+        var estado_id = $(this).select().val();
+        $.getJSON("/<?php echo $this->module; ?>/submodulo/Municipios/json//" + estado_id, function(result) {
+            if (result != '') {
+                $('#municipio_id').find('option').remove().end();
+                $.each(result, function(id, obj) {
+                    $('#municipio_id').append($("<option />").val(obj).text(id));
+                });
+            }
+
+        });
+    });
+</script>

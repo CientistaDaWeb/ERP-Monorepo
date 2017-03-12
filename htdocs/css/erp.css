@@ -1,0 +1,487 @@
+body{
+    background: url(images/background_ws.png) top left repeat #999;
+    font-size: 0.9em;
+}
+strong, b{
+    font-weight: bold;
+}
+em, i{
+    font-style: italic;
+}
+a img{
+    border: 0;
+}
+ul.errors li {
+    color: #990000;
+    font-size: 80%;
+    font-style: italic;
+    margin-top: 5px;
+}
+#link-sair{
+    color: #FFF;
+    display: block;
+    background: #900;
+    padding: 5px;
+    width: 150px;
+    margin: 10px auto 0;
+}
+.box-logado{
+    text-align: center;
+}
+h1{
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: right;
+    font-size: 1.2em;
+}
+h2{
+    margin-bottom: 5px;
+    font-size: 1.1em;
+    border-bottom: 2px solid #003D58;
+    padding-bottom: 3px;
+    color: #003D58;
+}
+h3{
+    margin-bottom: 5px;
+    font-size: 1.1em;
+    padding: 3px 5px;
+    background: #003D58;
+    color: #FFF;
+    font-weight: bold;
+}
+input[type="text"],input[type="password"],input[type="file"], select, textarea{
+    border-style: solid;
+    padding: 3px 5px;
+    width: 580px;
+    border: 1px solid #CCC;
+}
+.modal input[type="text"], .modal input[type="password"],input[type="file"], .modal select, .modal textarea{
+    width: 320px;
+}
+textarea.mce{
+    width: 100%;
+    height: 200px;
+}
+select{
+    width: auto !important;
+}
+.header{
+    background: #003D58;
+}
+.logoSite{
+    width: 180px;
+    height: 113px;
+    margin: 0 auto;
+    display: block;
+    overflow: hidden;
+    background: url(images/logo.jpg) top left no-repeat;
+    text-indent: -9000px;
+}
+dt label{
+    font-weight: bold;
+}
+dt label.required:after{
+    content: ' *';
+}
+dl dt{
+    margin-bottom: 3px;
+}
+dl dd{
+    margin-bottom: 7px;
+}
+.zend_form{
+    float: left;
+    display: inline;
+    min-width: 200px;
+}
+div.error{
+    clear: both;
+}
+td, th{
+    vertical-align: middle;
+}
+td.valor{
+    text-align: center;
+}
+th{
+    font-weight: bold;
+}
+table.listagem{
+    width: 100%;
+    border-collapse: collapse;
+    clear: both;
+}
+table.listagem a{
+    color: blue;
+    cursor: pointer;
+}
+table.listagem th{
+    padding: 7px 5px;
+}
+table.listagem .even{
+    background: #BFCBE4;
+}
+table.listagem .odd{
+    background: #EEEEEE;
+}
+table.listagem tbody tr:hover{
+    background: #3E7D9F !important;
+    color: #FFF;
+}
+table.listagem td.ui-state-active{
+    border: 0;
+}
+table.listagem tbody td{
+    border-right: 1px solid #CCC;
+    padding: 5px;
+    min-width: 50px;
+}
+table.listagem tbody tr{
+    border-bottom: 1px solid #CCC;
+}
+table.listagem tbody td:first-child{
+    text-align: center;
+}
+table.listagem tbody td:last-child{
+    border-right: 0px;
+}
+.paddding5{
+    padding: 5px;
+}
+.padding10{
+    padding: 10px;
+}
+.borda{
+    border: 1px solid #003D58;
+}
+.bordaR{
+    border: 0;
+    border-right: 1px solid;
+}
+#btExcluir{
+    width: 44px;
+    border: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    background: none;
+}
+div.botoes{
+    clear: both;
+    margin: 10px 0;
+    overflow: hidden;
+    display: block;
+}
+.dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate{
+    padding: 5px;
+    font-size: 80%;
+}
+.dataTables_length {
+    float:left;
+    width:40%;
+}
+.dataTables_length select{
+    width: 80px;
+}
+.dataTables_filter {
+    float:right;
+    text-align:right;
+    width:50%;
+}
+.dataTables_filter input{
+    width: 250px;
+}
+#cancelar{
+    float: right;
+}
+.ui-widget-content{
+    overflow: hidden;
+}
+hr.clear{
+    clear: both;
+    margin: 5px 0;
+    border: 0;
+    border-bottom: 2px solid #152E47;
+    height: 10px;
+}
+.fc-button-next, .fc-button-prev{
+    overflow: hidden;
+}
+.fc-header-title{
+    border: 0;
+}
+.topButtons{
+    margin-bottom: 10px;
+}
+.topButtons a{
+    margin-right: 10px;
+}
+.btAdicionar{
+    margin-bottom: 10px;
+}
+.btAdicionar.excecao{
+    margin-bottom: 0;
+}
+.btEditar, .btExcluir{
+    margin: 0 auto;
+}
+.DataTables_sort_wrapper span{
+    float: left;
+}
+dd fieldset dl{
+    padding-left: 10px;
+}
+fieldset{
+    border: 0;
+}
+fieldset legend{
+    font-size: 110%;
+    font-weight: bold;
+    border-bottom: 1px solid #003D58;
+    width: 100%;
+    margin-bottom: 5px;
+}
+#tableServicosOrcamentos{
+    margin: 10px 0;
+}
+.filter.money{
+    width: 120px !important;
+}
+.filter.qtde{
+    width: 50px !important;
+}
+.filter.date{
+    width: 110px !important;
+}
+.filter.hour{
+    width: 80px !important;
+}
+.filter.time{
+    width: 85px !important;
+}
+.filter.number{
+    width: 80px !important;
+}
+.filter.ip{
+    width: 140px;
+}
+.filter.mac-address{
+    width: 130px;
+}
+select.mes{
+    width: 120px;
+}
+select.ano{
+    width: 150px;
+}
+.float{
+    display: inline;
+}
+.float.left{
+    float: left;
+}
+.float.right{
+    float: right;
+}
+.ui-button-icon-only .ui-button-icon-primary{
+    left: 50% !important;
+}
+iframe, iframe html{
+    z-index: 0;
+}
+.ui-dialog *{
+    z-index: 9000;
+}
+.listagemModulos li ul{
+    padding-left: 15px;
+}
+.listagemModulos li{
+    margin: 5px 0;
+}
+.buttonSpace{
+    width: 35px !important;
+    text-align: center;
+    vertical-align: middle;
+}
+#PHPSysInfo{
+    margin: -10px;
+    margin-left: -15px;
+    width: 980px;
+}
+.ui-buttonset .ui-button{
+    margin: 0;
+}
+#formSearch{
+    text-align: right;
+    clear: both;
+    padding: 5px;
+}
+#formSearch input{
+    margin-right: 10px;
+}
+.pagination{
+    text-align: center;
+    margin: 10px 0;
+}
+.busca-filtro{
+    text-align: center;
+    margin: 10px 0;
+    font-style: italic;
+}
+.vertical-tabs.ui-tabs-nav{
+    width: 201px;
+    float: left;
+    display: inline;
+    padding: 5px;
+    padding-right: 0;
+    height: 260px;
+    overflow: auto;
+}
+.vertical-tabs.ui-tabs-nav li{
+    clear: both;
+    margin-bottom: 2px !important;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #FFF;
+}
+.vertical-tabs.ui-tabs-nav li a{
+    display: block;
+    width: 175px;
+}
+.excecoes{
+    background: #A7D9F5;
+    border: 1px solid #CCC;
+}
+.sitesLista li{
+    float: left;
+    display: inline;
+    width: 153px;
+    margin-bottom: 5px;
+}
+#auth-form{
+    width: 250px;
+    margin: 35px auto;
+    border: 1px solid #CCC;
+    overflow: hidden;
+    padding: 20px;
+}
+#auth-form input{
+    width: 240px;
+}
+.upload{
+    background: #EFEFEF;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+/*
+.container_12 {
+    margin-left: auto;
+    margin-right: auto;
+    width: 960px;
+}
+*/
+.ui-tabs .ui-tabs-panel{
+    padding: 10px 0;
+}
+#menu li ul{
+    width: 200px;
+}
+#wsadmin .title{
+    font-size: 28px;
+    text-align: center;
+    color: #3E7D9F;
+}
+#header{
+    padding: 10px 0;
+}
+#header, #content, #footer {
+    clear: both;
+    overflow: hidden;
+    padding: 10px 0;
+}
+#footer {
+    background: #3E7D9F;
+    color: #FFFFFF;
+    text-align: center;
+}
+#footer address {
+    font-style: normal;
+    text-align: center;
+}
+#footer address b {
+    font-size: 16px;
+}
+#menu{
+    height: 36px !important;
+}
+
+.pago, .greenAlert{
+    background: #acdd4a !important;
+}
+.aberto, .yellowAlert{
+    background: #FFEFA4 !important;
+}
+.atrasada, .redAlert{
+    background: #FF6F6F !important;
+}
+.box{
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.subbox{
+    border: 1px solid #CCC;
+    padding: 5px;
+    -moz-box-shadow: 0px 0px 5px #cccccc;
+    box-shadow: 0px 0px 5px #cccccc;
+    -webkit-box-shadow: 0px 0px 5px #cccccc;
+}
+.subbox h2{
+    text-align: center;
+    border-bottom: 1px solid #0078ae;
+    margin-bottom: 5px;
+    font-size: 100%;
+    color: #0078ae;
+}
+#content{
+    background: #FFF;
+}
+.destaque{
+    background: #FF6F6F;
+}
+#calendarProjetos span.fc-event-title{
+    color: #000;
+}
+.listade5 li{
+    float: left;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+p.description{
+    font-style: italic;
+    font-size: 90%;
+}
+#pesquisaSatisfacao #fechaModal{
+    font-size: 70%;
+}
+#pesquisaSatisfacao .respostas{
+    float: left;
+    display: inline-block;
+}
+#pesquisaSatisfacao .description{
+    float: left;
+    display: inline-block;
+    width: 300px;
+    padding: 10px;
+    border: 1px dotted #CCC;
+    margin-left: 50px;
+}
+.fundo-ppci{
+    background: #3A7FB8;
+}
+.fundo-hidro{
+    background: #34BB9B;
+}
+.fundo-atendimento{
+    background: #E67E1D;
+}

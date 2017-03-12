@@ -1,0 +1,86 @@
+<?php
+if (!isset($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+?>
+<div id="CtesTabs">
+    <ul>
+        <?php if (empty($this->data['id'])): ?>
+            <li><a href="#Dados">Dados</a></li>
+        <?php else: ?>
+            <li><a href="/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/dados//<?php echo $this->data['id']; ?>">Dados</a></li>
+        <?php endif; ?>
+        <li><a href="/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/faturas//<?php echo $this->data['id']; ?>">Faturas</a></li>
+        <!--<li><a href="/<?php echo $this->module; ?>/submodulo/Ordens-Servico/cte//<?php echo $this->data['id']; ?>">Ordens de Serviço</a></li>-->
+        <li><a href="/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/arquivos//<?php echo $this->data['id']; ?>">Arquivos</a></li>
+    </ul>
+    <?php if (empty($this->data['id'])): ?>
+        <div id="Dados">
+            <div class="grid_12">
+                <?php if (empty($this->data['id'])): ?>
+                    <div class="error">Não esqueça de conferir o cep do endereço antes de gerar as faturas!</div>
+                <?php endif; ?>
+                <?php echo $this->form; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+<script>
+    $(function() {
+        $("#CtesTabs").tabs({
+            spinner: carregando,
+            ajaxOptions: {
+                error: function(xhr, status, index, anchor) {
+                    if (status == 'error') {
+                        $(anchor.hash).html('Erro ao carregar o conteúdo');
+                    } else {
+                        $(anchor.hash).html(carregando);
+                    }
+                }
+            }
+<?php echo (empty($this->data['id'])) ? ', disabled: [1, 2, 3]' : ''; ?>
+        });
+        $('#endereco_id').find('option').remove().end().append('<option value="">Selecione o remetente</option>');
+        $('#destinatario_endereco_id').find('option').remove().end().append('<option value="">Selecione o destinatário</option>');
+        $('#expedidor_endereco_id').find('option').remove().end().append('<option value="">Selecione o expedidor</option>');
+        $('#recebedor_endereco_id').find('option').remove().end().append('<option value="">Selecione o recebedor</option>');
+        $('#cliente_id').die('change').unbind('change').change(function() {
+            var cliente_id = $(this).select().val();
+            $.getJSON("/<?php echo $this->module; ?>/submodulo/Clientes-Enderecos/json//" + cliente_id, function(result) {
+                $('#endereco_id').find('option').remove().end();
+                $.each(result, function() {
+                    $('#endereco_id').append($("<option />").val(this.id).text(this.endereco + ', ' + this.numero + ' - ' + this.municipio));
+                });
+            });
+        });
+        $('#destinatario_id').die('change').unbind('change').change(function() {
+            var cliente_id = $(this).select().val();
+            $.getJSON("/<?php echo $this->module; ?>/submodulo/Clientes-Enderecos/json//" + cliente_id, function(result) {
+                $('#destinatario_endereco_id').find('option').remove().end();
+                $.each(result, function() {
+                    $('#destinatario_endereco_id').append($("<option />").val(this.id).text(this.endereco + ', ' + this.numero + ' - ' + this.municipio));
+                });
+            });
+        });
+        $('#expedidor_id').die('change').unbind('change').change(function() {
+            var cliente_id = $(this).select().val();
+            $.getJSON("/<?php echo $this->module; ?>/submodulo/Clientes-Enderecos/json//" + cliente_id, function(result) {
+                $('#expedidor_endereco_id').find('option').remove().end();
+                $.each(result, function() {
+                    $('#expedidor_endereco_id').append($("<option />").val(this.id).text(this.endereco + ', ' + this.numero + ' - ' + this.municipio));
+                });
+            });
+        });
+        $('#recebedor_id').die('change').unbind('change').change(function() {
+            var cliente_id = $(this).select().val();
+            $.getJSON("/<?php echo $this->module; ?>/submodulo/Clientes-Enderecos/json//" + cliente_id, function(result) {
+                $('#recebedor_endereco_id').find('option').remove().end();
+                $.each(result, function() {
+                    $('#recebedor_endereco_id').append($("<option />").val(this.id).text(this.endereco + ', ' + this.numero + ' - ' + this.municipio));
+                });
+            });
+        });
+    });
+</script>

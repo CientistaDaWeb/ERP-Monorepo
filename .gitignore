@@ -1,0 +1,13 @@
+# WS Hydra
+/htdocs/uploads/*
+!/htdocs/uploads/usuarios/Cara_Ogro.png
+!/htdocs/uploads/default/*
+/.idea
+/htdocs/.htaccess
+/docs/dados-uteis
+/docs/ssh
+/remover
+# fim do WS Hydra
+
+#Acquasana
+.svn/*

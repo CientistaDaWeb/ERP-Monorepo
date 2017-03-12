@@ -1,0 +1,34 @@
+<h1>Certificados</h1>
+<?php if (!empty($this->items)): ?>
+    <table class="listagem">
+        <thead class="ui-widget-header">
+            <tr>
+                <th>Orçamento</th>
+                <th>Data de Tratamento</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $CertificadosModel = new Certificados_Model();
+            $PesquisaSatisfacaoModel = new PesquisaSatisfacao_Model();
+            foreach ($this->items AS $item):
+                $item = $CertificadosModel->adjustToView($item);
+                $arquivo = UPLOAD_PATH . '/certificados/Certificado_' . $item['orcamento_id'] . '_' . $item['id'] . '.pdf';
+                if (is_file($arquivo) && !empty($item['inicio_tratamento'])):
+                    $pdf = 'Certificado_' . $item['orcamento_id'] . '_' . $item['id'] . '.pdf';
+                    ?>
+                    <tr>
+                        <td><?php echo $item['orcamento_id']; ?></td>
+                        <td><?php echo $item['inicio_tratamento']; ?> - <?php echo $item['fim_tratamento']; ?></td>
+                        <td><a href="/cliente/Certificados/pesquisa/<?php echo base64_encode($item['id']); ?>" target="_blank"><?php echo $pdf; ?></a></td>
+                    </tr>
+                    <?php
+                endif;
+            endforeach;
+            ?>
+        </tbody>
+    </table>
+<?php else: ?>
+    <div class="error">Você não tem nenhum certificado gerado!</div>
+<?php endif; ?>

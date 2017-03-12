@@ -1,0 +1,24 @@
+<div id="content">
+    <div class="titulo">
+        <div class="container_12">
+            <div class="grid_12">
+                <h1 class="error">Encontramos um erro</h1>
+            </div>
+        </div>
+    </div>
+    <div class="container_12">
+        <div class="grid_12">
+            <h2><?php echo $this->message ?></h2>
+            <?php if (isset($this->exception)): ?>
+                <h3>Informação do erro:</h3>
+                <p>
+                    <b>Mensagem:</b> <?php echo $this->exception->getMessage() ?>
+                </p>
+                <h3>Mais informações:</h3>
+                <pre><?php echo $this->exception->getTraceAsString() ?></pre>
+                <h3>Parâmetros:</h3>
+                <pre><?php echo $this->escape(var_export($this->request->getParams(), true)) ?></pre>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

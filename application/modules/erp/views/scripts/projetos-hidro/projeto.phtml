@@ -1,0 +1,120 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    echo $this->partial('partials/btAdicionar.phtml', array(
+        'controller' => $this->controller,
+        'module' => $this->module,
+        'message' => $this->model->getOption('buttons', 'add'),
+        'parent_id' => $this->data['parent_id']
+    ));
+    ?>
+    <?php if (!empty($this->items)): ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th>Funcionário</th>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th>Horas</th>
+                    <th>Arquivo</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $total['horas'] = 0;
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    $total['horas'] += $item['horas'];
+                    ?>
+                    <tr>
+                        <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td><?php echo $item['usuario']; ?></td>
+                        <td><?php echo $item['data']; ?></td>
+                        <td><?php echo nl2br($item['descricao']); ?></td>
+                        <td align="center"><?php echo $item['horas']; ?></td>
+                        <td>
+                            <?php if (!empty($item['arquivo'])): ?>
+                                <a href="/uploads/projetos-alteracoes/<?php echo $item['arquivo']; ?>" title="<?php echo $item['arquivo']; ?>" target="_blank">Baixar</a>
+                            <?php else: ?>
+                                <div class="error">Nenhum arquivo enviado!</div>
+                            <?php endif; ?>
+                        </td>
+                        <td align="center">
+                            <?php if ($item['hora_inicial'] == '00:00:00'): ?>
+                                <button type="button" class="IniciarAtividade <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>">Iniciar Atividade</button>
+                            <?php elseif ($item['hora_final'] == '00:00:00'): ?>
+                                <button type="button" class="FinalizarAtividade <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>">Finalizar Atividade</button>
+                            <?php else: ?>
+                                Alteração concluída
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="5">Total</th>
+                    <td align="center"><?php echo $total['horas']; ?></td>
+                    <td colspan="2"></td>
+                </tr>
+            </tfoot>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <script type="text/javascript" src="/js/submodulo.js"> </script>
+        <script type="text/javascript">
+            $(function(){
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#ProjetosTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id : '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+            });
+        </script>
+    <?php endif; ?>
+</div>
+<div id="modalAtividade"></div>
+<script type="text/javascript">
+    $(function(){
+        $(".IniciarAtividade.<?php echo $this->controller; ?>").unbind('click').die('click').click(function(){
+            var source = $(this).attr('source');
+            $.ajax({
+                url: '<?php echo '/' . $this->module . '/save/' . $this->controller . '/iniciaratividade/'; ?>'+source,
+                success: function(data){
+                    $('#ProjetosTabs').tabs("load",$('#ProjetosTabs').tabs('option', 'selected'));
+                    $("#modalAtividade").html(data);
+                }
+            });
+        });
+        $(".FinalizarAtividade.<?php echo $this->controller; ?>").unbind('click').die('click').click(function(){
+            var bt = $(this);
+            var source = $(this).attr('source');
+            $.ajax({
+                url: '<?php echo '/' . $this->module . '/save/' . $this->controller . '/finalizaratividade/'; ?>'+source,
+                success: function(data){
+                    $("#modalAtividade").html(data);
+                    var btEditar = bt.parent().parent().find('.btEditar');
+                    btEditar.click();
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,198 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<div class="hidden">
+    <form method="post" id="Form_Relatorio_Orcamento">
+        <table class="listagem">
+            <tr>
+                <th>Data Inicial</th>
+                <th><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></th>
+                <th>Data Final</th>
+                <th><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></th>
+                <th rowspan="10">
+                    <button type="submit">Filtrar</button><br /><br />
+                    <button type="button" id="btImprimir">Imprimir</button>
+                </th>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class='clear margem-t'></div>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<?php
+if (!empty($this->items)):
+    $documentacao = $atendimento_servico = $atendimento_coleta = $atendimento_telefone = array('MS' => 0, 'S' => 0, 'PS' => 0, 'I' => 0);
+    $recomendaria = array('S' => 0, 'N' => 0);
+    foreach ($this->items AS $item):
+        $atendimento_telefone[$item['atendimento_telefone']] ++;
+        $atendimento_coleta[$item['atendimento_coleta']] ++;
+        $atendimento_servico[$item['atendimento_servico']] ++;
+        $documentacao[$item['documentacao']] ++;
+        $recomendaria[$item['recomendaria']] ++;
+    endforeach;
+    ?>
+    <div class='grid_4 margem-b'>
+        <div id="atendimento_telefone" style="width: 100%; height: 400px;"></div>
+    </div>
+    <div class='grid_4 margem-b'>
+        <div id="atendimento_coleta" style="width: 100%; height: 400px;"></div>
+    </div>
+    <div class='grid_4 margem-b'>
+        <div id="documentacao" style="width: 100%; height: 400px;"></div>
+    </div>
+    <div class='grid_4 margem-b'>
+        <div id="atendimento_servico" style="width: 100%; height: 400px;"></div>
+    </div>
+    <div class='grid_4 margem-b'>
+        <div id="recomendaria" style="width: 100%; height: 400px;"></div>
+    </div>
+    <script>
+        google.load("visualization", "1", {packages: ["corechart"]});
+
+        /* Atendimento Telefônico */
+        google.setOnLoadCallback(atendimentoTelefone);
+        function atendimentoTelefone() {
+            var data = google.visualization.arrayToDataTable([
+                ['Satisfação', 'Votos'],
+    <?php
+    $retorno = '';
+    foreach ($atendimento_telefone AS $nome => $valor) :
+        $retorno .= '["' . $this->model->getOption('satisfacao', $nome) . '", ' . $valor . '],';
+    endforeach;
+    echo substr($retorno, 0, -1);
+    ?>
+            ]);
+            var options = {
+                title: 'Atendimento ao telefone',
+                is3D: true,
+                colors: ['green', 'blue', 'red', 'purple']
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('atendimento_telefone'));
+            chart.draw(data, options);
+        }
+
+        /*Atendimento Coleta */
+        google.setOnLoadCallback(atendimentoColeta);
+        function atendimentoColeta() {
+            var data = google.visualization.arrayToDataTable([
+                ['Satisfação', 'Votos'],
+    <?php
+    $retorno = '';
+    foreach ($atendimento_coleta AS $nome => $valor) :
+        $retorno .= '["' . $this->model->getOption('satisfacao', $nome) . '", ' . $valor . '],';
+    endforeach;
+    echo substr($retorno, 0, -1);
+    ?>
+            ]);
+            var options = {
+                title: 'Atendimento durante a coleta',
+                is3D: true,
+                colors: ['green', 'blue', 'red', 'purple']
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('atendimento_coleta'));
+            chart.draw(data, options);
+        }
+
+        /* Documentação */
+        google.setOnLoadCallback(atendimentoDocumentacao);
+        function atendimentoDocumentacao() {
+            var data = google.visualization.arrayToDataTable([
+                ['Satisfação', 'Votos'],
+    <?php
+    $retorno = '';
+    foreach ($documentacao AS $nome => $valor) :
+        $retorno .= '["' . $this->model->getOption('satisfacao', $nome) . '", ' . $valor . '],';
+    endforeach;
+    echo substr($retorno, 0, -1);
+    ?>
+            ]);
+            var options = {
+                title: 'Documentações',
+                is3D: true,
+                colors: ['green', 'blue', 'red', 'purple']
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('documentacao'));
+            chart.draw(data, options);
+        }
+
+        /* Atendimento Serviço */
+        google.setOnLoadCallback(atendimentoServico);
+        function atendimentoServico() {
+            var data = google.visualization.arrayToDataTable([
+                ['Satisfação', 'Votos'],
+    <?php
+    $retorno = '';
+    foreach ($atendimento_servico AS $nome => $valor) :
+        $retorno .= '["' . $this->model->getOption('satisfacao', $nome) . '", ' . $valor . '],';
+    endforeach;
+    echo substr($retorno, 0, -1);
+    ?>
+            ]);
+            var options = {
+                title: 'Atendimento após a prestação de serviço',
+                is3D: true,
+                colors: ['green', 'blue', 'red', 'purple']
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('atendimento_servico'));
+            chart.draw(data, options);
+        }
+        /* Recomendaria */
+        google.setOnLoadCallback(recomendaria);
+        function recomendaria() {
+            var data = google.visualization.arrayToDataTable([
+                ['Satisfação', 'Votos'],
+    <?php
+    $retorno = '';
+    foreach ($recomendaria AS $nome => $valor) :
+        $retorno .= '["' . $this->model->getOption('recomendaria', $nome) . '", ' . $valor . '],';
+    endforeach;
+    echo substr($retorno, 0, -1);
+    ?>
+            ]);
+            var options = {
+                title: 'Recomendaria a Acquasana?',
+                is3D: true,
+                colors: ['green', 'red']
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('recomendaria'));
+            chart.draw(data, options);
+        }
+    </script>
+    <div class="clear"></div>
+    <h2>Pesquisas</h2>
+    <table class="listagem">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Certificado</th>
+                <th>Telefone</th>
+                <th>Coleta</th>
+                <th>Documentação</th>
+                <th>Serviço</th>
+                <th>Recomendaria</th>
+                <th>Observações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($this->items AS $item):
+                $item = $this->model->adjustToView($item);
+                ?>
+                <tr>
+                    <td><?php echo $item['cliente']; ?></td>
+                    <td align="center"><?php echo $item['codigo']; ?></td>
+                    <td align="center"><?php echo $item['atendimento_telefone']; ?></td>
+                    <td align="center"><?php echo $item['atendimento_coleta']; ?></td>
+                    <td align="center"><?php echo $item['documentacao']; ?></td>
+                    <td align="center"><?php echo $item['atendimento_servico']; ?></td>
+                    <td align="center"><?php echo $item['recomendaria']; ?></td>
+                    <td align="center"><?php echo $item['observacoes']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>
