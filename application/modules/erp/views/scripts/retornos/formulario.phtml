@@ -1,0 +1,79 @@
+<?php
+if (!isset($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+?>
+<?php if (empty($this->data['arquivo'])): ?>
+    <?php if (empty($this->data['id'])): ?>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="arquivo" id="arquivo" />
+            <button type="submit">Salvar</button>
+        </form>
+        <?php
+    else:
+        if (!empty($this->item)) :
+            $item = $this->model->adjustToView($this->item);
+            ?>
+            <table class="listagem">
+                <tr>
+                    <th>Retorno</th>
+                    <td><?php echo $item['id']; ?></td>
+                </tr>
+                <tr>
+                    <th>Data do Retorno</th>
+                    <td><?php echo $item['data_recebimento']; ?></td>
+                </tr>
+                <tr>
+                    <th>Empresa</th>
+                    <td><?php echo $item['empresa']; ?></td>
+                </tr>
+                <tr>
+                    <th>Banco</th>
+                    <td><?php echo $item['banco']; ?></td>
+                </tr>
+                <tr>
+                    <th>Nº Titulos</th>
+                    <td><?php echo $item['titulos']; ?></td>
+                </tr>
+                <tr>
+                    <th>Arquivo</th>
+                    <td><a href="/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/salvaarquivo/<?php echo $item['id']; ?>" target="_blank">Baixar arquivo</a></td>
+                </tr>
+            </table>
+            <hr class="margemB margemT" />
+            <table class="listagem">
+                <thead>
+                    <tr>
+                        <th>Orçamento</th>
+                        <th>Cliente</th>
+                        <th>Data de Vencimento</th>
+                        <th>Valor</th>
+                        <th>Data do Pagamento</th>
+                        <th>Valor Pago</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $ContasReceberModel = new ContasReceber_Model();
+                    foreach ($this->contas AS $conta) :
+                        $conta = $ContasReceberModel->adjustToView($conta);
+                        ?>
+                        <tr>
+                            <td><?php echo $conta['orcamento_id']; ?> - <?php echo $conta['id']; ?></td>
+                            <td><?php echo $conta['cliente']; ?></td>
+                            <td align="center"><?php echo $conta['data_vencimento']; ?></td>
+                            <td class="valor"><?php echo $conta['valor']; ?></td>
+                            <td align="center"><?php echo $conta['data_pagamento']; ?></td>
+                            <td class="valor"><?php echo $conta['valor_pago']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <button type="button" class="margemT" onclick="javascript: window.location = '/<?php echo $this->module; ?>/<?php echo $this->controller; ?>/index'">Voltar</button>
+        <?php else: ?>
+            <div class="empty">Retorno sem contas para baixar.</div>
+        <?php endif; ?>
+    <?php endif; ?>
+<?php endif; ?>

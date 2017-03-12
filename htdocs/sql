@@ -1,0 +1,212 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+ALTER TABLE `acquasan_erp`.`orcamentos_servicos` DROP FOREIGN KEY `orcamentos_servicos_x_orcamentos` , DROP FOREIGN KEY `orcamentos_servicos_x_servicos` ;
+
+ALTER TABLE `acquasan_erp`.`ordens_servico` DROP FOREIGN KEY `ordens_servico_x_orcamentos` ;
+
+
+ALTER TABLE `acquasan_erp`.`notas_fiscais` DROP FOREIGN KEY `notas_fiscais_x_orcamentos` ;
+
+
+ALTER TABLE `acquasan_erp`.`contas_receber` DROP FOREIGN KEY `contas_receber_x_orcamentos` ;
+
+
+ALTER TABLE `acquasan_erp`.`clientes` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+
+ALTER TABLE `acquasan_erp`.`servicos_categorias` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+
+ALTER TABLE `acquasan_erp`.`servicos` CHANGE COLUMN `id` `id` INT(5) ZEROFILL NOT NULL AUTO_INCREMENT  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+
+ALTER TABLE `acquasan_erp`.`orcamentos` CHANGE COLUMN `id` `id` INT(5) ZEROFILL NOT NULL AUTO_INCREMENT  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+
+ALTER TABLE `acquasan_erp`.`ordens_servico` CHANGE COLUMN `id` `id` INT(5) ZEROFILL NOT NULL AUTO_INCREMENT  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `orcamento_id` `orcamento_id` INT(5) ZEROFILL NOT NULL  , CHANGE COLUMN `valor` `valor` FLOAT(10,2) NOT NULL DEFAULT 0  , CHANGE COLUMN `desconto` `desconto` FLOAT(10,2) NOT NULL DEFAULT 0  , DROP FOREIGN KEY `ordens_servico_x_transportadores` ;
+
+
+ALTER TABLE `acquasan_erp`.`contas_receber` CHANGE COLUMN `id` `id` INT(8) ZEROFILL NOT NULL AUTO_INCREMENT  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `orcamento_id` `orcamento_id` INT(5) ZEROFILL NOT NULL  , CHANGE COLUMN `remessa_id` `remessa_id` INT(6) ZEROFILL NULL DEFAULT NULL  , CHANGE COLUMN `retorno_id` `retorno_id` INT(6) ZEROFILL NULL DEFAULT NULL  , DROP FOREIGN KEY `contas_receber_x_formas_pagamento` ;
+
+ALTER TABLE `acquasan_erp`.`contas_receber`
+  ADD CONSTRAINT `contas_receber_x_orcamentos`
+  FOREIGN KEY (`orcamento_id` )
+  REFERENCES `acquasan_erp`.`orcamentos` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  ADD CONSTRAINT `contas_receber_x_formas_pagamento`
+  FOREIGN KEY (`forma_pagamento_id` )
+  REFERENCES `acquasan_erp`.`formas_pagamento` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+ALTER TABLE `acquasan_erp`.`contas_pagar` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `conta_fixa` `conta_fixa` TINYINT(1) NOT NULL  , CHANGE COLUMN `valor` `valor` FLOAT(10,2) NOT NULL  , CHANGE COLUMN `data_vencimento` `data_vencimento` DATE NOT NULL  , DROP FOREIGN KEY `contas_pagar_x_fornecedores` , DROP FOREIGN KEY `contas_pagar_x_formas_pagamento` ;
+
+ALTER TABLE `acquasan_erp`.`contas_pagar`
+  ADD CONSTRAINT `contas_pagar_x_fornecedores`
+  FOREIGN KEY (`fornecedor_id` )
+  REFERENCES `acquasan_erp`.`fornecedores` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  ADD CONSTRAINT `contas_pagar_x_formas_pagamento`
+  FOREIGN KEY (`forma_pagamento_id` )
+  REFERENCES `acquasan_erp`.`formas_pagamento` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+ALTER TABLE `acquasan_erp`.`fornecedores_categorias` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `categoria` `categoria` VARCHAR(45) NOT NULL  ;
+
+ALTER TABLE `acquasan_erp`.`contas_pagar_categorias` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `categoria` `categoria` VARCHAR(45) NOT NULL  ;
+
+ALTER TABLE `acquasan_erp`.`usuarios` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `nome` `nome` VARCHAR(45) NOT NULL  , CHANGE COLUMN `usuario` `usuario` VARCHAR(45) NOT NULL  , CHANGE COLUMN `senha` `senha` VARCHAR(45) NOT NULL  , CHANGE COLUMN `cargo` `cargo` VARCHAR(45) NOT NULL  , CHANGE COLUMN `telefone` `telefone` VARCHAR(14) NOT NULL  , CHANGE COLUMN `email` `email` VARCHAR(255) NOT NULL  , CHANGE COLUMN `papel` `papel` ENUM('U','A') NOT NULL  , CHANGE COLUMN `ponto` `ponto` ENUM('S','N') NOT NULL DEFAULT 'N'  ;
+
+ALTER TABLE `acquasan_erp`.`modulos_categorias` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `categoria` `categoria` VARCHAR(45) NOT NULL  , CHANGE COLUMN `ordem` `ordem` INT(3) NOT NULL  ;
+
+
+
+ALTER TABLE `acquasan_erp`.`estados` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `estado` `estado` VARCHAR(45) NOT NULL  , CHANGE COLUMN `uf` `uf` VARCHAR(2) NOT NULL  , ADD COLUMN `codigo` VARCHAR(2) NOT NULL  AFTER `uf` ;
+
+ALTER TABLE `acquasan_erp`.`clientes_enderecos` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `cliente_id` `cliente_id` INT(11) NOT NULL  , CHANGE COLUMN `categoria_id` `categoria_id` INT(11) NOT NULL  , CHANGE COLUMN `estado_id` `estado_id` INT(11) NOT NULL  , CHANGE COLUMN `cep` `cep` VARCHAR(9) NOT NULL  , CHANGE COLUMN `cidade` `cidade` VARCHAR(255) NOT NULL  , CHANGE COLUMN `endereco` `endereco` VARCHAR(255) NOT NULL  , CHANGE COLUMN `bairro` `bairro` VARCHAR(255) NOT NULL DEFAULT 'NÃO INFORMADO'  , CHANGE COLUMN `numero` `numero` VARCHAR(45) NOT NULL DEFAULT 'S/N'  , ADD COLUMN `municipio_id` INT(11) NOT NULL DEFAULT 1  AFTER `estado_id` ,
+  ADD CONSTRAINT `clientes_enderecos_x_enderecos_categorias`
+  FOREIGN KEY (`categoria_id` )
+  REFERENCES `acquasan_erp`.`enderecos_categorias` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  ADD CONSTRAINT `clientes_enderecos_x_clientes`
+  FOREIGN KEY (`cliente_id` )
+  REFERENCES `acquasan_erp`.`clientes` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  ADD CONSTRAINT `clientes_enderecos_x_estados`
+  FOREIGN KEY (`estado_id` )
+  REFERENCES `acquasan_erp`.`estados` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  ADD CONSTRAINT `clientes_enderecos_x_municipios`
+  FOREIGN KEY (`municipio_id` )
+  REFERENCES `acquasan_erp`.`municipios` (`id` )
+  ON DELETE SET NULL
+  ON UPDATE CASCADE
+, ADD INDEX `clientes_enderecos_x_municipios_idx` (`municipio_id` ASC) ;
+
+ALTER TABLE `acquasan_erp`.`enderecos_categorias` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `categoria` `categoria` VARCHAR(255) NOT NULL  ;
+
+ALTER TABLE `acquasan_erp`.`telefones_categorias` CHANGE COLUMN `categoria` `categoria` VARCHAR(255) NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`clientes_crm` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `cliente_id` `cliente_id` INT(11) NOT NULL  , CHANGE COLUMN `usuario_id` `usuario_id` INT(11) NOT NULL  , CHANGE COLUMN `data` `data` DATE NOT NULL  , CHANGE COLUMN `descricao` `descricao` LONGTEXT NOT NULL  , CHANGE COLUMN `status` `status` ENUM('A','R') NOT NULL DEFAULT 'R'  ,
+  ADD CONSTRAINT `clientes_crm_x_clientes`
+  FOREIGN KEY (`cliente_id` )
+  REFERENCES `acquasan_erp`.`clientes` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  ADD CONSTRAINT `clientes_crm_x_usuarios`
+  FOREIGN KEY (`usuario_id` )
+  REFERENCES `acquasan_erp`.`usuarios` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+
+
+ALTER TABLE `acquasan_erp`.`usuarios_compromissos` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`transportadores` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `estado_id` `estado_id` INT(11) NOT NULL  , ADD COLUMN `municipio_id` INT(11) NOT NULL DEFAULT 1  AFTER `estado_id` ,
+  ADD CONSTRAINT `transportadores_x_estados`
+  FOREIGN KEY (`estado_id` )
+  REFERENCES `acquasan_erp`.`estados` (`id` )
+  ON DELETE SET NULL
+  ON UPDATE CASCADE,
+  ADD CONSTRAINT `transportadores_x_municipios`
+  FOREIGN KEY (`municipio_id` )
+  REFERENCES `acquasan_erp`.`municipios` (`id` )
+  ON DELETE SET NULL
+  ON UPDATE CASCADE
+, ADD INDEX `transportadores_x_municipios_idx` (`municipio_id` ASC) ;
+
+
+ALTER TABLE `acquasan_erp`.`textos_categorias` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `categoria` `categoria` VARCHAR(255) NOT NULL  ;
+
+
+
+ALTER TABLE `acquasan_erp`.`bancos` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `empresa_id` `empresa_id` INT(11) NOT NULL DEFAULT 1  , CHANGE COLUMN `banco` `banco` VARCHAR(45) NOT NULL  ;
+
+ALTER TABLE `acquasan_erp`.`formas_pagamento` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `forma_pagamento` `forma_pagamento` VARCHAR(45) NOT NULL  , CHANGE COLUMN `gera_remessa` `gera_remessa` ENUM('N','S') NOT NULL DEFAULT 'N'  ;
+
+ALTER TABLE `acquasan_erp`.`administradores_condominios` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `nome` `nome` VARCHAR(255) NOT NULL  , CHANGE COLUMN `telefone` `telefone` VARCHAR(14) NOT NULL  ;
+
+ALTER TABLE `acquasan_erp`.`ordens_servico_servicos` CHANGE COLUMN `created` `created` DATETIME NOT NULL  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `servico_id` `servico_id` INT(5) ZEROFILL NOT NULL  , CHANGE COLUMN `ordem_servico_id` `ordem_servico_id` INT(5) ZEROFILL NOT NULL  ,
+  ADD CONSTRAINT `os_servicos_x_servicos`
+  FOREIGN KEY (`servico_id` )
+  REFERENCES `acquasan_erp`.`servicos` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  ADD CONSTRAINT `os_servicos_x_ordens_servico`
+  FOREIGN KEY (`ordem_servico_id` )
+  REFERENCES `acquasan_erp`.`ordens_servico` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+ALTER TABLE `acquasan_erp`.`mtrs` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `ordem_servico_id` `ordem_servico_id` INT(5) ZEROFILL NOT NULL  , CHANGE COLUMN `endereco_id` `endereco_id` INT(11) NOT NULL  ,
+  ADD CONSTRAINT `mtr_x_ordens_servico`
+  FOREIGN KEY (`ordem_servico_id` )
+  REFERENCES `acquasan_erp`.`ordens_servico` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+  ADD CONSTRAINT `mtr_x_enderecos`
+  FOREIGN KEY (`endereco_id` )
+  REFERENCES `acquasan_erp`.`clientes_enderecos` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+
+
+ALTER TABLE `acquasan_erp`.`bens` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`notas_projetos` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`projetos_arquitetonicos` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`projetos_categorias` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`projetos_alteracoes` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`templates` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`construtoras` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`arquitetos` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`default_table` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`projetos_arquitetonicos_arquivos` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`projetos_ppci` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`projetos_hidro` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`templates_categorias` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`livro_pontos` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ;
+
+ALTER TABLE `acquasan_erp`.`usuarios_modulos` ROW_FORMAT =  , CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  ,
+  ADD CONSTRAINT `usuarios_moduslo_x_modulos`
+  FOREIGN KEY (`modulo_id` )
+  REFERENCES `acquasan_erp`.`modulos` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+, DROP INDEX `usuarios_modulos_x_usuarios_idx`
+, ADD INDEX `usuarios_modulos_x_usuarios_idx` (`usuario_id` ASC)
+, DROP INDEX `usuarios_moduslo_x_modulos_idx`
+, ADD INDEX `usuarios_moduslo_x_modulos_idx` (`modulo_id` ASC) ;
+
+ALTER TABLE `acquasan_erp`.`ctes` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `quantidade` `quantidade` FLOAT(10,2) NOT NULL DEFAULT 1  ;
+
+
+
+ALTER TABLE `acquasan_erp`.`cfops` CHANGE COLUMN `updated` `updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP  , CHANGE COLUMN `descricao` `descricao` VARCHAR(60) NOT NULL  ;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

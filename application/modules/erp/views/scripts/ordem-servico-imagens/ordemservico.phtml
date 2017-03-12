@@ -1,0 +1,104 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <script src="/js/jquery.uploadifive.js"></script>
+    <link href="/css/uploadifive.css" media="screen" rel="stylesheet" type="text/css" />
+    <script>
+        $(function() {
+            $('#localizacao').die('change').unbind('change').change(function() {
+                $('#uploadfive').die('uploadifive').unbind('uploadifive').uploadifive({
+                    uploadScript: '/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/upload/',
+                    buttonText: 'Enviar Imagens',
+                    width: 250,
+                    height: 50,
+                    removeCompleted: true,
+                    formData: {
+                        'local': $(this).val(),
+                        'ordem_servico_id': '<?php echo $this->data['parent_id']; ?>'
+                    },
+                    onQueueComplete: function(file) {
+                        $('#OrdensServicoTabs').tabs('load', $('#OrdensServicoTabs').tabs('option', 'selected'));
+                    }
+                });
+            });
+        });
+    </script>
+    <form>
+        <table class="listagem">
+            <tbody>
+                <tr>
+                    <th>Localização</th>
+                    <td>
+                        <select name="localizacao" id="localizacao">
+                            <option value="">Selecione...</option>
+                            <?php
+                            $categorias = $this->model->_local;
+                            foreach ($categorias AS $id => $categoria):
+                                ?>
+                                <option value="<?php echo $id; ?>"><?php echo $categoria; ?></option>
+                            <?php endforeach;
+                            ?>
+                        </select>
+                    </td>
+                    <td><input id="uploadfive" name="files" type="file" multiple="true" style="display: none;"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <hr />
+    <div class="clear-fix"></div>
+    <?php
+    if (!empty($this->items)):
+        ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th>Imagem</th>
+                    <th>Legenda</th>
+                    <th>Local</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <td class="buttonSpace"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td class="buttonSpace"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td align="center"><a href="/storage/file/<?php echo $item['arquivo']; ?>/ordem-servico/view?nocache=<?php echo date('U'); ?>" target="_blank"><img src="/storage/imagem/<?php echo $item['arquivo']; ?>/ordem-servico?w=100&h=100&c=crop" /></a></td>
+                        <td><?php echo $item['legenda']; ?></td>
+                        <td><?php echo $item['local']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    ?>
+    <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+    <script type="text/javascript" src="/js/submodulo.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $().submodulo({
+                controller: '<?php echo $this->controller; ?>',
+                module: '<?php echo $this->module; ?>',
+                tab: '#OrdensServicoTabs',
+                modal: '#<?php echo $this->controller; ?>Modal',
+                form: '#<?php echo $this->form->getId(); ?>',
+                parent_id: '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+            });
+        });
+    </script>
+</div>

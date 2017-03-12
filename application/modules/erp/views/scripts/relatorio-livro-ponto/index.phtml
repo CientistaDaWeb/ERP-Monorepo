@@ -1,0 +1,160 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<div class="hidden">
+    <form method="post" id="Form_Relatorio_Contratos">
+        <table class="listagem">
+            <tr>
+                <th>Data Inicial</th>
+                <th><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></th>
+                <th>Data Final</th>
+                <th><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></th>
+                <th rowspan="4"><button type="submit">Filtrar</button></th>
+                <th rowspan="4"><button type="button" id="btImprimir">Imprimir</button></th>
+            </tr>
+            <tr>
+                <th>Usuário</th>
+                <th colspan="3"><select name="usuario_id">
+                        <?php
+                        $UsuariosModel = new Usuarios_Model();
+                        foreach ($UsuariosModel->fetchPairPonto() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['usuario_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+        </table>
+    </form>
+</div>
+<?php if (!empty($this->items)): ?>
+    <div id="calendar" class="margem-b margem-t"></div>
+    <script type="text/javascript">
+        $(function () {
+            $('#calendar').fullCalendar({
+                theme: true,
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                editable: true,
+                events: [
+    <?php foreach ($this->items AS $item) : ?>
+                        {
+                            title: '<?php echo $item['nome']; ?>',
+                            start: '<?php echo $item['data'] . ' ' . $item['hora_inicial'] ?>',
+                            end: '<?php echo $item['data'] . ' ' . $item['hora_final'] ?>',
+                            allDay: false
+                        },
+    <?php endforeach; ?>
+                ],
+                buttonText: {
+                    today: 'Hoje',
+                    month: 'Mensal',
+                    week: 'Semanal',
+                    day: 'Diário'
+                },
+                editable: false,
+                        disableDragging: true,
+                disableResizing: true,
+                columnFormat: {
+                    month: 'dddd',
+                    week: 'dddd MMMM/dd',
+                    day: 'dddd MMMM/dd'
+                },
+                monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+                firstDay: 1,
+                timeFormat: 'H(:mm)'
+            });
+        });
+    </script>
+    <div class="clear clearfix margem-t"></div>
+    <h2 class="margem-t">Expediente</h2>
+    <table class="listagem margemB">
+        <thead>
+            <tr>
+                <th>Período</th>
+                <th>Entrada</th>
+                <th>Saída</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->model->_faixas AS $nome => $horario): ?>
+                <tr>
+                    <th><?php echo $nome; ?></th>
+                    <td align="center"><?php echo $horario['entrada']; ?></td>
+                    <td align="center"><?php echo $horario['saida']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <div class="clear clearfix"></div>
+    <h2 class="margem-t">Ponto</h2>
+    <div class="print">
+        <table class="listagem">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Data</th>
+                    <th>Entrada</th>
+                    <th>Saida</th>
+                    <th>Horas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $total = array('horas' => 0, 'minutos' => 0);
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToRelatorio($item);
+                    if (!empty($item['hora_final'])):
+                        $total['horas'] += $item['horas'];
+                        $total['minutos'] += $item['minutos'];
+                    endif;
+                    ?>
+                    <tr>
+                        <td><?php echo $item['nome']; ?></td>
+                        <td align="center"><?php echo $item['data']; ?></td>
+                        <td align="center"><?php echo $item['hora_inicial']; ?></td>
+                        <td align="center"><?php echo $item['hora_final']; ?></td>
+                        <td align="center"><?php echo $item['horas']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <?php
+            if ($this->data['usuario_id'] == '13'):
+                $minutos = $this->data['dias'] * 348;
+            else:
+                $minutos = $this->data['dias'] * 528;
+            endif;
+
+            $percentual = number_format(($total['minutos'] * 100) / $minutos, 2);
+            if ($percentual < 90):
+                $class = 'atrasada';
+            else:
+                $class = 'pago';
+            endif;
+            ?>
+            <tfoot>
+                <tr>
+                    <th colspan="4">Total de Horas Trabalhadas</th>
+                    <td align="center"><?php echo $total['horas']; ?></td>
+                </tr>
+                <tr>
+                    <th colspan="4">Total de Horas no Expediente</th>
+                    <td align="center"><?php echo WS_Date::minutesToHours($minutos); ?></td>
+                </tr>
+                <tr>
+                    <th colspan="4">% de Horas Trabalhadas</th>
+                    <td align="center" class="<?php echo $class; ?>"><?php echo $percentual; ?> %</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>

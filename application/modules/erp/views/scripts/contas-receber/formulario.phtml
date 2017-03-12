@@ -1,0 +1,82 @@
+<?php
+if (!isset($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+?>
+<div id="ContasReceberTabs">
+    <ul>
+        <li><a href="#Dados">Dados</a></li>
+        <li><a href="/<?php echo $this->module; ?>/submodulo/Ordens-Servico/contasreceber//<?php echo $this->data['id']; ?>">Ordens de Serviço</a></li>
+    </ul>
+    <div id="Dados">
+        <div class="grid_12">
+            <?php
+            if (!empty($this->data['data_pagamento']) && 1 != 1):
+                $item = $this->model->adjustToView($$this->data);
+                ?>
+                <table class="listagem" >
+                    <tbody>
+                        <tr>
+                            <th> Orçamento </tH>
+                            <td><?php echo $item['orcamento_id']; ?> </td>
+                        </tr>
+                        <tr>
+                            <th> Empresa </tH>
+                            <td><?php echo $item['empresa']; ?> </td>
+                        </tr>
+                        <tr>
+                            <th> Cliente </tH>
+                            <td><?php echo $item['cliente']; ?> </td>
+                        </tr>
+                        <tr>
+                            <th> Data de Vencimento </tH>
+                            <td><?php echo $item['data_vencimento']; ?> </td>
+                        </tr>
+                        <tr>
+                            <th> Valor </tH>
+                            <td><?php echo $item['valor']; ?> </td>
+                        </tr>
+                        <tr>
+                            <th> Forma de Pagamento </tH>
+                            <td><?php echo $item['forma_pagamento']; ?> </td>
+                        </tr>
+                        <tr>
+                            <th> Data de Pagamento </tH>
+                            <td><?php echo $item['data_pagamento']; ?> </td>
+                        </tr>
+                        <tr>
+                            <th> Valor Pago </tH>
+                            <td><?php echo $item['valor_pago']; ?> </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="empty">
+                    Essa conta ja foi paga e não pode ser alterada.
+                </div>
+                <button onclick="javascript: history.back();" >Cancelar </button>
+            <?php else: ?>
+                <?php echo $this->form; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<script>
+                $(function() {
+                    $("#ContasReceberTabs").tabs({
+                        spinner: carregando,
+                        ajaxOptions: {
+                            error: function(xhr, status, index, anchor) {
+                                if (status == 'error') {
+                                    $(anchor.hash).html('Erro ao carregar o conteúdo');
+                                }
+                                else {
+                                    $(anchor.hash).html(carregando);
+                                }
+                            }
+                        }
+<?php echo (empty($this->data['id'])) ? ', disabled: [1, 2, 3]' : ''; ?>
+                    });
+                });
+</script>

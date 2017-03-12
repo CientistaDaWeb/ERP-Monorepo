@@ -1,0 +1,128 @@
+<?php
+$configs = Zend_Registry::get('application');
+$dominio = $configs->cliente->dominio;
+?>
+<form id="EnviarEmailArquivos" method="post">
+    <table class="listagem">
+        <tbody>
+            <tr>
+                <th colspan="4"><h2>Arquivos</h2></th>
+        </tr>
+        <tr>
+            <th>Visualização</th>
+            <?php if (!empty($this->visualizacao_gerado)): ?>
+                <td><input type="checkbox" name="arquivos[]" value="<?php echo $this->visualizacao_arquivo; ?>" /> <?php echo $this->visualizacao_arquivo; ?> - Gerado em  <?php echo WS_Date::adjustToViewWithHour($this->visualizacao_gerado); ?></td>
+                <td align="center"><a class="buttonLink" href="/storage/file/<?php echo $this->visualizacao_arquivo; ?>/ordem-servico?nocache=<?php echo date('U'); ?>" target="_blank">Ver PDF</a></td>
+            <?php else: ?>
+                <td colspan="2"><div class="error">Arquivo não gerado!</div></td>
+            <?php endif; ?>
+            <td align="center"><button type="button" class="gera_pdf" arquivo="OS_<?php echo $this->id; ?>.pdf" pasta="ordem-servico/" url="http://<?php echo $dominio; ?>/erp/print/Ordens-Servico/visualizar/<?php echo $this->id; ?>">Gerar PDF</button></td>
+        </tr>
+        <tr>
+            <th>Relatório</th>
+            <?php if (!empty($this->relatorio_gerado)): ?>
+                <td><input type="checkbox" name="arquivos[]" value="<?php echo $this->relatorio_arquivo; ?>" /> <?php echo $this->relatorio_arquivo; ?> - Gerado em  <?php echo WS_Date::adjustToViewWithHour($this->relatorio_gerado); ?></td>
+                <td align="center"><a class="buttonLink" href="/storage/file/<?php echo $this->relatorio_arquivo; ?>/ordem-servico?nocache=<?php echo date('U'); ?>" target="_blank">Ver PDF</a></td>
+            <?php else: ?>
+                <td colspan="2"><div class="error">Arquivo não gerado!</div></td>
+            <?php endif; ?>
+            <td align="center"><button type="button" class="gera_pdf" arquivo="Relatorio_<?php echo $this->id; ?>.pdf" pasta="ordem-servico/" url="http://<?php echo $dominio; ?>/erp/print/Ordens-Servico/relatorio/<?php echo $this->id; ?>">Gerar PDF</button></td>
+        </tr>
+        <tr>
+            <th colspan="4"><h2>Dados</h2></th>
+        </tr>
+        <tr>
+            <th>E-mail</th>
+            <td colspan="3"><input type="text" id="email" class="ui-corner-all border" name="email" value="<?php echo $this->cliente['email']; ?>" /></td>
+        </tr>
+        <tr>
+            <th>Assunto</th>
+            <td colspan="3">
+                <select id="template_assunto_id" class="ui-corner-all border">
+                    <option value=''>Usar Modelo</option>
+                    <?php
+                    if (!empty($this->templates_assunto)):
+                        foreach ($this->templates_assunto AS $id => $titulo):
+                            ?>
+                            <option value="<?php echo $id; ?>"><?php echo $titulo; ?></option>
+                            <?php
+                        endforeach;
+                    endif;
+                    ?>
+                </select><br />
+                <input type="text" id="assunto" class="ui-corner-all border" name="assunto" /></td>
+        </tr>
+        <tr>
+            <th>Mesagem:</th>
+            <td colspan="3">
+                <select id="template_mensagem_id" class="ui-corner-all border">
+                    <option value=''>Usar Modelo</option>
+                    <?php
+                    if (!empty($this->templates_mensagem)):
+                        foreach ($this->templates_mensagem AS $id => $titulo):
+                            ?>
+                            <option value="<?php echo $id; ?>"><?php echo $titulo; ?></option>
+                            <?php
+                        endforeach;
+                    endif;
+                    ?>
+                </select><br />
+                <textarea name="mensagem" id="mensagem" class="ui-corner-all border"></textarea>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4"><button type="submit" class="botao">Enviar Arquivos</button></th>
+            </tr>
+        </tfoot>
+    </table>
+</form>
+<div id="retorno"></div>
+<script>
+    $(function() {
+        $('.gera_pdf').die('click').unbind('click').click(function() {
+            var url = $(this).attr('url');
+            var pasta = $(this).attr('pasta');
+            var arquivo = $(this).attr('arquivo');
+            $.ajax({
+                url: '/erp/Index/mpdf',
+                type: 'POST',
+                data: {url: url, pasta: pasta, arquivo: arquivo}
+            }).done(function(msg) {
+                $("#retorno").html(msg);
+                $("#OrdensServicoTabs").tabs("load", $("#OrdensServicoTabs").tabs('option', 'selected'));
+            });
+        });
+        $("#template_mensagem_id").change(function() {
+            var id = $(this).select().val();
+            $.ajax({
+                url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/' + id,
+                datatype: 'GET',
+                success: function(data) {
+                    if (data != "")
+                        $("#mensagem").val(data);
+                }
+            });
+        });
+        $("#template_assunto_id").change(function() {
+            var id = $(this).select().val();
+            $.ajax({
+                url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/' + id,
+                datatype: 'GET',
+                success: function(data) {
+                    if (data != "")
+                        $("#assunto").val(data);
+                }
+            });
+        });
+        $('#EnviarEmailArquivos').die('submit').unbind('submit').submit(function() {
+            $(this).ajaxSubmit({
+                type: 'post',
+                url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/enviaarquivos/",
+                target: '#retorno'
+            });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,72 @@
+<div class="grid_12">
+    <?php
+    if (!($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    if (!empty($this->items)):
+        ?>
+        <form method="POST" id="CteOrdensServicosForm">
+            <table class="listagem">
+                <thead>
+                    <tr class="ui-widget-header">
+                        <th></th>
+                        <th>Código</th>
+                        <th>Data da Coleta</th>
+                        <th>Valor</th>
+                        <th>Desconto</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $total = 0;
+                    foreach ($this->selecionados AS $selecionado):
+                        $selecteds[] = $selecionado['id'];
+                    endforeach;
+                    foreach ($this->items AS $item):
+                        $item = $this->model->adjustToView($item);
+                        ?>
+                        <tr class="<?php echo $item['class']; ?>">
+                            <td align="center"><input type="checkbox" value="<?php echo $item['id']; ?>" name="os_id[]" <?php echo(in_array($item['id'], $selecteds)) ? 'checked="checked"' : ''; ?> /></td>
+                            <td align="center"><?php echo $item['orcamento_id']; ?>.<?php echo $item['sequencial']; ?></td>
+                            <td align="center"><?php echo $item['data_coleta']; ?></td>
+                            <td class="valor"><?php echo $item['valor']; ?></td>
+                            <td class="valor"><?php echo $item['desconto']; ?></td>
+                            <td class="valor"><?php echo $item['saldo']; ?></td>
+                        </tr>
+                        <?php
+                    endforeach;
+                    ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="6"><button type="submit">Salvar</button></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    ?>
+    <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+    <script>
+        $(function() {
+            $('#CteOrdensServicosForm').die('submit').unbind('submit').submit(function() {
+                $(this).ajaxSubmit({
+                    url: '/<?php echo $this->module . '/submodulo/' . $this->controller . '/addcontareceber//' . $this->data['parent_id'] . '/'; ?>',
+                    success: function(msg) {
+                        $("#<?php echo $this->controller; ?>Modal").html(msg);
+                        $('#ContasReceberTabs').tabs("load", $('#ContasReceberTabs').tabs('option', 'selected'));
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+</div>

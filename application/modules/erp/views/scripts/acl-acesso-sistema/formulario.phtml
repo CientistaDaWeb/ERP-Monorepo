@@ -1,0 +1,56 @@
+<div class="grid_12">
+    <?php if ($this->usuario['papel'] != 'A'): ?>
+        <div id="AclAcessoSistema">
+            <form id="AclAcessoSistemaForm" method="post">
+                <?php if (!empty($this->modulos)): ?>
+                    <div id="tree" name="modulo_id[]"></div>
+                    <br class="clear" />
+                    <button type="submit" class="margem-t">Salvar</button>
+                <?php endif; ?>
+            </form>
+        </div>
+    <?php else: ?>
+        <div class="empty">Administradores tem permissão total no sistema.</div>
+    <?php endif; ?>
+    <div id="retorno"></div>
+</div>
+<script src="/js/jquery.cookie.js"></script>
+<script src="/js/jquery.dynatree.js"></script>
+<link href="/css/skin-vista/ui.dynatree.css" rel="stylesheet" type="text/css" id="skinSheet">
+<script>
+    $(function(){
+    $("#tree").dynatree({
+    checkbox: true,
+            selectMode: 3,
+            children:[
+<?php foreach ($this->modulos AS $categoria): ?>
+        {
+        title:'<?php echo $categoria['categoria']; ?>', expand: true, key: '',
+    <?php if (!empty($categoria['modulos'])): ?>
+            children: [
+        <?php foreach ($categoria['modulos'] AS $item): ?>
+                {title: '<?php echo $item['titulo']; ?>', key:'<?php echo $item['id']; ?>' <?php if (!empty($item['acl_id'])): ?>, select:true<?php endif; ?> },
+        <?php endforeach; ?>
+            ]
+    <?php endif; ?>
+        },
+<?php endforeach; ?>
+    ]
+    });
+            //envio ajax do formulário
+            $("#AclAcessoSistemaForm").submit(function(){
+    var tree = $("#tree").dynatree("getTree");
+            var formData = tree.serializeArray();
+            $.ajax({
+    type: 'POST',
+            url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/formulario//<?php echo $this->usuario['id']; ?>",
+            data: formData,
+            success: function(data){
+    $("#retorno").html(data);
+            $("#UsuariosTab").tabs("load", $("#UsuariosTab").tabs('option', 'selected'));
+    }
+    });
+            return false;
+    });
+    });
+</script>

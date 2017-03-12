@@ -1,0 +1,68 @@
+<?php
+if (!($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+if (isset($this->model->_addButton)):
+    echo $this->partial('partials/btAdicionar.phtml', array(
+        'controller' => $this->controller,
+        'module' => $this->module,
+        'message' => $this->model->getOption('buttons', 'add')
+    ));
+endif;
+?>
+<form method="post" action="/<?php echo $this->module; ?>/<?php echo $this->controller; ?>/excluir" class="formListagem">
+    <?php if (!empty($this->items)): ?>
+        <table class="listagem" id="RetornosListagem">
+            <thead>
+                <tr>
+                    <?php echo $this->partial('partials/btExcluir.phtml', array('controller' => $this->controller, 'model' => $this->model)); ?>
+                    <th></th>
+                    <th>Data de Recebimento</th>
+                    <th>Conta</th>
+                    <th>Títulos</th>
+                    <th>Imprimir</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <?php echo $this->partial('partials/itemDel.phtml', array('item' => $item)); ?>
+                        <?php echo $this->partial('partials/btEditar.phtml', array('controller' => $this->controller, 'model' => $this->model, 'item' => $item)); ?>
+                        <td><?php echo $item['data_emissao']; ?></td>
+                        <td><?php echo $item['empresa'] . ' - ' . $item['banco']; ?></td>
+                        <td><?php echo $item['titulos']; ?></td>
+                        <td><a href="/<?php echo $this->module; ?>/Boleto-Itau/remessa/<?php echo base64_encode($item['id']); ?>" target="_blank">Imprimir Boletos</a></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    ?>
+</form>
+<script type="text/javascript">
+    $(function(){
+        $('#RetornosListagem').dataTable({
+            "oLanguage": { "sUrl": "/js/dataTables/pt_BR.txt" },
+            "bJQueryUI": true,
+            "aaSorting": [[2,"asc"]],
+            "aoColumns":[
+                {"bSortable": false},
+                {"bSortable": false},
+                {"bSortable": true},
+                {"bSortable": true},
+                {"bSortable": true},
+                {"bSortable": false}
+            ]
+        });
+    });
+</script>

@@ -1,0 +1,64 @@
+<form method="post" action="" class="PesquisaSatisfacaoForm formulario" enctype="application/x-www-form-urlencoded" id="PesquisaSatisfacaoForm">
+    <dl class="zend_form">
+        <input type="hidden" id="id" value="" name="id">
+        <input type="hidden" id="certificado_id" value="<?php echo $this->certificado_id; ?>" name="certificado_id">
+        <dt id="atendimento_telefone-label"><label class="required" for="atendimento_telefone">Atendimento ao telefone, como foi a:</label></dt>
+        <dd id="atendimento_telefone-element">
+            <div class="respostas">
+                <p><label><input type="radio" name="atendimento_telefone" value="MS" />Muito Satisfeito</label></p>
+                <p><label><input type="radio" name="atendimento_telefone" value="S" />Satisfeito</label></p>
+                <p><label><input type="radio" name="atendimento_telefone" value="PS" />Pouco Satisfeito</label></p>
+                <p><label><input type="radio" name="atendimento_telefone" value="I" />Insatisfeito</label></p>
+            </div>
+            <p class="description">Cordialidade, clareza nas instruções,disponibilidade e agilidade dos atendentes</p>
+        </dd>
+        <div class="clear"></div>
+        <br />
+        <dt id="atendimento_coleta-label"><label class="required" for="atendimento_coleta">Atendimento durante a coleta, como foi nos quesitos:</label></dt>
+        <dd id="atendimento_coleta-element">
+            <div class="respostas">
+                <p><label><input type="radio" name="atendimento_coleta" value="MS" />Muito Satisfeito</label></p>
+                <p><label><input type="radio" name="atendimento_coleta" value="S" />Satisfeito</label></p>
+                <p><label><input type="radio" name="atendimento_coleta" value="PS" />Pouco Satisfeito</label></p>
+                <p><label><input type="radio" name="atendimento_coleta" value="I" />Insatisfeito</label></p>
+            </div>
+            <p class="description">Habilidade do coletor; Confiabilidade; limpeza e organização; uso de Epis; instruções fornecidas ao cliente</p>
+        </dd>
+        <div class="clear"></div>
+        <br />
+        <dt id="documentacao-label"><label class="required" for="documentacao">Documentações, como avalia as documentações fornecidas:</label></dt>
+        <dd id="documentacao-element">
+            <div class="respostas">
+                <p><label><input type="radio" name="documentacao" value="MS" />Muito Satisfeito</label></p>
+                <p><label><input type="radio" name="documentacao" value="S" />Satisfeito</label></p>
+                <p><label><input type="radio" name="documentacao" value="PS" />Pouco Satisfeito</label></p>
+                <p><label><input type="radio" name="documentacao" value="I" />Insatisfeito</label></p>
+            </div>
+            <p class="description">MTRs; certificados; relatórios de coleta; boletos, licenças.</p>
+        </dd>
+        <div class="clear"></div>
+        <br />
+        <dt id="atendimento_servico-label"><label class="required" for="atendimento_servico">Atendimento pós prestação de serviço, como avalia os quesitos:</label></dt>
+        <dd id="atendimento_servico-element">
+            <div class="respostas">
+                <p><label><input type="radio" name="atendimento_servico" value="MS" />Muito Satisfeito</label></p>
+                <p><label><input type="radio" name="atendimento_servico" value="S" />Satisfeito</label></p>
+                <p><label><input type="radio" name="atendimento_servico" value="PS" />Pouco Satisfeito</label></p>
+                <p><label><input type="radio" name="atendimento_servico" value="I" />Insatisfeito</label></p>
+            </div>
+            <p class="description">Retorno sobre a coleta; esclarecimentos fornecidos; conferências; controle de periodicidade da coleta</p>
+        </dd>
+        <div class="clear"></div>
+        <br />
+        <dt id="recomendaria-label"><label class="required" for="recomendaria">Você recomendaria a Acquasana Transportes de efluentes?</label></dt>
+        <dd id="recomendaria-element">
+            <p><label><input type="radio" name="recomendaria" value="S" />Sim</label></p>
+            <p><label><input type="radio" name="recomendaria" value="N" />Não</label></p>
+        </dd>
+        <br />
+        <dt id="observacoes-label"><label class="optional" for="observacoes">Abaixo escreva suas sugestões ou observações sobre nossa empresa. Sinta-se bem à vontade para expor sua opinião, a Acquasana agradece sua contribuição.</label></dt>
+        <dd id="observacoes-element">
+            <textarea cols="80" rows="5" class="ui-corner-all border" id="observacoes" name="observacoes"></textarea></dd>
+        <button class="btEnviar" value="Enviar Pesquisa" type="submit" id="salvar" name="salvar">Enviar Pesquisa</button>
+    </dl>
+</form>

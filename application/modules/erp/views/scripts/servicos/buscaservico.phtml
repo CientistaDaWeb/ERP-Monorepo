@@ -1,0 +1,15 @@
+<?php if (!empty($this->item)): ?>
+    <tr>
+        <td><input type="hidden" name="servico[<?php echo $this->item['id'] ?>][servico_id]" value="<?php echo $this->item['id'] ?>" /><?php echo $this->item['id']; ?></td>
+        <td><?php echo $this->item['servico']; ?></td>
+        <td align="center"><input type="text" name="servico[<?php echo $this->item['id'] ?>][qtde]" value="<?php echo (isset($this->item['qtde']) && $this->item['qtde'] > 0) ? $this->item['qtde'] : '1'; ?>" class="ui-corner-all filter qtde" /> <?php echo $this->item['unidade']; ?></td>
+        <?php
+        if (isset($this->item['preco'])):
+            $this->item['valor_unitario'] = $this->item['preco'];
+        endif;
+        ?>
+        <td align="center"><input type="text" name="servico[<?php echo $this->item['id'] ?>][valor]" value="<?php echo $this->item['valor_unitario']; ?>" class="ui-corner-all filter money" /></td>
+        <td align="center"><button class="btExcluir" type="button">Excluir</button</td>
+    </tr>
+<?php endif;
+?>

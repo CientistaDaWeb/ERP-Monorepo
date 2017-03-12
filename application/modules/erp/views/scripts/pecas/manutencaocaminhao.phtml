@@ -1,0 +1,86 @@
+<div class="grid_12">
+    <?php
+    if (!($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <div id="ManutencaoCaminhaoPecasModal"></div>
+    <div id="listaPecas">
+        <select id="peca_id">
+            <?php
+            if (!empty($this->pecas)):
+                foreach ($this->pecas AS $id => $peca):
+                    ?>
+                    <option value="<?php echo $id; ?>"><?php echo $peca; ?></option>
+                    <?php
+                endforeach;
+            endif;
+            ?>
+        </select>
+        <button type="button" id="adicionarPeca">
+            Adicionar Peça a Manutenção de Caminhão
+        </button>
+    </div>
+    <form method="post" id="ManutencaoCaminhaoPecasForm">
+        <table class="listagem" id="tablePecasOrcamentos">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th>Peça</th>
+                    <th>Qtde</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody id="pecasDoOrcamento">
+                <?php
+                if (!empty($this->pecasManutencao)):
+                    foreach ($this->pecasManutencao AS $item):
+                        ?>
+                        <tr>
+                            <td><input type="hidden" nam="peca[<?php echo $item['id'] ?>][peca_id]" value="<?php echo $item['id']; ?>" /><?php echo $item['peca']; ?></td>
+                            <td align="center"><input type="text" name="peca[<?php echo $item['id'] ?>][qtde]" value="<?php echo (isset($item['qtde']) && $this->item['qtde'] > 0) ? $item['qtde'] : '1'; ?>" class="ui-corner-all filter qtde" /></td>
+                            <td align="center"><input type="text" name="peca[<?php echo $item['id'] ?>][valor]" value="<?php echo $item['valor']; ?>" class="ui-corner-all filter money" /></td>
+                        </tr>
+                        <?php
+                    endforeach;
+                endif;
+                ?>
+            </tbody>
+        </table>
+        <button type="submit" id="salvar">
+            Salvar
+        </button>
+    </form>
+    <script type="text/javascript">
+        $("#adicionarPeca").die('click');
+        $("#adicionarPeca").live('click', function () {
+            var id = $("#peca_id").select().val();
+            $.ajax({
+                url: '/<?php echo $this->module; ?>/submodulo/Pecas/buscapeca/' + id,
+                datatype: 'GET',
+                success: function (data) {
+                    if (data != "")
+                        $("#pecasDoOrcamento").append(data);
+                }
+            });
+        });
+        $("#ManutencaoCaminhaoPecasForm").die('submit');
+        $("#ManutencaoCaminhaoPecasForm").live('submit', function () {
+            $("#ManutencaoCaminhaoPecasForm").ajaxSubmit({
+                type: 'post',
+                url: '/<?php echo $this->module; ?>/save/Pecas/addmanutencao//<?php echo $this->data['parent_id']; ?>',
+                success: function (data) {
+                    $("#ManutencaoCaminhaoPecasModal").html(data);
+                    $("#ManutencaoCaminhaoTabs").tabs('reload', '1');
+                }
+            });
+            return false;
+        });
+
+        $("#pecasDoOrcamento .btExcluir").die('click');
+        $("#pecasDoOrcamento .btExcluir").live('click', function () {
+            $(this).parent().parent().remove();
+        });
+    </script>
+</div>

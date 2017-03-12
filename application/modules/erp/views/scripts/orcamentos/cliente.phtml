@@ -1,0 +1,52 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    echo $this->partial('partials/btAdicionar.phtml', array(
+        'controller' => $this->controller,
+        'module' => $this->module,
+        'message' => $this->model->getOption('buttons', 'add'),
+        'parent_id' => $this->data['parent_id']
+    ));
+    ?>
+    <?php if (!empty($this->items)): ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th>Código</th>
+                    <th>Data de Emissão</th>
+                    <th>Status</th>
+                    <th>Nº OS</th>
+                    <th>Nº Fat.</th>
+                    <th>Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr class="<?php echo $item['class']; ?>">
+                        <td align="center"><a class="buttonLink" href="/<?php echo $this->module; ?>/<?php echo $this->controller; ?>/formulario/<?php echo $item['id']; ?>" title="<?php echo $this->model->getOption('buttons', 'go'); ?>"><?php echo $this->model->getOption('buttons', 'go'); ?></a></td>
+                        <td><?php echo $item['id']; ?></td>
+                        <td><?php echo $item['data_emissao']; ?></td>
+                        <td><?php echo $item['status']; ?></td>
+                        <td><?php echo $item['nOS']; ?></td>
+                        <td><?php echo $item['nFat']; ?></td>
+                        <td class="valor"><?php echo $item['saldo']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    ?>
+</div>

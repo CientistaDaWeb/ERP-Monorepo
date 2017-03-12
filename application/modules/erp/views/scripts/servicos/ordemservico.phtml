@@ -1,0 +1,93 @@
+<div class="grid_12">
+    <?php
+    if (!($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <div id="OrdemServicosServicoModal"></div>
+    <div>
+        <?php
+        if (!empty($this->items)):
+            if (!empty($this->total)):
+                $total = $this->total;
+            else:
+                $total = 0;
+                $soma = true;
+            endif;
+            ?>
+            <form method="post" id="OrdemServicosServicoForm">
+                <table class="listagem">
+                    <thead>
+                        <tr class="ui-widget-header">
+                            <th>Categoria</th>
+                            <th>Serviço</th>
+                            <th>Quantidade</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($this->items AS $servico):
+                            if (isset($soma)):
+                                $total += ($servico['valor'] * $servico['qtde']);
+                            endif;
+                            ?>
+                        <input type="hidden" name="servico[<?php echo $servico['id']; ?>][servico_id]" value="<?php echo $servico['id']; ?>" />
+                        <tr>
+                            <td><?php echo $servico['categoria']; ?></td>
+                            <td><?php echo $servico['servico']; ?></td>
+                            <td align="center"><input type="text" value="<?php echo (!empty($servico['qtde'])) ? $servico['qtde'] : '0'; ?>" name="servico[<?php echo $servico['id']; ?>][qtde]" class="filter qtde calcula" /></td>
+                            <td align="center"><input type="text" value="<?php echo (!empty($servico['valor'])) ? $servico['valor'] : $servico['preco']; ?>" name="servico[<?php echo $servico['id']; ?>][valor]" class="filter money calcula" /></td>
+                        </tr>
+                        <?php
+                    endforeach;
+                    ?>
+                    </tbody>
+                    <tfoot>
+                        <tr class="ui-widget-header">
+                            <th colspan="3">Total</th>
+                            <td><input type="text" value="<?php echo $total; ?>" name="valor" id="total" class="filter money" /></td>
+                        </tr>
+                        <tr class="ui-widget-header">
+                            <th colspan="4"><button type="submit">Salvar</button></</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </form>
+        <?php else: ?>
+            <div class="empty">Nenhum serviço atribuido a esse Orçamento.</div>
+        <?php endif; ?>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $('.calcula').blur(function(){
+                var qtde = $('#OrdemServicosServicoForm .qtde.filter');
+                var total = 0;
+                var valor = 0;
+                var qtd = 0;
+                qtde.each(function(){
+                    qtd = $(this).val();
+                    if(qtd > 0){
+                        valor = $(this).parent().parent().find('.filter.money').val();
+                        total += qtd*valor;
+                    }
+                });
+                total = parseFloat(total).toFixed(2);
+                $("#total").val(total);
+                $("#valor").val(total);
+            });
+            $("#OrdemServicosServicoForm").die('submit');
+            $("#OrdemServicosServicoForm").live('submit', function(){
+                $("#OrdemServicosServicoForm").ajaxSubmit({
+                    url: '/<?php echo $this->module; ?>/save/Servicos/addordemservico//<?php echo $this->data['parent_id']; ?>',
+                    success: function(msg){
+                        $("#OrdemServicosServicoModal").html(msg);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+</div>

@@ -1,0 +1,82 @@
+<div class="grid_12">
+    <?php
+    if (!($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <div id="OrcamentoServicosModal"></div>
+    <div id="listaServicos">
+        <select id="servico_id">
+            <?php
+            if (!empty($this->servicos)):
+                foreach ($this->servicos AS $servico):
+                    ?>
+                    <option value="<?php echo $servico['id']; ?>"><?php echo '[' . $servico['id'] . '] ' . $servico['categoria'] . ' | ' . $servico['servico']; ?></option>
+                    <?php
+                endforeach;
+            endif;
+            ?>
+        </select>
+        <button type="button" id="adicionarServico">
+            Adicionar Serviço ao Orçamento
+        </button>
+    </div>
+    <form method="post" id="OrcamentoServicosForm">
+        <table class="listagem" id="tableServicosOrcamentos">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th>Código</th>
+                    <th>Serviço</th>
+                    <th>Qtde</th>
+                    <th>Valor Unitário</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="servicosDoOrcamento">
+                <?php
+                if (!empty($this->servicosOrcamento)):
+                    foreach ($this->servicosOrcamento AS $item):
+                        echo $this->partial('servicos/buscaservico.phtml', array('item' => $item));
+                    endforeach;
+                endif;
+                ?>
+            </tbody>
+        </table>
+        <button type="submit" id="salvar">
+            Salvar
+        </button>
+    </form>
+    <script type="text/javascript">
+        $("#adicionarServico").die('click');
+        $("#adicionarServico").live('click', function(){
+            var id = $("#servico_id").select().val();
+            $.ajax({
+                url: '/<?php echo $this->module; ?>/submodulo/Servicos/buscaservico/'+id,
+                datatype : 'GET',
+                success: function(data){
+                    if(data != "")
+                        $("#servicosDoOrcamento").append(data);
+                }
+            });
+        });
+        $("#OrcamentoServicosForm").die('submit');
+        $("#OrcamentoServicosForm").live('submit', function(){
+            $("#OrcamentoServicosForm").ajaxSubmit({
+                type: 'post',
+                url: '/<?php echo $this->module; ?>/save/Servicos/addorcamento//<?php echo $this->data['parent_id']; ?>',
+                success: function(data){
+                    $("#OrcamentoServicosModal").html(data);
+                    $("#OrcamentoTab").tabs('reload','1');
+                }
+            });
+            return false;
+        });
+
+        $("#servicosDoOrcamento .btExcluir").die('click');
+        $("#servicosDoOrcamento .btExcluir").live('click', function(){
+            $(this).parent().parent().remove();
+        });
+    </script>
+</div>

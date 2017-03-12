@@ -1,0 +1,284 @@
+<h1>Formulário de impressão da MTR</h1>
+<?php if (!empty($this->data['gerador']['razao_social'])): ?>
+    <form method="post" action="/<?php echo $this->module . '/print/' . $this->controller . '/imprimirmtr'; ?>">
+        <input type="hidden" name="id" id="id" value="<?php echo (!empty($this->data['id'])) ? $this->data['id'] : ''; ?>" />
+        <input type="hidden" name="mtr_id" id="mtr_id" value="<?php echo $this->data['mtr_id']; ?>" />
+        <table class="listagem">
+            <tbody>
+                <tr>
+                    <th colspan="4"><h3>1 - Gerador</h3></th>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="gerador_razao_social">Razão Social</label></th>
+                <td colspan="2"><input type="text" name="gerador_razao_social" id="gerador_razao_social" value="<?php echo $this->data['gerador']['razao_social']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="gerador_cnpj">CNPJ</label></th>
+                <td colspan="2"><input type="text" name="gerador_cnpj" id="gerador_cnpj" value="<?php echo $this->data['gerador']['cnpj']; ?>" /></td>
+            </tr>
+            <!--
+            <tr>
+                <th colspan="2"><label for="gerador_lo">Nº LO Fepan</label></th>
+                <td colspan="2"><input type="text" name="gerador_lo" id="gerador_lo" value="<?php echo $this->data['gerador']['lo']; ?>" /></td>
+            </tr>
+            -->
+            <tr>
+                <th colspan="2"><label for="gerador_endereco">Endereço</label></th>
+                <td colspan="2"><input type="text" name="gerador_endereco" id="gerador_endereco" value="<?php echo $this->data['gerador']['endereco']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="gerador_municipio">Município</label></th>
+                <td colspan="2"><input type="text" name="gerador_municipio" id="gerador_municipio" value="<?php echo $this->data['gerador']['municipio']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="gerador_responsavel">Responsável</label></th>
+                <td colspan="2"><input type="text" name="gerador_responsavel" id="gerador_responsavel" value="<?php echo $this->data['gerador']['responsavel']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="gerador_telefone">Telefone</label></th>
+                <td colspan="2"><input type="text" name="gerador_telefone" id="gerador_telefone" value="<?php echo $this->data['gerador']['telefone']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="gerador_ramal">Ramal</label></th>
+                <td colspan="2"><input type="text" name="gerador_ramal" id="gerador_ramal" value="<?php echo $this->data['gerador']['ramal']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="4"><h3>2 - Descrição dos Resíduos</h3></th>
+            </tr>
+            <?php
+            $MtrModel = new Mtr_Model;
+            $residuos = $MtrModel->listOptions('residuos');
+            ?>
+            <tr>
+                <th><label for="residuos">Resíduo 1</label></th>
+                <td><select name="residuos" id="residuos">
+                        <?php foreach ($residuos AS $id => $residuo): ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($id == $this->data['residuos']) ? 'selected="selected"' : ''; ?>><?php echo $residuo['nome']; ?></option>
+                        <?php endforeach; ?>
+                    </select></td>
+                <th><label for="quantidade">Quantidade</th>
+                <td><input type="text" name="quantidade" id="quantidade" value="<?php echo $this->data['quantidade']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="4"><h3>3 - Transportador</h3></th>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_razao_social">Razão Social</label></th>
+                <td colspan="2"><input type="text" name="transportador_razao_social" id="transportador_razao_social" value="<?php echo $this->data['transportador']['razao_social']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_cnpj">CNPJ</label></th>
+                <td colspan="2"><input type="text" name="transportador_cnpj" id="transportador_cnpj" value="<?php echo $this->data['transportador']['cnpj']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_endereco">Endereço</label></th>
+                <td colspan="2"><input type="text" name="transportador_endereco" id="transportador_endereco" value="<?php echo $this->data['transportador']['endereco']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_cep">CEP</label></th>
+                <td colspan="2"><input type="text" name="transportador_cep" id="transportador_cep" value="<?php echo $this->data['transportador']['cep']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_municipio">Município</label></th>
+                <td colspan="2"><input type="text" name="transportador_municipio" id="transportador_municipio" value="<?php echo $this->data['transportador']['municipio']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_condutor">Nome do Condutor</label></th>
+                <td colspan="2"><input type="text" name="transportador_condutor" id="transportador_condutor" value="<?php echo $this->data['transportador']['condutor']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_fone">Fone</label></th>
+                <td colspan="2"><input type="text" name="transportador_fone" id="transportador_fone" value="<?php echo $this->data['transportador']['fone']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_lo">LO</label></th>
+                <td colspan="2"><input type="text" name="transportador_lo" id="transportador_lo" value="<?php echo $this->data['transportador']['lo']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_condutor_cpf">CPF do Condutor</label></th>
+                <td colspan="2"><input type="text" name="transportador_condutor_cpf" id="transportador_condutor_cpf" value="<?php echo $this->data['transportador']['condutor_cpf']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_equipamento">Marca do Veículo</label></th>
+                <td colspan="2"><input type="text" name="transportador_equipamento" id="transportador_equipamento" value="<?php echo $this->data['transportador']['equipamento']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_placa">Placa</label></th>
+                <td colspan="2"><input type="text" name="transportador_placa" id="transportador_placa" value="<?php echo $this->data['transportador']['placa']; ?>" /></td>
+            </tr>
+            <!--
+            <tr>
+                <th colspan="2"><label for="transportador_lacre">Nº Lacre</label></th>
+                <td colspan="2"><input type="text" name="transportador_lacre" id="transportador_lacre" value="<?php echo $this->data['transportador']['lacre']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_veiculo">Veículo Nº</label></th>
+                <td colspan="2"><input type="text" name="transportador_veiculo" id="transportador_veiculo" value="<?php echo $this->data['transportador']['veiculo']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="transportador_estado">Estado</label></th>
+                <td colspan="2"><input type="text" name="transportador_estado" id="transportador_estado" value="<?php echo $this->data['transportador']['estado']; ?>" /></td>
+            </tr>
+            -->
+            <tr>
+                <th colspan="4"><h3>4 - Unidade de Destinação</h3></th>
+            </tr>
+            <tr>
+                <th colspan="2">Utilizar dados de um cliente</th>
+                <td colspan="2"><select id="destinatario_id">
+                        <option>Selecione o cliente</option>
+                        <?php
+                        $clientes = Clientes_Model::fetchPair();
+                        foreach ($clientes AS $id => $cliente):
+                            ?>
+                            <option value="<?php echo $id; ?>"><?php echo $cliente; ?></option>
+                        <?php endforeach; ?>
+                    </select></td>
+            </tr>
+            <tr>
+                <th colspan="2">Endereço</th>
+                <td colspan="2"><select id="endereco_id">
+                        <option>Selecione o cliente</option>
+                    </select></td>
+            </tr>
+            <tr>
+                <th colspan="4"><hr /></th>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_razao_social">Razão Social</label></th>
+                <td colspan="2"><input type="text" name="destinatario_razao_social" id="destinatario_razao_social" value="<?php echo $this->data['destinatario']['razao_social']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_cnpj">CNPJ</label></th>
+                <td colspan="2"><input type="text" name="destinatario_cnpj" id="destinatario_cnpj" value="<?php echo $this->data['destinatario']['cnpj']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_endereco">Endereço</label></th>
+                <td colspan="2"><input type="text" name="destinatario_endereco" id="destinatario_endereco" value="<?php echo $this->data['destinatario']['endereco']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_cep">CEP</label></th>
+                <td colspan="2"><input type="text" name="destinatario_cep" id="destinatario_cep" value="<?php echo $this->data['destinatario']['cep']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_municipio">Município</label></th>
+                <td colspan="2"><input type="text" name="destinatario_municipio" id="destinatario_municipio" value="<?php echo $this->data['destinatario']['municipio']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_uf">UF</label></th>
+                <td colspan="2"><input type="text" name="destinatario_uf" id="destinatario_uf" value="<?php echo $this->data['destinatario']['uf']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_lo">LO</label></th>
+                <td colspan="2"><input type="text" name="destinatario_lo" id="destinatario_lo" value="<?php echo $this->data['destinatario']['lo']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_fepam">Nº Autorização FEPAM</label></th>
+                <td colspan="2"><input type="text" name="destinatario_fepam" id="destinatario_fepam" value="<?php echo $this->data['destinatario']['fepam']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_motivo">Motivo Não Recebimento</label></th>
+                <td colspan="2"><input type="text" name="destinatario_motivo" id="destinatario_motivo" value="<?php echo $this->data['destinatario']['motivo']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_responsavel">Nome do Responsável</label></th>
+                <td colspan="2"><input type="text" name="destinatario_responsavel" id="destinatario_responsavel" value="<?php echo $this->data['destinatario']['responsavel']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_fone">Fone</label></th>
+                <td colspan="2"><input type="text" name="destinatario_fone" id="destinatario_fone" value="<?php echo $this->data['destinatario']['fone']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="destinatario_email">E-mail</label></th>
+                <td colspan="2"><input type="text" name="destinatario_email" id="destinatario_email" value="<?php echo $this->data['destinatario']['email']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="4"><h3>5 - Informações adicionais sobre os resíduos e o seu manuseio em caso de acidentes.</h3></th>
+            </tr>
+            <tr>
+                <td colspan="4"><textarea name="descricao" id="descricao"><?php echo $this->data['descricao']; ?></textarea></td>
+            </tr>
+            <!--
+            <tr>
+                <th colspan="4"><h3>6 - Instruções especiais de manuseio e informações adicionais no caso de emergência (saúde, meio ambiente, incêndio). Em caso de não entrega do resíduo, especificar nº MTR anterior.</h3></th>
+            </tr>
+            <tr>
+                <td colspan="4"><textarea name="instrucoes" id="instrucoes"><?php echo $this->data['instrucoes']; ?></textarea></td>
+            </tr>
+            -->
+            <tr>
+                <th colspan="4"><h3>8 - Responsável pela liberação / transporte / recebimento de carga.</h3></th>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="responsavel_gerador">Gerador</label></th>
+                <td colspan="2"><input type="text" name="responsavel_gerador" id="responsavel_gerador" value="<?php echo $this->data['responsavel']['gerador']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="responsavel_transportador">Transportador</label></th>
+                <td colspan="2"><input type="text" name="responsavel_transportador" id="responsavel_transportador" value="<?php echo $this->data['responsavel']['transportador']; ?>" /></td>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="responsavel_receptor">Unidade Receptora</label></th>
+                <td colspan="2"><input type="text" name="responsavel_receptor" id="responsavel_receptor" value="<?php echo $this->data['responsavel']['receptor']; ?>" /></td>
+            </tr>
+            <!--
+            <tr>
+                <th colspan="4"><h3>9 - Instruções em caso de discrepância das indicações descritas nesse manifesto:</h3></th>
+            </tr>
+            <tr>
+                <td colspan="4"><textarea name="discrepancia" id="discrepancia"><?php echo $this->data['discrepancia']; ?></textarea></td>
+            </tr>
+            <tr>
+                <th colspan="4"><h3>10 - Instalação receptora: Certificação de recebimento do material perigoso descrito neste manifesto, exceto quando ocorrer o especificado  no item 9.</h3></th>
+            </tr>
+            <tr>
+                <th colspan="2"><label for="instalacao_receptor">Nome</label></th>
+                <td colspan="2"><input type="text" name="instalacao_receptor" id="instalacao_receptor" value="<?php echo $this->data['instalacao']['receptor']; ?>" /></td>
+            </tr>
+            -->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="4"><button type="submit">Imprimir MTR</button></th>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+<?php else: ?>
+    <div class="error">Dados não encontrados!</div>
+<?php endif; ?>
+<script>
+    $(function() {
+        $("#destinatario_id").die('change').unbind('change').change(function() {
+            var cliente_id = $(this).select().val();
+            $.getJSON("/<?php echo $this->module; ?>/submodulo/Clientes-Enderecos/json//" + cliente_id, function(result) {
+                $('#endereco_id').find('option').remove().end().append('<option value="">Selecione o cliente</option>');
+                $.each(result, function() {
+                    $('#endereco_id').append($("<option />").val(this.id).text(this.endereco + ', ' + this.numero + ' - ' + this.municipio));
+                });
+            });
+        });
+        $("#endereco_id").die('change').unbind('change').change(function() {
+            var cliente_id = $("#destinatario_id").select().val();
+            var endereco_id = $(this).select().val();
+            $.getJSON("/<?php echo $this->module; ?>/submodulo/Clientes/json/" + cliente_id + '/' + endereco_id, function(result) {
+                if (result != '') {
+                    var items = [];
+                    $.each(result, function() {
+                        $('#destinatario_razao_social').val(this.razao_social);
+                        $('#destinatario_cnpj').val(this.cnpj);
+                        $('#destinatario_endereco').val(this.endereco + ', ' + this.numero);
+                        $('#destinatario_cep').val(this.cep);
+                        $('#destinatario_municipio').val(this.municipio);
+                        $('#destinatario_uf').val(this.uf);
+                        $('#destinatario_lo').val(this.lo);
+                        $('#destinatario_fepam').val(this.fepam);
+                        $('#destinatario_responsavel').val(this.contato);
+                        $('#destinatario_fone').val(this.telefone);
+                        $('#destinatario_email').val(this.email);
+                    });
+                }
+            });
+        });
+    });
+</script>

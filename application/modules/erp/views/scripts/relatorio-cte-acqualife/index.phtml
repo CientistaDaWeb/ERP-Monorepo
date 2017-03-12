@@ -1,0 +1,100 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<?php
+if ($this->csv) :
+    ?>
+    <script>
+        $(function () {
+            $.jGrowl("Verifique o bloqueio de pop-ups!", {theme: "warning", life: 10000});
+        });
+        window.open('/uploads/relatorios/<?php echo $this->csv; ?>');
+    </script>
+    <?php
+endif;
+?>
+<div class="hidden">
+    <form method="post" id="Form_Relatorio_Notas_Fiscais">
+        <table class="listagem">
+            <tr>
+                <th>Data Inicial</th>
+                <th><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></th>
+                <th>Data Final</th>
+                <th><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></th>
+                <th rowspan="4"><button type="submit">Filtrar</button></th>
+                <th rowspan="4"><button type="button" id="btImprimir">Imprimir</button></th>
+                <th rowspan="4"><button type="button" id="btExportarCSV">Exportar em CSV</button>
+                    <input type="checkbox" class="invisivel" name="gera_csv" id="gera_csv" /></th>
+            </tr>
+            <tr>
+                <th colspan="2">Cliente</th>
+                <?php $ClientesModel = new Clientes_Model(); ?>
+                <th colspan="2"><select name="cliente_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($ClientesModel->fetchPair() as $id => $nome): ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['cliente_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+        </table>
+    </form>
+</div>
+<?php if (!empty($this->items)): ?>
+    <div class="print">
+        <form id="zipaArquivos">
+            <table class="listagem">
+                <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>CT-e</th>
+                        <th>Cliente</th>
+                        <th>Data de Emissão</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $total['valor'] = 0;
+                    foreach ($this->items AS $item):
+                        $total['valor'] += $item['total'];
+                        $item = $this->model->adjustToView($item);
+                        ?>
+                        <tr>
+                            <td><input type="checkbox" name="cte_id[]" value="<?php echo $item['id']; ?>" <?php echo ($item['total'])? 'checked="cheked"' : ''; ?> /></td>
+                            <td align="center"><?php echo $item['id']; ?></td>
+                            <td><a class="buttonLink hidden" target="_blank" href="/<?php echo $this->module; ?>/Clientes/formulario/<?php echo $item['cliente_id']; ?>" title="<?php echo $ClientesModel->getOption('buttons', 'go'); ?>"><?php echo $ClientesModel->getOption('buttons', 'go'); ?></a> <?php echo $item['cliente']; ?></td>
+                            <td align="center"><?php echo $item['data']; ?></td>
+                            <td align="center"><?php echo $item['total']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="4">Total</th>
+                        <td align="center"><?php echo WS_Money::adjustToView($total['valor']); ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="5"><div id="retorno"><button type="submit">Gerar arquivo para o contador</button></div></th>
+                </tr>
+                </tfoot>
+            </table>
+        </form>
+    </div>
+    <script>
+        $(function() {
+            $("#zipaArquivos").die('submit').unbind('submit').submit(function() {
+                $('#retorno').html('Gerando arquivo <img src="/images/ajax-loader.gif" />');
+                $(this).ajaxSubmit({
+                    type: 'post',
+                    url: "/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/zipaarquivos",
+                    target: '#retorno'
+                });
+                return false;
+            });
+        });
+    </script>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>

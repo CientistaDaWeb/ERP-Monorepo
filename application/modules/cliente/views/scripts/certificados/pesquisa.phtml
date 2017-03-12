@@ -1,0 +1,20 @@
+<div id="retorno"></div>
+<?php if ($this->mostra): ?>
+    <div class="modal" title="Pesquisa de Satisfação" id="pesquisaSatisfacao">
+        <h1>Pesquisa de Satisfação</h1>
+        <h2>Por favor, participe da nossa pesquisa de satisfação, com ela poderemos aprimorar e melhorar a prestação dos nossos serviços, são apenas 5 questões.</h2>
+        <br /><br />
+        <?php
+        echo $this->partial('pesquisa/pesquisa.phtml', array(
+            'certificado_id' => $this->certificado_id,
+                )
+        );
+        ?>
+        <a class="float right" href="<?php echo $this->url; ?>" id="fechaModal">pular</a>
+    </div>
+<?php else: ?>
+    <div class="sucess">Obrigado por participar de nossa pesquisa de satisfação!</div>
+    <script>
+        window.location = '<?php echo $this->url; ?>';
+    </script>
+<?php endif; ?>

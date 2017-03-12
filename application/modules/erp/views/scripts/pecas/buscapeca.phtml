@@ -1,0 +1,8 @@
+<?php if (!empty($this->item)): ?>
+    <tr>
+        <td><input type="hidden" name="peca[<?php echo $this->item['id'] ?>][peca_id]" value="<?php echo $this->item['id'] ?>" /><?php echo $this->item['nome']; ?></td>
+        <td align="center"><input type="text" name="peca[<?php echo $this->item['id'] ?>][qtde]" value="1" class="ui-corner-all filter qtde" /></td>
+        <td align="center"><input type="text" name="peca[<?php echo $this->item['id'] ?>][valor]" value="" class="ui-corner-all filter money" /></td>
+    </tr>
+<?php endif;
+?>

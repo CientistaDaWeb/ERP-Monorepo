@@ -1,0 +1,120 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <script src="/js/jquery.uploadifive.js"></script>
+    <link href="/css/uploadifive.css" media="screen" rel="stylesheet" type="text/css" />
+    <script>
+        $(function() {
+                $('#uploadfive').die('uploadifive').unbind('uploadifive').uploadifive({
+                    uploadScript: '/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/upload/',
+                    buttonText: 'Enviar Arquivos',
+                    width: '250',
+                    height: 50,
+                    removeCompleted: true,
+                    formData: {
+                        'cliente_id': '<?php echo $this->data['parent_id']; ?>'
+                    },
+                    onQueueComplete: function(file) {
+                        $('#ClientesTabs').tabs('load', $('#ClientesTabs').tabs('option', 'selected'));
+                    }
+            });
+        });
+    </script>
+    <form>
+        <table class="listagem">
+            <tbody>
+                <tr>
+                    <td><input id="uploadfive" name="files" type="file" multiple="true" style="display: none;"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <hr />
+    <div class="clear-fix"></div>
+    <div class="modal" id="ClientesCrmModal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+    <?php if (!empty($this->items)): ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Descrição</th>
+                    <th>Arquivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr class="<?php echo $item['class']; ?>">
+                        <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td align="center"><a class="btFile" href="/storage/file/<?php echo $item['arquivo']; ?>/clientes-arquivos?nocache=<?php echo date('U'); ?>" target="_blank">Baixar</a></td>
+                        <td><?php echo $item['descricao']; ?></td>
+                        <td><?php echo $item['arquivo']; ?></td>
+
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <?php $AgendaModel = new UsuariosCompromissos_Model(); ?>
+        <div id="<?php echo $this->controller; ?>ModalAgenda" class="modal" title="<?php echo $AgendaModel->getOption('title'); ?>"></div>
+        <script src="/js/submodulo.js"></script>
+        <script>
+        $(function() {
+            $().submodulo({
+                controller: '<?php echo $this->controller; ?>',
+                module: '<?php echo $this->module; ?>',
+                tab: '#ClientesTabs',
+                modal: '#<?php echo $this->controller; ?>Modal',
+                form: '#<?php echo $this->form->getId(); ?>',
+                parent_id: '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+            });
+            $().submodulo({
+                controller: 'Agenda',
+                module: '<?php echo $this->module; ?>',
+                tab: '#ClientesTabs',
+                modal: '#<?php echo $this->controller; ?>ModalAgenda',
+                form: '#UsuariosCompromissosForm'
+            });
+            $('#<?php echo $this->controller; ?>ModalAgenda').dialog({
+                modal: true,
+                autoOpen: false,
+                show: "slide",
+                hide: "slide",
+                width: '600',
+                close: function() {
+                    $('#ClientesTabs').tabs("load", $('#ClientesTabs').tabs('option', 'selected'));
+                    $('#<?php echo $this->controller; ?>ModalAgenda').html('');
+                }
+            });
+            $('.btConverter').die('click').unbind('click').click(function() {
+                var id = $(this).attr('source');
+                $.get(
+                        '/<?php echo $this->module; ?>/submodulo/Agenda/converter/',
+                        {'atendimento_id': id},
+                function(data) {
+                    $('#<?php echo $this->controller; ?>ModalAgenda').html(data).dialog('open');
+                }
+                );
+            });
+        });
+        </script>
+    <?php endif; ?>
+</div>

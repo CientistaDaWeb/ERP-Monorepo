@@ -1,0 +1,19 @@
+<div class="grid_12">
+    <?php echo $this->form; ?>
+</div>
+<div id="contadorModal"></div>
+<script>
+    $(function () {
+        $('#ArquivosContadorForm').die('submit').submit(function() {
+            $(this).ajaxSubmit({
+                type: 'post',
+                url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/enviar-contador/",
+                success: function (data) {
+                    $("#contadorModal").html(data);
+                    $("#EmpresasTabs").tabs('reload', '1');
+                }
+            });
+            return false;
+        });
+    });
+</script>

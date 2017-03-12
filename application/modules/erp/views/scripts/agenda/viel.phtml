@@ -1,0 +1,93 @@
+<?php
+if (!($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+if (isset($this->model->_addButton)):
+    ?>
+    <a href="/<?php echo $this->module; ?>/<?php echo $this->controller; ?>/formulario/<?php echo ($this->parent_id) ? '/' . $this->parent_id : ''; ?>?viel=true'" parent_id="<?php echo ($this->parent_id) ? $this->parent_id : ''; ?>" class="btAdicionar <?php echo $this->controller; ?>" title="<?php echo $this->model->getOption('buttons', 'add'); ?>">
+        <?php echo $this->model->getOption('buttons', 'add'); ?>
+    </a>
+    <?php
+endif;
+?>
+<div id="calendar"></div>
+<div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+<script type="text/javascript">
+    $(function() {
+        $('#calendar').fullCalendar({
+            theme: true,
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            editable: true,
+            events: "/<?php echo $this->module; ?>/Agenda/eventosviel/",
+            buttonText: {
+                today: 'Hoje',
+                month: 'Mensal',
+                week: 'Semanal',
+                day: 'Diário'
+            },
+            editable: false,
+                    disableDragging: true,
+            disableResizing: true,
+            columnFormat: {
+                month: 'dddd',
+                week: 'dddd MMMM/dd',
+                day: 'dddd MMMM/dd'
+            },
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+            firstDay: 1,
+            timeFormat: 'H(:mm)',
+            eventClick: function(calEvent, jsEvent, view) {
+                /*
+                 window.location = '/<?php echo $this->module; ?>/Agenda/formulario/'+calEvent.id;
+                 */
+
+                $('#<?php echo $this->controller; ?>Modal').html(carregando);
+                var id = $(this).attr('source');
+                $.ajax({
+                    url: '<?php echo '/' . $this->module . '/submodulo/' . $this->controller . '/formulario/'; ?>' + calEvent.id,
+                    success: function(data) {
+                        $('#<?php echo $this->controller; ?>Modal').html(data).dialog('open');
+                    }
+                });
+                return false;
+            }
+        });
+        $().submodulo({
+            controller: '<?php echo $this->controller; ?>',
+            module: '<?php echo $this->module; ?>',
+            modal: '#<?php echo $this->controller; ?>Modal',
+            form: '#<?php echo $this->form->getId(); ?>',
+            parent_id: '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+        });
+        $('#<?php echo $this->controller; ?>Modal').dialog({
+            beforeClose: function(event, ui) {
+                location.reload(true);
+            }
+        });
+        $(".btAdicionar.<?php echo $this->controller; ?>").die('click').unbind('click').click(function() {
+            $('#<?php echo $this->controller; ?>Modal').html(carregando);
+            var attr = $(this).attr('parent_id');
+            if (typeof attr !== 'undefined' && attr !== false && attr != '') {
+                url = "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/formulario//" + $(this).attr('parent_id') + '?viel=true';
+            } else {
+                url = "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/formulario//<?php echo $this->data['parent_id']; ?>?viel=true";
+            }
+            $.ajax({
+                url: url,
+                success: function(data) {
+                    $('#<?php echo $this->controller; ?>Modal').html(data).dialog('open');
+                }
+            });
+            return false;
+        });
+    });
+</script>

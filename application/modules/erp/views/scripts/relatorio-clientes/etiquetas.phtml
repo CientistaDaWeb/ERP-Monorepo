@@ -1,0 +1,51 @@
+<?php
+if (!empty($this->clientes)):
+    ?>
+        <form method="POST" action="/<?php echo $this->module . '/print/' . $this->controller . '/imprimeetiquetas'; ?>">
+            <h3>Selecione os endereços</h3>
+            <table class="listagem">
+                <tbody>
+                    <?php
+                    foreach ($this->clientes AS $cliente):
+                        $this->model = new Clientes_Model();
+                        $cli = $this->model->find($cliente);
+                        if (!empty($cli['razao_social'])):
+                            $enderecos = ClientesEnderecos_Model::fetchPair($cliente);
+                            ?>
+                            <tr>
+                                <th><?php echo $cli['razao_social']; ?></th>
+                                <td>
+                                    <?php if (!empty($enderecos)): ?>
+                                        <select name="endereco_id[]">
+                                            <?php foreach ($enderecos AS $id => $endereco): ?>
+                                                <option value="<?php echo $id; ?>"><?php echo $endereco; ?></option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="error">Nenhum endereço encontrado!</div>
+                                        <?php endif; ?>
+                                    </select></td>
+                            </tr>
+                            <?php
+                        endif;
+                    endforeach;
+                    ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            <label for="">Etiquetas usadas</label>
+                            <select name="usadas">
+                                <?php for ($i = 0; $i < 14; $i++): ?>
+                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </th>
+                        <td><button type="submit">Imprimir etiquetas</button></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    <?php else: ?>
+        <div class="empty">Nenhum cliente selecionado!</div>
+    <?php endif; ?>
+</html>

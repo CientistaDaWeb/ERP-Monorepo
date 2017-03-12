@@ -1,0 +1,316 @@
+<div class="grid_12">
+    <?php $item = $this->model->adjustToView($this->item); ?>
+    <table class="listagem margemB">
+        <tr>
+            <th>Data</th>
+            <td><?php echo $item['data']; ?></td>
+        </tr>
+        <tr>
+            <th>Tomador</th>
+            <td><?php echo $item['toma']; ?></td>
+        </tr>
+        <tr>
+            <th>Remetente</th>
+            <td><?php echo $item['remetente']; ?></td>
+        </tr>
+        <tr>
+            <th>Destinatario</th>
+            <td><?php echo $item['destinatario']; ?></td>
+        </tr>
+        <tr>
+            <th>Expedidor</th>
+            <td><?php echo $item['expedidor']; ?></td>
+        </tr>
+        <tr>
+            <th>Recebedor</th>
+            <td><?php echo $item['recebedor']; ?></td>
+        </tr>
+        <tr>
+            <th>CFOP</th>
+            <td><?php echo $item['cfop_codigo'] . ' - ' . $item['cfop_descricao']; ?></td>
+        </tr>
+        <tr>
+            <th>Volume</th>
+            <td><?php echo $item['quantidade']; ?> m³</td>
+        </tr>
+        <tr>
+            <th>RTRNC</th>
+            <td><?php echo $item['rtnrc']; ?></td>
+        </tr>
+        <tr>
+            <th>Observações</th>
+            <td><?php echo $item['observacoes']; ?></td>
+        </tr>
+        <tr>
+            <th colspan="2"><h3>Documentos Originários</h3></th>
+        </tr>
+        <tr>
+            <th>Tipo</th>
+            <td><?php echo $item['doc_tipo']; ?></td>
+        </tr>
+        <tr>
+            <th>Número</th>
+            <td><?php echo $item['doc_numero']; ?></td>
+        </tr>
+        <tr>
+            <th>Data de Emissão</th>
+            <td><?php echo $item['doc_data_emissao']; ?></td>
+        </tr>
+        <tr>
+            <th>Valor</th>
+            <td><?php echo $item['doc_valor']; ?></td>
+        </tr>
+        <tr>
+            <th colspan="2"><h3>NFE</h3></th>
+        </tr>
+        <tr>
+            <th>Chave</th>
+            <td><?php echo $item['nfe_chave']; ?></td>
+        </tr>
+        <tr>
+            <th>Pin</th>
+            <td><?php echo $item['nfe_pin']; ?></td>
+        </tr>
+        <tr>
+            <th>Data de Emissão</th>
+            <td><?php echo $item['nfe_data_emissao']; ?></td>
+        </tr>
+        <tr>
+            <th>Valor da Carga</th>
+            <td><?php echo $item['valor_carga']; ?></td>
+        </tr>
+        <tr>
+            <th colspan="2"><h3>Protocolos</h3></th>
+        </tr>
+        <tr>
+            <th>Protocolo</th>
+            <td><?php echo $item['protocolo']; ?></td>
+        </tr>
+        <tr>
+            <th>Chave</th>
+            <td><?php echo $item['chave']; ?></td>
+        </tr>
+        <tr>
+            <th>Protocolo SEFAZ</th>
+            <td><?php echo $item['protocolo_sefaz']; ?></td>
+        </tr>
+        <tr>
+            <th>Código</th>
+            <td><?php echo $item['codigo']; ?></td>
+        </tr>
+        <tr>
+            <th>Lote</th>
+            <td><?php echo $item['lote']; ?></td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td><?php echo $item['status']; ?></td>
+        </tr>
+    </table>
+    <?php
+    if (($this->item['status'] >= 1) && ($this->item['status'] <= 4)):
+        ?>
+        <button type="button" id="corrigirDados" source="<?php echo $this->item['id']; ?>">Corrigir Dados</button>
+        <?php
+    endif;
+    if (($this->item['status'] <= 3) && ($this->item['status'] >= 2)):
+        ?>
+        <button type="button" id="gerarXml" source="<?php echo $this->item['id']; ?>">Gerar XML</button>
+        <?php
+    endif;
+    if (($this->item['status'] == 3)):
+        ?>
+        <button type="button" id="validarXml" source="<?php echo $this->item['id']; ?>">Validar XML</button>
+        <?php
+    endif;
+    if (($this->item['status'] == 4)):
+        ?>
+        <button type="button" id="previewArquivo" source="<?php echo $this->item['id']; ?>">Preview de Arquivo</button>
+        <button type="button" id="transmitirArquivo" source="<?php echo $this->item['id']; ?>">Transmitir Arquivo</button>
+        <?php
+    endif;
+    if (($this->item['status'] == 5)):
+        ?>
+        <button type="button" id="gerarArquivos" source="<?php echo $this->item['id']; ?>">Gerar Arquivo</button>
+        <?php
+    endif;
+    if (($this->item['status'] != 11)):
+        ?>
+        <button type="button" id="inutilizarNumeracao" source="<?php echo $this->item['id']; ?>">Inutilizar CT-e</button>
+        <?php
+    endif;
+    if (($this->item['status'] > 3) && ($this->item['status'] < 8) && $this->item['protocolo_sefaz']):
+        ?>
+        <button type="button" id="cancelarCte" source="<?php echo $this->item['id']; ?>">Cancelar Cte</button>
+        <hr />
+        <br />
+        <h2>Carta de Correção</h2>
+        <form id="formCartaCorrecao">
+            <input type="hidden" value="<?php echo $item['id']; ?>" id="cte_id" name="cte_id" />
+            <?php
+            foreach ($this->model->getOption('campos') AS $id => $item):
+                ?>
+                <p>
+                    <label for="<?php echo $id; ?>">
+                        <?php echo $item['campo']; ?>
+                    </label>
+                    <?php if ($item['type'] == 'Select'): ?>
+                        <select id="<?php echo $id; ?>" name="alteracoes[<?php echo $id; ?>]">
+                            <?php
+                            if (!empty($item['option'])):
+                                ?>
+                                <option value=''><?php echo $item['option']['']; ?></option>
+                                <?php
+                            endif;
+                            foreach ($item['options'] AS $id => $item):
+                                ?>
+                                <option value='<?php echo $id; ?>'><?php echo $item; ?></option>
+                                <?php
+                            endforeach;
+                            ?>
+                        </select>
+                    <?php endif; ?>
+                </p>
+                <?php
+            endforeach;
+            ?>
+            <br />
+            <p><button type='submit'>Enviar Carta</button></p>
+        </form>
+        <?php
+    endif;
+    ?>
+    <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+
+</div>
+<script>
+    $(function() {
+        $().submodulo({
+            controller: '<?php echo $this->controller; ?>',
+            module: '<?php echo $this->module; ?>',
+            tab: '#CtesTabs',
+            modal: '#<?php echo $this->controller; ?>Modal',
+            form: '#<?php echo $this->form->getId(); ?>',
+            parent_id: '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+        });
+        $('#gerarXml').unbind('click').die('click').click(function() {
+            var source = $(this).attr('source');
+            $.ajax({
+                type: 'POST',
+                url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/geraxml/",
+                data: {'cte_id': source},
+                success: function(data) {
+                    $("#<?php echo $this->controller; ?>Modal").html(data);
+                    $('#CtesTabs').tabs("load", $('#CtesTabs').tabs('option', 'selected'));
+                }
+            });
+            return false;
+        });
+        $('#transmitirArquivo').unbind('click').die('click').click(function() {
+            var source = $(this).attr('source');
+            $.ajax({
+                type: 'POST',
+                url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/transmitir/",
+                data: {'cte_id': source},
+                success: function(data) {
+                    $("#<?php echo $this->controller; ?>Modal").html(data);
+                    $('#CtesTabs').tabs("load", $('#CtesTabs').tabs('option', 'selected'));
+                }
+            });
+            return false;
+        });
+        $('#validarXml').unbind('click').die('click').click(function() {
+            var source = $(this).attr('source');
+            $.ajax({
+                type: 'POST',
+                url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/validar/",
+                data: {'cte_id': source},
+                success: function(data) {
+                    $("#<?php echo $this->controller; ?>Modal").html(data);
+                    $('#CtesTabs').tabs("load", $('#CtesTabs').tabs('option', 'selected'));
+                }
+            });
+            return false;
+        });
+        $('#gerarArquivos').unbind('click').die('click').click(function() {
+            var source = $(this).attr('source');
+            $.ajax({
+                type: 'POST',
+                url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/gerararquivos/",
+                data: {'cte_id': source},
+                success: function(data) {
+                    $("#<?php echo $this->controller; ?>Modal").html(data);
+                    $('#CtesTabs').tabs("load", $('#CtesTabs').tabs('option', 'selected'));
+                }
+            });
+            return false;
+        });
+        $('#cancelarCte').unbind('click').die('click').click(function() {
+            var source = $(this).attr('source');
+            $.ajax({
+                type: 'POST',
+                url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/cancelar/",
+                data: {'cte_id': source},
+                success: function(data) {
+                    $("#<?php echo $this->controller; ?>Modal").html(data);
+                    $('#CtesTabs').tabs("load", $('#CtesTabs').tabs('option', 'selected'));
+                }
+            });
+            return false;
+        });
+        $('#previewArquivo').unbind('click').die('click').click(function() {
+            var source = $(this).attr('source');
+            $.ajax({
+                type: 'POST',
+                url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/preview/",
+                data: {'cte_id': source},
+                success: function(data) {
+                    $("#<?php echo $this->controller; ?>Modal").html(data);
+                    $('#CtesTabs').tabs("load", $('#CtesTabs').tabs('option', 'selected'));
+                }
+            });
+            return false;
+        });
+        $('#corrigirDados').unbind('click').die('click').click(function() {
+            var source = $(this).attr('source');
+            $.ajax({
+                type: 'GET',
+                url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/corrigir/" + source,
+                //data: {'id': source},
+                success: function(data) {
+                    $("#<?php echo $this->controller; ?>Modal").html(data).dialog('open');
+                    //$('#CtesTabs').tabs("load", $('#CtesTabs').tabs('option', 'selected'));
+                }
+            });
+            return false;
+        });
+        $('#inutilizarNumeracao').unbind('click').die('click').click(function() {
+            var r = confirm("Gostaria mesmo de inutlizar essa CT-e?");
+            if (r == true) {
+                var source = $(this).attr('source');
+                $.ajax({
+                    type: 'GET',
+                    url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/inutilizar/" + source,
+                    //data: {'id': source},
+                    success: function(data) {
+                        $('#CtesTabs').tabs("load", $('#CtesTabs').tabs('option', 'selected'));
+                    }
+                });
+            }
+            return false;
+        });
+
+
+        $('#formCartaCorrecao').unbind('submit').die('submit').submit(function() {
+            $("#<?php echo $this->controller; ?>Modal").dialog('open').html(carregando);
+            $(this).ajaxSubmit({
+                success: function(data) {
+                    $("#<?php echo $this->controller; ?>Modal").html(data).dialog('close');
+                },
+                type: 'post',
+                url: "/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/carta/",
+            });
+            return false;
+        });
+    });
+</script>

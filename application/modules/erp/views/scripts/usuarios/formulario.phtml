@@ -1,0 +1,45 @@
+<?php
+if (!isset($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+$auth = new WS_Auth('erp');
+$user = $auth->getIdentity();
+if ($user->papel != 'A'):
+    echo $this->form;
+else:
+    ?>
+    <div id="UsuariosTab">
+        <ul>
+            <li><a href="#dataTab">Usuário</a></li>
+            <li><a href="/<?php echo $this->module; ?>/submodulo/Acl-Acesso-Sistema/formulario//<?php echo $this->data['id']; ?>">Permissoes</a></li>
+        </ul>
+        <div id="dataTab">
+            <div class="grid_12">
+                <?php echo $this->form; ?>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $("#UsuariosTab").tabs({
+                spinner: carregando,
+                ajaxOptions: {
+                    error: function(xhr, status,index, anchor){
+                        if(status == 'error'){
+                            $(anchor.hash).html('Erro ao carregar o conteúdo!');
+                        }else{
+                            $(anchor.hash).html(carregando);
+                        }
+                    }
+                }
+            });
+    <?php if (empty($this->data['id'])): ?>
+                $("#UsuariosTab").tabs("option","disabled", [1]);
+    <?php elseif (isset($this->noLayout)): ?>
+                $("#UsuariosTab").tabs("option","disabled", [1]);
+    <?php endif; ?>
+        });
+    </script>
+<?php endif; ?>

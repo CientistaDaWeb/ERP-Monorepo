@@ -1,0 +1,64 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    if (!empty($this->items)):
+        ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th>Orçamento</th>
+                    <th>Data de Assinatura</th>
+                    <th>Data de Encerramento</th>
+                    <th>Serviço Contratado</th>
+                    <th>Valor Trans.</th>
+                    <th>Valor Trat. (m³)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td><?php echo $item['orcamento_id']; ?></td>
+                        <td align="center"><?php echo $item['data_assinatura']; ?></td>
+                        <td align="center"><?php echo $item['data_encerramento']; ?></td>
+                        <td align="center"><?php echo $item['servico_contratado']; ?></td>
+                        <td align="center"><?php echo $item['valor_transporte']; ?></td>
+                        <td align="center"><?php echo $item['valor_tratamento']; ?></td>
+                    </tr>
+    <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <script type="text/javascript" src="/js/submodulo.js"> </script>
+        <script type="text/javascript">
+            $(function(){
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#ClientesTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id : '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+            });
+        </script>
+<?php endif; ?>
+</div>

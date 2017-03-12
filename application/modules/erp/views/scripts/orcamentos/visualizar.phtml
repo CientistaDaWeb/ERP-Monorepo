@@ -1,0 +1,153 @@
+<div class="grid_12">
+    <?php
+    if (!($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <div id="GerarPdfModal" class="modal"></div>
+    <div id="EnviarEmailModal" class="modal" title="Enviar Orçamento por E-mail"></div>
+    <div class="margemB botoes">
+        <button type="button" id="btGerarPDF">
+            Gerar PDF
+        </button>
+        <button type="button" id="btVerPDF">
+            Salvar PDF
+        </button>
+        <button type="button" id="btEnviarEmail">
+            Enviar por E-mail
+        </button>
+        <button type="button" id="btGerarPDFTimbrado">
+            Gerar para folha timbrada
+        </button>
+        <button type="button" id="btVerOrcamento">
+            Ver Orçamento
+        </button>
+    </div>
+    <?php
+    if (!empty($this->pdf)):
+        ?>
+        <div class="warning">
+            PDF gerado pela última vez em: <?php echo WS_Date::adjustToViewWithHour($this->pdf_gerado); ?>
+        </div>
+        <hr class="clear" />
+        <iframe width="100%" id="iframeOrcamento" height="500" src="/uploads/orcamentos/<?php echo $this->pdf; ?>?<?php echo date('U'); ?>"></iframe>
+    <?php endif; ?>
+    <script type="text/javascript">
+        $(function() {
+            $('#GerarPdfModal').dialog({
+                modal: true,
+                autoOpen: false,
+                show: "slide",
+                hide: "slide",
+                width: '350',
+                beforeClose: function(event, ui) {
+                    $("#iframeOrcamento").show();
+                    $('#OrcamentosTabs').tabs("load",$('#OrcamentosTabs').tabs('option', 'selected'));
+                },
+                open: function(event, ui) {
+                    $("#iframeOrcamento").hide();
+                }
+            });
+            $('#EnviarEmailModal').dialog({
+                modal: true,
+                autoOpen: false,
+                show: "slide",
+                hide: "slide",
+                width: '650',
+                beforeClose: function(event, ui) {
+                    $("#iframeOrcamento").show()
+                },
+                open: function(event, ui) {
+                    $("#iframeOrcamento").hide()
+                }
+            });
+
+            $('#btVerPDF').die('click').unbind('click').click(function() {
+                window.open('/<?php echo $this->module; ?>/save/Orcamentos/verpdf/<?php echo $this->id; ?>', 'Ver PDF');
+            });
+
+            $('#btGerarPDFTimbrado').die('click').unbind('click').click(function() {
+                window.open('/<?php echo $this->module; ?>/save/Orcamentos/gerarnovopdf/<?php echo $this->id; ?>//true', 'Ver PDF');
+            });
+
+            $('#btGerarPDF').die('click').unbind('click').click(function() {
+                $("#GerarPdfModal").html('Aguarde, gerando PDF!');
+                $("#GerarPdfModal").dialog("open");
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: '/<?php echo $this->module; ?>/save/Orcamentos/gerarnovopdf/<?php echo $this->id; ?>',
+                    success: function(data) {
+                        if (data != "")
+                            $("#GerarPdfModal").html(data);
+                        $("#GerarPdfModal").dialog("close");
+                    }
+                });
+            });
+
+            $('#btEnviarEmail').die('click').unbind('click').click(function() {
+                $("#iframeOrcamento").hide();
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: '/<?php echo $this->module; ?>/submodulo/Orcamentos/enviaremail//<?php echo $this->id; ?>',
+                    success: function(data) {
+                        if (data != "") {
+                            $("#EnviarEmailModal").html(data);
+                        } else {
+                            $("#EnviarEmailModal").dialog("close");
+                        }
+                    }
+                });
+                $("#EnviarEmailModal").dialog("open");
+            });
+
+            $('#OrcamentosEmailForm').die('submit').unbind('submit').live('submit', function() {
+                $(this).ajaxSubmit({
+                    type: "post",
+                    url: "/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/enviaremail//<?php echo $this->id; ?>",
+                    beforeSubmit: avisoEnvio,
+                    success: function(data) {
+                        if (data != "")
+                            $("#EnviarEmailModal").html(data);
+                        $("#EnviarEmailModal").dialog('close');
+                    }
+                });
+                return false;
+            });
+
+            $("#btVerOrcamento").die('click').unbind('click').click(function() {
+                window.open('/<?php echo $this->module; ?>/print/Orcamentos/ver/<?php echo $this->id; ?>', 'Ver Orçamento');
+            });
+
+            $("#assunto_id").die('click').unbind('click').live('change', function() {
+                var id = $(this).select().val();
+                $.ajax({
+                    url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/' + id,
+                    datatype: 'GET',
+                    success: function(data) {
+                        if (data != "")
+                            $("#assunto").val(data);
+                    }
+                });
+            });
+
+            $("#descricao_id").die('change').unbind('change').live('change', function() {
+                var id = $(this).select().val();
+                $.ajax({
+                    url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/' + id,
+                    datatype: 'GET',
+                    success: function(data) {
+                        if (data != "")
+                            $("#descricao").val(data);
+                    }
+                });
+            });
+        });
+        function avisoEnvio() {
+            $("#EnviarEmailModal").html('Enviando E-mail!')
+        }
+    </script>
+</div>

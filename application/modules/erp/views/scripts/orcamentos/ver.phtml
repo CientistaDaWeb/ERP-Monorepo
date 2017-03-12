@@ -1,0 +1,107 @@
+<div class="grid_12">
+    <?php
+    if (!($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+
+    if (!empty($this->orcamento)):
+        $empresa_endereco = $this->orcamento['endereco'] . ', ' . $this->orcamento['numero'] . ' ' . $this->orcamento['complemento'] . ' - ' . $this->orcamento['bairro'];
+        $empresa_cidade = $this->orcamento['cep'] . ' ' . $this->orcamento['cidade'] . ' - ' . $this->orcamento['uf'];
+        $empresa_telefone = $this->orcamento['telefone'];
+        if (!empty($this->orcamento['telefone2'])):
+            $empresa_telefone .= ' | ' . $this->orcamento['telefone2'];
+        endif;
+        if (!empty($this->orcamento['telefone3'])):
+            $empresa_telefone .= ' | ' . $this->orcamento['telefone3'];
+        endif;
+        $ZD = new Zend_Date($this->orcamento['data_emissao']);
+        ?>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="margem-b">
+            <tr>
+                <th align="left"><?php echo $this->orcamento['empresa']; ?></th>
+                <td rowspan="6"><img src="/images/logos/<?php echo $this->orcamento['logomarca']; ?>" /></td>
+            </tr>
+            <tr>
+                <td><?php echo $empresa_endereco; ?></td>
+            </tr>
+            <tr>
+                <td><?php echo $empresa_cidade; ?></td>
+            </tr>
+            <tr>
+                <td>Fones: <?php echo $empresa_telefone; ?></td>
+            </tr>
+            <tr>
+                <td>Email: <?php echo $this->orcamento['email']; ?></td>
+            </tr>
+            <tr>
+                <td>Website: <?php echo $this->orcamento['site']; ?></td>
+            </tr>
+        </table>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="margem-t">
+            <tr>
+                <th align="left">Orçamento nº <?php echo $this->orcamento['id']; ?></th>
+                <td align="right"><?php
+                    $date = new WS_Date($this->orcamento['data_emissao'], 'yyyy-MM-dd');
+                    echo $date->toString('dd/MM/yyyy');
+                    ?></td>
+            </tr>
+        </table>
+        <h2 style="margin: 30px 0; color: #000; text-align: center; border: 0"><?php echo $this->orcamento['titulo']; ?></h2>
+        <p class="margem-b"><b>Cliente: <?php echo $this->orcamento['cliente']; ?></b></p>
+        <p class="margem-b">Contato: <?php echo $this->orcamento['contato']; ?></p>
+        <p>Conforme solicitado segue o orçamento para os trabalhos descritos abaixo:</p>
+        <br />
+        <?php if (!empty($this->servicos)): ?>
+            <table class="listagem">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descrição</th>
+                        <th>Qtd</th>
+                        <th>Valor Unitário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->servicos AS $servico): ?>
+                        <tr>
+                            <td><?php echo $servico['id']; ?></td>
+                            <td><b><?php echo $servico['servico']; ?></b><br /><?php echo nl2br($servico['descricao']); ?></td>
+                            <td><?php echo $servico['qtde']; ?> <?php echo $servico['unidade']; ?></td>
+                            <td class="valor">R$ <?php echo number_format($servico['preco'], 2, ',', '.'); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <?php if ($this->orcamento['valor_total'] > 0): ?>
+                    <tr>
+                        <th align="right" colspan="3">Total</td>
+                        <td class="valor">R$ <?php echo number_format($this->orcamento['valor_total'], 2, ',', '.'); ?></td>
+                    </tr>
+                <?php endif; ?>
+            </table>
+            <br />
+            <p><b>Condições de Pagamento</b></p>
+            <p><?php echo nl2br($this->orcamento['condicoes_pagamento']); ?></p>
+            <br />
+            <p><b>Validade da Proposta</b></p>
+            <p><?php echo nl2br($this->orcamento['prazo_entrega']); ?></p>
+            <br />
+            <p><b>Observações</b></p>
+            <p><?php echo nl2br($this->orcamento['observacoes']); ?></p>
+            <br />
+            <p>Colocamo-nos a sua disposição para quaisquer esclarecimentos adicionais.<br /><br />
+                Atenciosamente,</p>
+            <p><b><?php echo $this->orcamento['fnome']; ?></b></p>
+            <p><?php echo $this->orcamento['fcargo']; ?></p>
+            <p><?php echo $this->orcamento['femail']; ?></p>
+            <p><?php echo $this->orcamento['ftelefone']; ?></p>
+            <?php if ($this->orcamento['vantagens']): ?>
+                <div class="breakline"></div>
+                <img src="/images/vantagens.jpg" />
+                <?php
+            endif;
+        endif;
+    endif;
+    ?>
+</div>

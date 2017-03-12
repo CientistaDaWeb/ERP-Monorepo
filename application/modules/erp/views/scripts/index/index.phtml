@@ -1,0 +1,493 @@
+<?php
+$auth = new WS_Auth('erp');
+$acl = new AclAcessos_Model();
+$usuario = $auth->getIdentity();
+if ($usuario->papel):
+    $role = $usuario->papel;
+else:
+    $role = 'V';
+endif;
+/*
+  if (!empty($this->faltantes)) :
+  ?>
+  <div class="grid_12">
+  <div class="box">
+  <h1>Funcionários que não bateram o último ponto</h1>
+  <table class="listagem">
+  <thead>
+  <tr class="ui-widget-header">
+  <th>Funcionário</th>
+  </tr>
+  </thead>
+  <tbody>
+  <?php foreach ($this->faltantes AS $item): ?>
+  <tr class="atrasada">
+  <td><?php echo $item['nome']; ?></td>
+  </tr>
+  <?php endforeach; ?>
+  </tbody>
+  </table>
+  </div>
+  </div>
+  <?php endif;
+ */
+/* Verifica se tem permissão para acessar o módulo de Projetos */
+if ($acl->isAllowed($role, 'erp:Projetos')):
+    $ProjetosModel = new Projetos_Model();
+    $classes = array(
+        'A' => 'yellowAlert',
+        'I' => 'redAlert'
+    );
+    ?>
+    <div class="grid_12">
+        <div class="box">
+            <h1><?php echo $this->tituloProjetos; ?></h1>
+            <div class="grid_6">
+                <div class="subbox">
+                    <h2>PPCI</h2>
+                    <?php if (!empty($this->projetos_ppci)): ?>
+                        <table class="listagem">
+                            <thead>
+                                <tr class="ui-widget-header">
+                                    <th></th>
+                                    <th>Projeto</th>
+                                    <th>Última Interação</th>
+                                    <th>Protocolo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($this->projetos_ppci AS $item):
+                                    $classe = $classes[$item['status_ppci']];
+                                    $item = $ProjetosModel->adjustToView($item);
+                                    ?>
+                                    <tr class="<?php echo $classe; ?>">
+                                        <td><a href="/<?php echo $this->module; ?>/Projetos/formulario/<?php echo $item['id']; ?>" class="buttonLink">Ir para o Projeto</a></td>
+                                        <td><?php echo $item['nome']; ?></td>
+                                        <td><?php echo WS_Date::adjustToView($item['data']); ?></td>
+                                        <td><?php echo $item['numero_protocolo']; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flashMessage sucess">Nenhum PPCI pendente.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="grid_6">
+                <div class="subbox">
+                    <h2>HIDRO</h2>
+                    <?php if (!empty($this->projetos_hidro)): ?>
+                        <table class="listagem">
+                            <thead>
+                                <tr class="ui-widget-header">
+                                    <th></th>
+                                    <th>Projeto</th>
+                                    <th>Última Interação</th>
+                                    <th>Protocolo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($this->projetos_hidro AS $item):
+                                    $classe = $classes[$item['status_hidro']];
+                                    $item = $ProjetosModel->adjustToView($item);
+                                    ?>
+                                    <tr class="<?php echo $classe; ?>">
+                                        <td><a href="/<?php echo $this->module; ?>/Projetos/formulario/<?php echo $item['id']; ?>" class="buttonLink">Ir para o Projeto</a></td>
+                                        <td><?php echo $item['nome']; ?></td>
+                                        <td><?php echo WS_Date::adjustToView($item['data']); ?></td>
+                                        <td><?php echo $item['numero_protocolo']; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flashMessage sucess">Nenhum HIDRO pendente.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+endif;
+if (!empty($this->compromissos)) :
+    ?>
+    <div class="grid_12">
+        <div class="box">
+            <h1><?php echo $this->tituloAgenda; ?></h1>
+            <table class="listagem">
+                <thead>
+                    <tr class="ui-widget-header">
+                        <th></th>
+                        <th>Usuário</th>
+                        <th>Data</th>
+                        <th>Título</th>
+                        <th>Cliente</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->compromissos AS $item): ?>
+                        <tr>
+                            <td><a href="/<?php echo $this->module . '/Agenda/formulario/' . $item['id']; ?>" class="buttonLink">Ir para a Agenda</a></td>
+                            <td><?php echo $item['nome']; ?></td>
+                            <td><?php echo WS_Date::adjustToViewWithHour($item['data'] . ' ' . $item['hora']); ?></td>
+                            <td><?php echo $item['titulo']; ?></td>
+                            <td><?php echo $item['cliente']; ?></td>
+                            <td><?php echo nl2br($item['descricao']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php
+endif;
+/* Verifica se tem permissão para acessar o módulo de Contas a Receber */
+if ($acl->isAllowed($role, 'erp:Contas-Receber')):
+    ?>
+    <div class="grid_12">
+        <div class="box">
+            <h1><?php echo $this->tituloContasReceber; ?></h1>
+            <div class="grid_6">
+                <div class="subbox">
+                    <h2>Atrasadas</h2>
+                    <?php if (!empty($this->contasReceberAtrasadas)): ?>
+                        <table class="listagem">
+                            <thead>
+                                <tr class="ui-widget-header">
+                                    <th></th>
+                                    <th>Vencimento</th>
+                                    <th>Cliente</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($this->contasReceberAtrasadas AS $item): ?>
+                                    <tr class="atrasada">
+                                        <td><a href="/<?php echo $this->module; ?>/Contas-Receber/pagar/<?php echo $item['id']; ?>" class="buttonLink">Ir para a Conta</a></td>
+                                        <td><?php echo WS_Date::adjustToView($item['data_vencimento']); ?></td>
+                                        <td><?php echo $item['razao_social']; ?></td>
+                                        <td class="valor"><?php echo WS_Money::adjustToView($item['valor']); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flashMessage sucess">Nenhuma conta atrasada.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="grid_6">
+                <div class="subbox">
+                    <h2>Vencendo</h2>
+                    <?php if (!empty($this->contasReceberVencendo)): ?>
+                        <table class="listagem">
+                            <thead>
+                                <tr class="ui-widget-header">
+                                    <th></th>
+                                    <th>Vencimento</th>
+                                    <th>Cliente</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($this->contasReceberVencendo AS $item): ?>
+                                    <tr class="aberto">
+                                        <td><a href="/<?php echo $this->module; ?>/Contas-Receber/pagar/<?php echo $item['id']; ?>" class="buttonLink">Ir para a Conta</a></td>
+                                        <td><?php echo WS_Date::adjustToView($item['data_vencimento']); ?></td>
+                                        <td><?php echo $item['razao_social']; ?></td>
+                                        <td class="valor"><?php echo WS_Money::adjustToView($item['valor']); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flashMessage sucess">Nenhuma conta vencendo.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+endif;
+/* Verifica se tem permissão para acessar o módulo de Orçamentos */
+if ($acl->isAllowed($role, 'erp:Orcamentos')):
+    ?>
+    <div class="grid_12">
+        <div class="box">
+            <h1><?php echo $this->tituloOrcamentos; ?> com divergência de valores</h1>
+            <?php if (!empty($this->divergencias)): ?>
+                <table class="listagem">
+                    <thead>
+                        <tr class="ui-widget-header">
+                            <th></th>
+                            <th>Código</th>
+                            <th>Data de Emissão</th>
+                            <th>Cliente</th>
+                            <th>Funcionário</th>
+                            <th>Saldo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($this->divergencias AS $item): ?>
+                            <tr class="atrasada">
+                                <td><a href="/<?php echo $this->module; ?>/Orcamentos/formulario/<?php echo $item['id']; ?>" class="buttonLink">Ir para o Orçamento</a></td>
+                                <td><?php echo $item['id']; ?></td>
+                                <td><?php echo WS_Date::adjustToView($item['data_emissao']); ?></td>
+                                <td><?php echo $item['cliente']; ?></td>
+                                <td><?php echo $item['nome']; ?></td>
+                                <td><?php echo $item['saldo']; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div class="flashMessage sucess">Nenhum Orçamento com divergência de valores.</div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php
+endif;
+/* Verifica se tem permissão para acessar o módulo de Contas a Pagar */
+if ($acl->isAllowed($role, 'erp:Contas-Pagar')):
+    ?>
+    <div class="grid_12">
+        <div class="box">
+            <h1><?php echo $this->tituloContasPagar; ?></h1>
+            <div class="grid_6">
+                <div class="subbox">
+                    <h2>Atrasadas</h2>
+                    <?php if (!empty($this->contasPagarAtrasadas)): ?>
+                        <table class="listagem">
+                            <thead>
+                                <tr class="ui-widget-header">
+                                    <th></th>
+                                    <th>Vencimento</th>
+                                    <th>Cliente</th>
+                                    <th class="valor">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($this->contasPagarAtrasadas AS $item): ?>
+                                    <tr class="atrasada">
+                                        <td><a href="/<?php echo $this->module; ?>/Contas-Pagar/pagar/<?php echo $item['id']; ?>" class="buttonLink">Ir para a Conta</a></td>
+                                        <td><?php echo WS_Date::adjustToView($item['data_vencimento']); ?></td>
+                                        <td><?php echo $item['razao_social']; ?></td>
+                                        <td><?php echo WS_Money::adjustToView($item['valor']); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flashMessage sucess">Nenhuma conta atrasada.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="grid_6">
+                <div class="subbox">
+                    <h2>Vencendo</h2>
+                    <?php if (!empty($this->contasPagarVencendo)): ?>
+                        <table class="listagem">
+                            <thead>
+                                <tr class="ui-widget-header">
+                                    <th></th>
+                                    <th>Vencimento</th>
+                                    <th>Fornecedor</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($this->contasPagarVencendo AS $item): ?>
+                                    <tr class="aberto">
+                                        <td><a href="/<?php echo $this->module; ?>/Contas-Pagar/pagar/<?php echo $item['id']; ?>" class="buttonLink">Ir para a Conta</a></td>
+                                        <td><?php echo WS_Date::adjustToView($item['data_vencimento']); ?></td>
+                                        <td><?php echo $item['razao_social']; ?></td>
+                                        <td class="valor"><?php echo WS_Money::adjustToView($item['valor']); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flashMessage sucess">Nenhuma conta vencendo.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+endif;
+/* Verifica se tem permissão para acessar o módulo de Ordens de Serviço */
+if ($acl->isAllowed($role, 'erp:Ordens-Servico')):
+    ?>
+    <div class="grid_12">
+        <div class="box">
+            <h1><?php echo $this->tituloOrdensServico; ?></h1>
+            <div class="grid_6">
+                <div class="subbox">
+                    <h2>Atrasadas</h2>
+                    <?php if (!empty($this->OSAtrasadas)): ?>
+                        <table class="listagem">
+                            <thead>
+                                <tr class="ui-widget-header">
+                                    <th></th>
+                                    <th>Código</th>
+                                    <th>Data de Coleta</th>
+                                    <th>Cliente</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($this->OSAtrasadas AS $item): ?>
+                                    <tr class="atrasada">
+                                        <td><a href="/<?php echo $this->module; ?>/Ordens-Servico/formulario/<?php echo $item['id']; ?>" class="buttonLink">Ir para a Ordem de Serviço</a></td>
+                                        <td><?php echo $item['orcamento_id'] . '.' . $item['sequencial']; ?></td>
+                                        <td><?php echo WS_Date::adjustToViewWithHour($item['data_coleta'] . ' ' . $item['hora_coleta']); ?></td>
+                                        <td><?php echo $item['razao_social']; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flashMessage sucess">Nenhuma Ordem de Serviço atrasada.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="grid_6">
+                <div class="subbox">
+                    <h2>Vencendo</h2>
+                    <?php if (!empty($this->OSVencendo)): ?>
+                        <table class="listagem">
+                            <thead>
+                                <tr class="ui-widget-header">
+                                    <th></th>
+                                    <th>Código</th>
+                                    <th>Data da Coleta</th>
+                                    <th>Cliente</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($this->OSVencendo AS $item): ?>
+                                    <tr class="aberto">
+                                        <td><a href="/<?php echo $this->module; ?>/Ordens-Servico/formulario/<?php echo $item['id']; ?>" class="buttonLink">Ir para a Ordem de Serviço</a></td>
+                                        <td><?php echo $item['orcamento_id'] . '.' . $item['sequencial']; ?></td>
+                                        <td><?php echo WS_Date::adjustToViewWithHour($item['data_coleta'] . ' ' . $item['hora_coleta']); ?></td>
+                                        <td><?php echo $item['razao_social']; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flashMessage sucess">Nenhuma Ordem de Serviços próxima.</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<div class="grid_12">
+    <div class="box">
+        <h1><?php echo $this->tituloAtendimentos; ?></h1>
+        <?php if (!empty($this->atendimentos)): ?>
+            <table class="listagem">
+                <thead>
+                    <tr class="ui-widget-header">
+                        <th></th>
+                        <th>Data</th>
+                        <th>Cliente</th>
+                        <th>Descrição</th>
+                        <th>Funcionário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->atendimentos AS $item): ?>
+                        <tr class="atrasada">
+                            <td><a href="/<?php echo $this->module; ?>/Clientes/formulario/<?php echo $item['cliente_id']; ?>#ui-tabs-3" class="buttonLink">Ir para o Atendimento</a></td>
+                            <td><?php echo WS_Date::adjustToView($item['data']); ?></td>
+                            <td><?php echo $item['razao_social']; ?></a></td>
+                            <td><?php echo nl2br($item['descricao']); ?></td>
+                            <td><?php echo $item['nome']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <div class="flashMessage sucess">Nenhum Atendimento não resolvido.</div>
+        <?php endif; ?>
+    </div>
+</div>
+<?php
+/* Verifica se tem permissão para acessar o módulo de Orçamentos */
+if ($acl->isAllowed($role, 'erp:Orcamentos')):
+    ?>
+    <div class="grid_12">
+        <div class="box">
+            <h1><?php echo $this->tituloOrcamentos; ?></h1>
+            <?php if (!empty($this->orcamentos)): ?>
+                <table class="listagem">
+                    <thead>
+                        <tr class="ui-widget-header">
+                            <th></th>
+                            <th>Código</th>
+                            <th>Data de Emissão</th>
+                            <th>Cliente</th>
+                            <th>Funcionário</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($this->orcamentos AS $item): ?>
+                            <tr class="atrasada">
+                                <td><a href="/<?php echo $this->module; ?>/Orcamentos/formulario/<?php echo $item['id']; ?>" class="buttonLink">Ir para o Orçamento</a></td>
+                                <td><?php echo $item['id']; ?></td>
+                                <td><?php echo WS_Date::adjustToView($item['data_emissao']); ?></td>
+                                <td><?php echo $item['razao_social']; ?></td>
+                                <td><?php echo $item['nome']; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div class="flashMessage sucess">Nenhum Orçamento aguardando aprovação.</div>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+<?php
+if ($acl->isAllowed($role, 'erp:Contratos')):
+    if (!empty($this->contratos)) :
+        ?>
+        <div class="grid_12">
+            <div class="box">
+                <h1><?php echo $this->tituloContrato; ?></h1>
+                <table class="listagem">
+                    <thead>
+                        <tr class="ui-widget-header">
+                            <th></th>
+                            <th>Cliente</th>
+                            <th>Data</th>
+                            <th>Coletas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($this->contratos AS $item):
+                            if (!isset($item['coletas'])):
+                                $item['coletas'] = '';
+                            endif;
+                            ?>
+                            <tr>
+                                <td><a href="/<?php echo $this->module; ?>/Contratos/formulario/<?php echo $item['id']; ?>" class="buttonLink">Ir para o contrato.</a></td>
+                                <td><?php echo $item['cliente']; ?></td>
+                                <td><?php echo WS_Date::adjustToView($item['data_encerramento']); ?></td>
+                                <td><?php echo $item['coletas']; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <?php
+    endif;
+endif;
+?>

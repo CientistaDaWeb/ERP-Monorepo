@@ -1,0 +1,109 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <script src="/js/jquery.uploadifive.js"></script>
+    <link href="/css/uploadifive.css" media="screen" rel="stylesheet" type="text/css" />
+    <script>
+        $(function() {
+            $('#categoria').die('change').unbind('change').change(function() {
+                $('#uploadfive').die('uploadifive').unbind('uploadifive').uploadifive({
+                    uploadScript: '/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/upload/',
+                    buttonText: 'Enviar Arquivos',
+                    width: '250',
+                    height: 50,
+                    removeCompleted: true,
+                    formData: {
+                        'categoria_id': $(this).val(),
+                        'projeto_id': '<?php echo $this->data['parent_id']; ?>'
+                    },
+                    onQueueComplete: function(file) {
+                        $('#ProjetosTabs').tabs('load', $('#ProjetosTabs').tabs('option', 'selected'));
+                    }
+                });
+            });
+        });
+    </script>
+    <form>
+        <table class="listagem">
+            <tbody>
+                <tr>
+                    <th>Categoria</th>
+                    <td>
+                        <select name="categoria" id="categoria">
+                            <option value="">Selecione...</option>
+                            <?php
+                            $categorias = ProjetosCategorias_Model::fetchPair();
+                            foreach ($categorias AS $id => $categoria):
+                                ?>
+                                <option value="<?php echo $id; ?>"><?php echo $categoria; ?></option>
+                            <?php endforeach;
+                            ?>
+                        </select>
+                    </td>
+                    <td><input id="uploadfive" name="files" type="file" multiple="true" style="display: none;"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <hr />
+    <div class="clear-fix"></div>
+    <?php
+    if (!empty($this->items)): ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th>Data</th>
+                    <th>Categoria</th>
+                    <th>Descrição</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td><?php echo $item['created']; ?></td>
+                        <td><?php echo $item['categoria']; ?></td>
+                        <td><?php echo nl2br($item['descricao']); ?></td>
+                        <td><a href="/storage/file/<?php echo $item['arquivo']; ?>/projetos/save" target="_blank">Download (<?php echo $item['arquivo']; ?>)</a></td>
+                    </tr>
+                    <?php
+                endforeach;
+                ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <script type="text/javascript" src="/js/submodulo.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#ProjetosTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id: '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+            });
+        </script>
+    <?php endif; ?>
+</div>

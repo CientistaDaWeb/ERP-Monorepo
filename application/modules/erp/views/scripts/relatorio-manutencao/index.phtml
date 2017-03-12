@@ -1,0 +1,81 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<div class="hidden">
+    <form method="post" id="Form_Relatorio_Contratos">
+        <table class="listagem">
+            <tr>
+                <th>Data Inicial</th>
+                <th><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></th>
+                <th>Data Final</th>
+                <th><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></th>
+                <th rowspan="6"><button type="submit">Filtrar</button></th>
+            </tr>
+            <tr>
+                <th>Fornecedor</th>
+                <th>
+                    <select name="fornecedor_id">
+                        <option value="">Todas</option>
+                        <?php
+                        $FornecedoresModel = new Fornecedores_Model();
+                        foreach ($FornecedoresModel->fetchPair() AS $key => $c):
+                            ?>
+                            <option value="<?php echo $key; ?>" <?php echo ($this->data['fornecedor_id'] == $key) ? 'selected="selected"' : ''; ?>><?php echo $c; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+                <th>Peça</th>
+                <th>
+                    <select name="peca_id">
+                        <option value="">Todas</option>
+                        <?php
+                        $PecasModel = new Pecas_Model();
+                        foreach ($PecasModel->fetchPair() AS $key => $c):
+                            ?>
+                            <option value="<?php echo $key; ?>" <?php echo ($this->data['peca_id'] == $key) ? 'selected="selected"' : ''; ?>><?php echo $c; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="margem-t clear"></div>
+<?php if (!empty($this->items)): ?>
+    <table class="listagem">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Fornecedor</th>
+                <th>Data</th>
+                <th>Descricao</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $total = 0;
+            $i = 0;
+            foreach ($this->items AS $item):
+                $total += $item['valor'];
+                $item = $this->model->adjustToView($item);
+                ?>
+                <tr>
+                    <td><?php echo ++$i; ?></td>
+                    <td><?php echo $item['razao_social']; ?></td>
+                    <td><?php echo $item['data']; ?></td>
+                    <td><?php echo nl2br($item['observacoes']); ?></td>
+                    <td align="center"><?php echo WS_Money::adjustToView($item['valor']); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4">Total</th>
+                <td align="center"><?php echo WS_Money::adjustToView($total); ?></td>
+            </tr>
+        </tfoot>
+    </table>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>

@@ -1,0 +1,185 @@
+<?php
+$configs = Zend_Registry::get('application');
+$dominio = $configs->cliente->dominio;
+?>
+<div class="grid_12">
+    <div id="CertificadosRefresh">
+        <?php
+        if (!isset($this->noLayout)):
+            echo $this->partial('partials/title.phtml', array(
+                'title' => $this->model->getOption('title')
+            ));
+        endif;
+        if (!empty($this->data['id'])):
+            ?>
+            <div class="margem-b topButtons">
+                <!--<button type="button" id="btGerarCertificado">
+                Gerar PDF
+                </button>-->
+                <button type="button" class="gera_pdf" arquivo="Certificado_<?php echo $this->data['orcamento_id']; ?>_<?php echo $this->data['id']; ?>.pdf" pasta="certificados/" url="http://<?php echo $dominio; ?>/erp/print/Certificados/visualizar/<?php echo $this->data['id']; ?>">
+                    Gerar PDF
+                </button>
+                <button type="button" id="btVerCertificado">
+                    Ver Certificado
+                </button>
+                <button type="button" id="btEnviarEmail">
+                    Enviar por E-mail
+                </button>
+                <button type="button" id="btBuscarDados">
+                    Buscar Dados Novamente
+                </button>
+            </div>
+            <?php
+            if (!empty($this->pdf)):
+                ?>
+                <div class="warning">
+                    PDF gerado pela última vez em: <?php echo WS_Date::adjustToViewWithHour($this->pdf_gerado); ?>
+                </div>
+                <hr class="clear" />
+                <iframe width="100%" height="500" id="CertificadosIframe" src="/uploads/certificados/<?php echo $this->pdf; ?>?<?php echo date('U'); ?>"></iframe>
+            <?php endif; ?>
+            <?php
+        endif;
+        echo $this->form;
+        ?>
+        <div id="CertificadosModal"></div>
+        <div id="EnviarEmailModal" class="modal" title="Enviar Certificado por E-mail"></div>
+        <script type="text/javascript">
+            $(function() {
+                $("#CertificadosForm").die('submit');
+                $("#CertificadosForm").submit(function() {
+                    $(this).ajaxSubmit({
+                        url: '/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/formulario/',
+                        success: function(msg) {
+                            $("#CertificadosRefresh").html(msg);
+                        }
+                    });
+                    return false;
+                });
+                $('#CertificadosModal').dialog({
+                    modal: true,
+                    autoOpen: false,
+                    show: "slide",
+                    hide: "slide",
+                    width: '350',
+                    beforeClose: function(event, ui) {
+                        $("#CertificadosIframe").show()
+                    },
+                    open: function(event, ui) {
+                        $("#CertificadosIframe").hide()
+                    }
+                });
+                $('#EnviarEmailModal').dialog({
+                    modal: true,
+                    autoOpen: false,
+                    show: "slide",
+                    hide: "slide",
+                    width: '650'
+                });
+                $("#btGerarCertificado").die('click').click(function() {
+                    $("#CertificadosModal").html('Aguarde, gerando PDF!');
+                    $("#CertificadosModal").dialog("open");
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/gerarpdf/<?php echo $this->data['id']; ?>',
+                        success: function(data) {
+                            $("#CertificadosModal").html(data);
+                            $("#CertificadosModal").dialog("close");
+                            $("#MtrTabs").tabs('load', '1');
+                        }
+                    });
+                });
+                $("#btVerCertificado").die('click').click(function() {
+                    window.open('/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/verpdf/<?php echo $this->data['id']; ?>', 'Ver Certificado');
+                });
+
+                $('#btEnviarEmail').die('click').unbind('click').click(function() {
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/enviaremail/<?php echo $this->data['id']; ?>',
+                        success: function(data) {
+                            if (data != "") {
+                                $("#EnviarEmailModal").html(data);
+                            } else {
+                                $("#EnviarEmailModal").dialog("close");
+                            }
+                        }
+                    });
+                    $("#EnviarEmailModal").dialog("open");
+                });
+
+                $('#CertificadosEmailForm').die('submit').unbind('submit').live('submit', function() {
+                    $(this).ajaxSubmit({
+                        type: "post",
+                        url: "/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/enviaremail/<?php echo $this->data['id']; ?>",
+                        beforeSubmit: avisoEnvio,
+                        success: function(data) {
+                            if (data != "")
+                                $("#EnviarEmailModal").html(data);
+                            $("#EnviarEmailModal").dialog('close');
+                        }
+                    });
+                    return false;
+                });
+
+                $("#assunto_id").die('click').unbind('click').live('change', function() {
+                    var id = $(this).select().val();
+                    $.ajax({
+                        url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/' + id,
+                        datatype: 'GET',
+                        success: function(data) {
+                            if (data != "")
+                                $("#assunto").val(data);
+                        }
+                    });
+                });
+
+                $("#descricao_id").die('change').unbind('change').live('change', function() {
+                    var id = $(this).select().val();
+                    $.ajax({
+                        url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/' + id,
+                        datatype: 'GET',
+                        success: function(data) {
+                            if (data != "")
+                                $("#descricao").val(data);
+                        }
+                    });
+                });
+
+                $("#btBuscarDados").die('click').click(function() {
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: '/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/excluir/<?php echo $this->data['id']; ?>',
+                        success: function(data) {
+                            $("#CertificadosModal").html(data);
+                            $("#MtrTabs").tabs('load', '1');
+                        }
+                    });
+                });
+                $('.gera_pdf').die('click').unbind('click').click(function() {
+                    $("#CertificadosModal").html('Aguarde, gerando PDF!');
+                    $("#CertificadosModal").dialog("open");
+
+                    var url = $(this).attr('url');
+                    var pasta = $(this).attr('pasta');
+                    var arquivo = $(this).attr('arquivo');
+                    $.ajax({
+                        url: '/erp/Index/mpdf',
+                        type: 'POST',
+                        data: {url: url, pasta: pasta, arquivo: arquivo}
+                    }).done(function(msg) {
+                        $("#CertificadosModal").html(msg);
+                        $("#CertificadosModal").dialog('close');
+                        $("#MtrTabs").tabs('load', '1');
+                    });
+                });
+            });
+            function avisoEnvio() {
+                $("#EnviarEmailModal").html('Enviando E-mail!')
+            }
+        </script>
+    </div>
+</div>

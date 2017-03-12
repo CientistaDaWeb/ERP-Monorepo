@@ -1,0 +1,16 @@
+<div class="pagination">
+    <?php $url = '/' . $this->module . '/' . $this->controller . '/busca/?busca=' . $this->model->_searchWord . '&page='; ?>
+
+    <a class="<?php echo ($this->first == $this->current) ? 'disabled' : ''; ?> botao" title="<?php echo $this->first; ?>" href="<?php echo $url . $this->first; ?>">&laquo;&laquo;</a>
+    <a class="<?php echo ((is_null($this->previous)) || ($this->previous == $this->current)) ? 'disabled' : ''; ?> botao" title="<?php echo $this->previous; ?>" href="<?php echo $url . $this->previous; ?>">&laquo;</a>
+
+    <?php foreach ($this->pagesInRange as $page): ?>
+        <button class="<?php echo ($page == $this->current) ? 'disabled' : ''; ?> botao" title="<?php echo $page; ?>" href="<?php echo $url . $page; ?>"><?php echo $page; ?></button>
+    <?php endforeach; ?>
+
+    <a class="<?php echo ((is_null($this->next)) || ($this->next == $this->current)) ? 'disabled' : ''; ?> botao" title="<?php echo $this->next; ?>" href="<?php echo $url . $this->next; ?>">&raquo;</a>
+    <a class="<?php echo ($this->last == $this->current) ? 'disabled' : ''; ?> botao" title="<?php echo $this->last; ?>" href="<?php echo $url . $this->last; ?>">&raquo;&raquo;</a>
+</div>
+<div class="busca-filtro">
+    <?php echo (!empty($this->model->_searchWord)) ? 'Filtrando por: "' . $this->model->_searchWord . '" | ' : ''; ?>Mostrando <?php echo $this->firstItemNumber; ?> à <?php echo $this->lastItemNumber; ?> de <?php echo $this->totalItemCount; ?> registros.
+</div>

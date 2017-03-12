@@ -1,0 +1,76 @@
+<div class="grid_12">
+    <?php
+    if (!($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    if (isset($this->model->_addButton)):
+        echo $this->partial('partials/btAdicionar.phtml', array(
+            'controller' => $this->controller,
+            'module' => $this->module,
+            'message' => $this->model->getOption('buttons', 'add')
+        ));
+    endif;
+    if (!empty($this->items)):
+        ?>
+        <table class="listagem" id="ListagemMTr">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th>MTR</th>
+                    <th>Certificado</th>
+                    <th>Dono</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr class="<?php echo $item['class']; ?>">
+                        <td align="center"><button type="button" source="<?php echo $item['id']; ?>" class="btExcluir Mtr" title="<?php echo $this->model->getOption('buttons', 'delete'); ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td align="center"><button type="button" source="<?php echo $item['id']; ?>" class="btEditar Mtr" title="<?php echo $this->model->getOption('buttons', 'edit'); ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><?php echo $item['mtr']; ?></td>
+                        <td align="center"><?php if ($item['certificado_id']): ?>
+                                <?php echo $item['orcamento_id']; ?>.<?php echo $item['sequencialc']; ?>
+                            <?php else: ?>
+                                <?php echo ($item['class'] == 'atrasada') ? 'Gere o Certificado' : ''; ?>
+        <?php endif; ?>
+                        </td>
+                        <td align="center">
+                            <?php echo $item['dono']; ?>
+                            <?php if ($item['dono'] == 'Terceiros'): ?>
+                                <?php echo ' - ' . $item['terceiro']; ?>
+        <?php endif; ?>
+                        </td>
+                    </tr>
+                    </div>
+    <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <script type="text/javascript" src="/js/submodulo.js"> </script>
+        <script type="text/javascript">
+            $(function(){
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#OrdensServicoTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id : '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+            });
+        </script>
+<?php endif; ?>
+</div>

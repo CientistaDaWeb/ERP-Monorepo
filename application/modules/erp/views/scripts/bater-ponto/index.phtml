@@ -1,0 +1,91 @@
+<div class="alignCenter">
+    <?php echo $this->form; ?>
+</div>
+<div class="clear clear-fix margem-b"></div>
+<h2>Histórico</h2>
+<?php
+$dataInicialTimestamp = mktime(0, 0, 0, date('m'), 1, date('Y'));
+$dataFinalTimestamp = mktime(0, 0, 0, date('m'), 31, date('Y'));
+$data_inicial = date('d/m/Y', $dataInicialTimestamp);
+$data_final = date('d/m/Y', $dataFinalTimestamp);
+
+$datas = $this->model->getDays($data_inicial, $data_final);
+$dias = count($datas);
+$minutos = $dias * 528;
+$horasExpediente = WS_Date::minutesToHours($minutos);
+
+$minutos_meio = $dias * 348;
+$horasExpedienteMeio = WS_Date::minutesToHours($minutos_meio);
+?>
+<?php if (!empty($this->dados['usuarios'])): ?>
+    <table class="listagem">
+        <tbody>
+            <tr>
+                <th></th>
+                <?php foreach ($this->dados['usuarios'] AS $usuario): ?>
+                    <th><?php echo $usuario; ?></th>
+                <?php endforeach; ?>
+            </tr>
+            <tr>
+                <th rospan="2">Horas Trabalhadas</th>
+                <?php
+                foreach ($this->dados['usuarios'] AS $id => $usuario):
+                    $data['data_inicial'] = $data_inicial;
+                    $data['data_final'] = $data_final;
+                    $data['usuario_id'] = $id;
+                    $horasTrabalhadas[$id] = $this->model->getHoursWorked($data);
+                    ?>
+                    <td align="center"><?php echo number_format($horasTrabalhadas[$id]['horas'], 2); ?></td>
+                    <?php
+                endforeach;
+                ?>
+            </tr>
+            <tr>
+                <th rospan="2">Horas Expediente</th>
+                <?php
+                foreach ($this->dados['usuarios'] AS $usuario):
+                    if ($usuario == 'Bruno Benedetti'):
+                        ?>
+                        <td align = "center"><?php echo $horasExpedienteMeio; ?></td>
+                        <?php
+                    else:
+                        ?>
+                        <td align = "center"><?php echo $horasExpediente; ?></td>
+                    <?php
+                    endif;
+                    ?>
+                <?php endforeach; ?>
+            </tr>
+            <tr>
+                <th rospan="2">% de Presença</th>
+                <?php
+                foreach ($this->dados['usuarios'] AS $id => $usuario):
+                    if ($usuario == 'Bruno Benedetti'):
+                        $percentual = number_format(($horasTrabalhadas[$id]['minutos'] * 100) / $minutos_meio, 2);
+                    else:
+                        $percentual = number_format(($horasTrabalhadas[$id]['minutos'] * 100) / $minutos, 2);
+                    endif;
+
+                    if ($percentual < 90):
+                        $class = 'atrasada';
+                    else:
+                        $class = 'pago';
+                    endif;
+                    ?>
+                    <td align="center" class="<?php echo $class; ?>"><?php echo $percentual; ?> %</td>
+                    <?php
+                endforeach;
+                ?>
+            </tr>
+        </tbody>
+    </table>
+<?php endif; ?>
+<script type="text/javascript">
+    $(function(){
+        $('.btCancelar').hide();
+        $('#token').blur(function(){
+            $(this).val('');
+        });
+        //$('.btEnviar').text('Confirmar').button();
+    });
+</script>

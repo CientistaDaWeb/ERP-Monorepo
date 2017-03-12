@@ -1,0 +1,101 @@
+<?php
+if (!($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+if (isset($this->model->_addButton)):
+    echo $this->partial('partials/btAdicionar.phtml', array(
+        'controller' => $this->controller,
+        'module' => $this->module,
+        'message' => $this->model->getOption('buttons', 'add')
+    ));
+endif;
+?>
+<form method="post" action="/<?php echo $this->module; ?>/<?php echo $this->controller; ?>/excluir" class="formListagem">
+    <?php if (!empty($this->items)): ?>
+        <table class="listagem">
+            <thead class="ui-widget-header">
+                <tr>
+                    <?php
+                    echo $this->partial('partials/btExcluir.phtml', array(
+                        'message' => $this->model->getOption('buttons', 'delete')
+                    ));
+                    ?>
+                    <th></th>
+                    <th>Nome</th>
+                    <th>Data de Aquisição</th>
+                    <th>Valor de Compra</th>
+                    <th>Valor Atual</th>
+                    <th>Valor Depreciado</th>
+                    <th>Depreciação Mensal</th>
+                    <th>Meses</th>
+                    <th>Meses Dep.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $total = array('compra' => 0, 'atual' => 0, 'depreciacao' => 0, 'depreciado' => 0);
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    $total['compra'] += $item['valor_compra'];
+                    $total['depreciado'] += $item['valor_depreciado'];
+                    $total['atual'] += $item['valor_atual'];
+//                    $aquisicao = new Zend_Date($item['data_aquisicao']);
+//                    $aquisicao->add($item['meses_quitacao']+1, Zend_Date::MONTH);
+//                    $hoje = new Zend_Date();
+//                    $vencido = $hoje->compare($aquisicao);
+//                    if ($vencido > 0):
+//                        $item['depreciacao'] = 0;
+//                    endif;
+                    $total['depreciacao'] += $item['depreciacao'];
+                    ?>
+                    <tr>
+                        <?php
+                        echo $this->partial('partials/itemDel.phtml', array(
+                            'message' => $this->model->getOption('buttons', 'delete'),
+                            'id' => $item['id'],
+                            'controller' => $this->controller,
+                            'module' => $this->module
+                        ));
+                        echo $this->partial('partials/btEditar.phtml', array(
+                            'message' => $this->model->getOption('buttons', 'edit'),
+                            'id' => $item['id'],
+                            'controller' => $this->controller,
+                            'module' => $this->module
+                        ));
+                        ?>
+                        <td><?php echo $item['nome']; ?></td>
+                        <td><?php echo $item['data_aquisicao']; ?></td>
+                        <td class="valor"><?php echo WS_Money::adjustToView($item['valor_compra']); ?></td>
+                        <td class="valor"><?php echo WS_Money::adjustToView($item['valor_atual']); ?></td>
+                        <td class="valor"><?php echo WS_Money::adjustToView($item['valor_depreciado']); ?></td>
+                        <td class="valor"><?php echo WS_Money::adjustToView($item['depreciacao']); ?></td>
+                        <td><?php echo $item['meses_quitacao']; ?></td>
+                        <td><?php echo $item['meses']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot class="ui-widget-header">
+                <tr>
+                    <th colspan="2">Total Investido</th>
+                    <th colspan="3"><?php echo WS_Money::adjustToView($total['compra']); ?></th>
+                    <th colspan="2">Total Atual</th>
+                    <th colspan="3"><?php echo WS_Money::adjustToView($total['atual']); ?></th>
+                </tr>
+                <tr>
+                    <th colspan="2">Total Depreciado</th>
+                    <th colspan="3"><?php echo WS_Money::adjustToView($total['depreciado']); ?></th>
+                    <th colspan="2">Depreciação Mensal</th>
+                    <th colspan="3"><?php echo WS_Money::adjustToView($total['depreciacao']); ?></th>
+                </tr>
+            </tfoot>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    ?>
+</form>

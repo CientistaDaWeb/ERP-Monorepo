@@ -1,0 +1,60 @@
+<style>
+    #logo{
+        display: none;
+    }
+    .etiqueta14{
+        width: 9.8cm;
+        height: 3.8cm;
+        float: left;
+        display: inline-block;
+        margin: 0 0.2cm;
+        overflow: hidden;
+    }
+    .folha{
+        width: 22.6cm;
+        height: 26.2cm;
+        display: inline-block;
+        padding: 1.6cm 0cm 0 0.4cm;
+    }
+    .etiqueta{
+        display: inline-block;
+        width: 100%;
+        padding: 10px;
+    }
+    p{
+       margin-bottom: 5px;
+    }
+    .razaoSocial{
+        margin-bottom: 10px;
+    }
+</style>
+<?php echo $this->partial('partials/instrucao_impressao.phtml'); ?>
+<div class="folha">
+    <?php for ($i = 0; $i < $this->usadas; $i++): ?>
+        <div class="etiqueta14">
+            <div class="etiqueta">
+            </div>
+        </div>
+    <?php endfor; ?>
+    <?php foreach ($this->enderecos AS $endereco): ?>
+        <div class="etiqueta14">
+            <div class="etiqueta">
+                <p class="razaoSocial"><b><?php echo $endereco['razao_social']; ?></b></p>
+                <p><?php echo $endereco['endereco'].' - '.$endereco['numero'].' '.$endereco['complemento']; ?></p>
+                <p><?php echo $endereco['bairro']; ?></p>
+                <p><?php echo $endereco['cidade']. ' - '.$endereco['uf']; ?></p>
+                <p><?php echo $endereco['cep']; ?></p>
+            </div>
+        </div>
+        <?php
+        $i++;
+        if ($i % 14 == 0):
+            ?>
+        </div>
+        <div class="breakline"></div>
+        <div class="folha">
+            <?php
+        endif;
+    endforeach;
+    ?>
+</div>

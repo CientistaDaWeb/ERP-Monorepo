@@ -1,0 +1,18 @@
+{
+	"sProcessing": "Procesando...",
+	"sLengthMenu": "Mostrar _MENU_ registros",
+        "iDisplayStart": 100,
+	"sZeroRecords": "<div class='empty'>Não foi encontrado nenhum registro com esses dados.</div>",
+	"sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+	"sInfoEmtpy": "Mostrando 0 a 0 de 0 registros",
+	"sInfoFiltered": "(filtrado de _MAX_ registros no total.)",
+	"sInfoPostFix": "",
+	"sSearch": "Buscar:",
+	"sUrl": "",
+	"oPaginate": {
+		"sFirst":    "<<",
+		"sPrevious": "<",
+		"sNext":     ">",
+		"sLast":     ">>"
+	}
+}

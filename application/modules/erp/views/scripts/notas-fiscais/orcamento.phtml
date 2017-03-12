@@ -1,0 +1,73 @@
+<div class="grid_12">
+    <?php
+    if (!($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    if (isset($this->model->_addButton)):
+        echo $this->partial('partials/btAdicionar.phtml', array(
+            'controller' => $this->controller,
+            'module' => $this->module,
+            'message' => $this->model->getOption('buttons', 'add')
+        ));
+    endif;
+    if (!empty($this->items)):
+        ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th>Nº NF.</th>
+                    <th>Data de Emissão</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $total = 0;
+                foreach ($this->items AS $item):
+                    $total += $item['valor'];
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><button class="btExcluir <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'delete'); ?></button></td>
+                        <td align="center"><?php echo $item['numero']; ?></td>
+                        <td align="center"><?php echo $item['data_geracao']; ?></td>
+                        <td class="valor"><?php echo $item['valor']; ?></td>
+                    </tr>
+    <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr class="ui-widget-header">
+                    <th colspan="4">Total</th>
+                    <td class="valor"><?php echo WS_Money::adjustToView($total); ?></td>
+                </tr>
+            </tfoot>
+        </table>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    if ($this->noLayout):
+        ?>
+        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+        <script type="text/javascript" src="/js/submodulo.js"> </script>
+        <script type="text/javascript">
+            $(function(){
+                $().submodulo({
+                    controller: '<?php echo $this->controller; ?>',
+                    module: '<?php echo $this->module; ?>',
+                    tab: '#OrcamentosTabs',
+                    modal: '#<?php echo $this->controller; ?>Modal',
+                    form: '#<?php echo $this->form->getId(); ?>',
+                    parent_id : '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                });
+            });
+        </script>
+<?php endif; ?>
+</div>

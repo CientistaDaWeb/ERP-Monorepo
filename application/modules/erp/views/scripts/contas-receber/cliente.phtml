@@ -1,0 +1,97 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <?php if (!empty($this->items)): ?>
+        <table class="listagem">
+            <thead>
+                <tr class="ui-widget-header">
+                    <th></th>
+                    <th></th>
+                    <th>Orçamento</th>
+                    <th>Vencimento</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Data de Pagamento</th>
+                    <th>Valor Recebido</th>
+                    <th>CT-e</th>
+                    <th>CT-e Acqualife</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $total = 0;
+                $totalPago = 0;
+                foreach ($this->items AS $item):
+                    $total += $item['valor'];
+                    $totalPago += $item['valor_pago'];
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr class="<?php echo $item['class']; ?>">
+                        <td align="center"><button class="btEditar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'edit'); ?></button></td>
+                        <td align="center"><button class="btPagar <?php echo $this->controller; ?>" source="<?php echo $item['id']; ?>"><?php echo $this->model->getOption('buttons', 'pay'); ?></button></td>
+                        <td><?php echo $item['orcamento_id']; ?></td>
+                        <td><?php echo $item['data_vencimento']; ?></td>
+                        <td class="valor"><?php echo $item['valor']; ?></td>
+                        <td><?php echo ($item['valor_pago']) ? 'Pago' : 'Em Aberto'; ?></td>
+                        <td><?php echo (!empty($item['data_pagamento'])) ? $item['data_pagamento'] : '-'; ?></td>
+                        <td class="valor"><?php echo $item['valor_pago']; ?></td>
+                        <td class="valor"><?php echo $item['cte_id']; ?></td>
+                        <td class="valor"><?php echo $item['cte_acqualife_id']; ?></td>
+                    </tr>
+                    <?php
+                endforeach;
+                ?>
+                <tr>
+                    <th colspan="5">Total a Receber</th>
+                    <td colspan="3"><?php echo WS_Money::adjustToView($total); ?></td>
+                </tr>
+                <tr>
+                    <th colspan="5">Total Recebido</th>
+                    <td colspan="3"><?php echo WS_Money::adjustToView($totalPago); ?></td>
+                </tr>
+                <tr>
+                    <th colspan="5">Total</th>
+                    <td colspan="3"><?php echo WS_Money::adjustToView($totalPago - $total); ?></td>
+                </tr>
+            </tbody>
+        </table>
+        <?php if ($this->noLayout): ?>
+            <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+            <script type="text/javascript" src="/js/submodulo.js"> </script>
+            <script type="text/javascript">
+                $(function(){
+                    $().submodulo({
+                        controller: '<?php echo $this->controller; ?>',
+                        module: '<?php echo $this->module; ?>',
+                        tab: '#OrcamentosTabs',
+                        modal: '#<?php echo $this->controller; ?>Modal',
+                        form: '#<?php echo $this->form->getId(); ?>',
+                        parent_id : '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+                    });
+                    $('#ContasReceberPagarForm').die('submit');
+                    $('#ContasReceberPagarForm').live('submit', function(){
+                        $('#ContasReceberPagarForm').ajaxSubmit({
+                            type: 'post',
+                            url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/pagar/",
+                            success: function(data){
+                                $('#<?php echo $this->controller; ?>Modal').html(data);
+                            }
+                        });
+                        return false;
+                    });
+                });
+            </script>
+            <?php
+        endif;
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+    ?>
+</div>

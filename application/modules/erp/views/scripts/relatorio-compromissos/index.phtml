@@ -1,0 +1,85 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<div class="hidden">
+    <form method="post" id="Form_Relatorio_Compromissos">
+        <table class="listagem">
+            <tr>
+                <th>Data Inicial</th>
+                <th><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></th>
+                <th>Data Final</th>
+                <th><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></th>
+                <th rowspan="10">
+                    <button type="submit">Filtrar</button><br /><br />
+                    <button type="button" id="btImprimir">Imprimir</button>
+                    <!--<button type="button" id="btSalvaPdf">Salvar em PDF</button> -->
+                </th>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <th><select name="status">
+                        <option value="">Todos</option>
+                        <?php foreach ($this->model->listOptions('status') AS $id => $stat): ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['status'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $stat; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+                <th>Funcionário</th>
+                <th><select name="usuario_id">
+                        <option value="">Todos</option>
+                        <?php
+                        $UsuariosModel = new Usuarios_Model();
+                        foreach ($UsuariosModel->fetchPair() AS $id => $nome):
+                            ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['usuario_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+        </table>
+    </form>
+</div>
+<?php if (!empty($this->items)): ?>
+    <div class="print">
+        <table class="listagem">
+            <thead>
+                <tr>
+                    <th>Funcionário</th>
+                    <th>Data</th>
+                    <th>Título</th>
+                    <th>Local</th>
+                    <th>Descrição</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $WM = new WS_Money();
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <td><a href="/<?php echo $this->module . '/Agenda/formulario/' . $item['id']; ?>" class="buttonLink hidden">Ir para a Agenda</a> <?php echo $item['nome']; ?></td>
+                        <td><?php echo WS_Date::adjustToViewWithHour($item['data'] . ' ' . $item['hora']); ?></td>
+                        <td><?php echo $item['titulo']; ?></td>
+                        <td><?php echo $item['local']; ?></td>
+                        <td><?php echo nl2br($item['descricao']); ?></td>
+                        <td><?php echo $item['status']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $("#btSalvaPdf").click(function(){
+                var form = $("#Form_Relatorio_Orcamento");
+                form.attr("target","_blank").attr("action",'/<?php echo $this->module; ?>/save/Relatorio-Orcamentos/pdf/');
+                form.submit();
+                form.attr("target","_self").attr("action",'');
+            });
+        });
+    </script>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>

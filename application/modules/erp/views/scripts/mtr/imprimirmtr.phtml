@@ -1,0 +1,139 @@
+<link href="/css/mtr.css" rel="stylesheet" type="text/css" />
+<div class="hidden">
+    <h3>Instruções de impressão:</h3>
+    <p>- Mantenha a proporção da página em 100%;</p>
+    <p>- Mantenha as margens com a seguinte configuração:<br />
+        Superior: 60mm<br />
+        Direita: 0mm<br />
+        Inferior: 0mm<br />
+        Esquerda: 9mm<br />
+    </p>
+    <button onclick="print();" class="margemT" id="btImprimir">Imprimir</button>
+    <br class="clear" />
+</div>
+<div class="folha">
+    <div id="box_gerador" class="box">
+        <div id="gerador_razao_social" class="float left campo">
+            <?php echo $this->data['gerador_razao_social']; ?>
+        </div>
+        <div id="gerador_cnpj" class="float left campo">
+            <?php echo $this->data['gerador_cnpj']; ?>
+        </div>
+        <div id="gerador_endereco" class="float left campo">
+            <?php echo $this->data['gerador_endereco']; ?>
+        </div>
+        <div id="gerador_municipio" class="float left campo">
+            <?php echo $this->data['gerador_municipio']; ?>
+        </div>
+        <div id="gerador_responsavel" class="float left campo">
+            <?php echo ($this->data['gerador_responsavel']) ? $this->data['gerador_responsavel'] : '&nbsp;'; ?>
+        </div>
+        <div id="gerador_telefone" class="float left campo">
+            <?php echo $this->data['gerador_telefone']; ?>
+        </div>
+        <div id="gerador_ramal" class="float left campo">
+            <?php echo $this->data['gerador_ramal']; ?>
+        </div>
+    </div>
+    <div id="box_residuos" class="box">
+        <table>
+            <tr>
+                <td class="fonte"><?php echo $this->data['residuos']['fonte']; ?></td>
+                <td class="descricao"><?php echo $this->data['residuos']['descricao']; ?></td>
+                <td class="td"><?php echo $this->data['residuos']['estado']; ?></td>
+                <td class="td"><?php echo $this->data['residuos']['classificacao']; ?></td>
+                <td class="td"><?php echo $this->data['residuos']['codigo']; ?></td>
+                <td class="qtde"><?php echo $this->data['quantidade']; ?></td>
+                <td class="unidade"><?php echo $this->data['residuos']['unidade']; ?></td>
+                <td class="onu"><?php echo $this->data['residuos']['onu']; ?></td>
+            </tr>
+        </table>
+    </div>
+    <div id="box_transportador" class="box">
+        <div id="transportador_razao_social" class="float left campo">
+            <?php echo $this->data['transportador_razao_social']; ?>
+        </div>
+        <div id="transportador_cnpj" class="float left campo">
+            <?php echo $this->data['transportador_cnpj']; ?>
+        </div>
+        <div id="transportador_endereco" class="float left campo">
+            <?php echo $this->data['transportador_endereco']; ?>
+        </div>
+        <div id="transportador_cep" class="float left campo">
+            <?php echo $this->data['transportador_cep']; ?>
+        </div>
+        <div id="transportador_municipio" class="float left campo">
+            <?php echo $this->data['transportador_municipio']; ?>
+        </div>
+        <div id="transportador_condutor" class="float left campo">
+            <?php echo $this->data['transportador_condutor']; ?>
+        </div>
+        <div id="transportador_fone" class="float left campo">
+            <?php echo $this->data['transportador_fone']; ?>
+        </div>
+        <div id="transportador_lo" class="float left campo">
+            <?php echo $this->data['transportador_lo']; ?>
+        </div>
+        <div id="transportador_condutor_cpf" class="float left campo">
+            <?php echo $this->data['transportador_condutor_cpf']; ?>
+        </div>
+        <div id="transportador_equipamento" class="float left campo">
+            <?php echo $this->data['transportador_equipamento']; ?>
+        </div>
+        <div id="transportador_placa" class="float left campo">
+            <?php echo $this->data['transportador_placa']; ?>
+        </div>
+    </div>
+    <div id="box_destinatario" class="box">
+        <div id="destinatario_razao_social" class="float left campo">
+            <?php echo $this->data['destinatario_razao_social']; ?>
+        </div>
+        <div id="destinatario_cnpj" class="float left campo">
+            <?php echo $this->data['destinatario_cnpj']; ?>
+        </div>
+        <div id="destinatario_endereco" class="float left campo">
+            <?php echo $this->data['destinatario_endereco']; ?>
+        </div>
+        <div id="destinatario_cep" class="float left campo">
+            <?php echo $this->data['destinatario_cep']; ?>
+        </div>
+        <div id="destinatario_municipio" class="float left campo">
+            <?php echo $this->data['destinatario_municipio']; ?>
+        </div>
+        <div id="destinatario_uf" class="float left campo">
+            <?php echo $this->data['destinatario_uf']; ?>
+        </div>
+        <div id="destinatario_lo" class="float left campo">
+            <?php echo $this->data['destinatario_lo']; ?>
+        </div>
+        <div id="destinatario_fepam" class="float left campo">
+            <?php echo $this->data['destinatario_fepam']; ?>
+        </div>
+        <div id="destinatario_motivo" class="float left campo">
+            <?php echo $this->data['destinatario_motivo']; ?>
+        </div>
+        <div id="destinatario_responsavel" class="float left campo">
+            <?php echo $this->data['destinatario_responsavel']; ?>
+        </div>
+        <div id="destinatario_fone" class="float left campo">
+            <?php echo $this->data['destinatario_fone']; ?>
+        </div>
+        <div id="destinatario_email" class="float left campo">
+            <?php echo $this->data['destinatario_email']; ?>
+        </div>
+    </div>
+    <div id="box_descricao" class="box">
+        <?php echo $this->data['descricao']; ?>
+    </div>
+    <div id="box_responsavel" class="box">
+        <div id="responsavel_gerador" class="float left campo">
+            <?php echo $this->data['responsavel_gerador']; ?>
+        </div>
+        <div id="responsavel_transportador" class="float left campo">
+            <?php echo $this->data['responsavel_transportador']; ?>
+        </div>
+        <div id="responsavel_receptor" class="float left campo">
+            <?php echo $this->data['responsavel_receptor']; ?>
+        </div>
+    </div>
+</div>

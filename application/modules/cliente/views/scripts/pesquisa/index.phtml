@@ -1,0 +1,15 @@
+<h1>Pesquisa de Satisfação</h1>
+<?php if ($this->mostra): ?>
+    <h2>Por favor, participe da nossa pesquisa de satisfação, com ela poderemos aprimorar e melhorar a prestação dos nossos serviços, são apenas 5 questões.</h2>
+    <br /><br />
+    <?php
+    echo $this->partial('pesquisa/pesquisa.phtml', array(
+        'certificado_id' => $this->certificado_id,
+            )
+    );
+else:
+    ?>
+    <h2>Obrigado por tr respondido nossa pesquisa de satisfação!</h2>
+<?php
+endif;
+?>

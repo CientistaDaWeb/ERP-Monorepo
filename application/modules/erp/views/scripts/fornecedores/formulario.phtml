@@ -1,0 +1,40 @@
+<?php
+if (!isset($this->noLayout)):
+    $title = $this->model->getOption('title');
+    if (!empty($this->data['razao_social'])):
+        $title .= ' (' . $this->data['razao_social'] . ')';
+    endif;
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $title
+    ));
+endif;
+?>
+<div id="FornecedoresTabs">
+    <ul>
+        <li><a href="#Dados">Dados</a></li>
+        <li><a href="/<?php echo $this->module; ?>/submodulo/Fornecedores-Crm/fornecedor//<?php echo $this->data['id']; ?>">Atendimentos</a></li>
+        <li><a href="/<?php echo $this->module; ?>/submodulo/Fornecedores-Arquivos/fornecedor//<?php echo $this->data['id']; ?>">Arquivos</a></li>
+    </ul>
+    <div id="Dados">
+        <div class="grid_12">
+            <?php echo $this->form; ?>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        $("#FornecedoresTabs").tabs({
+            spinner: carregando,
+            ajaxOptions: {
+                error: function(xhr, status, index, anchor) {
+                    if (status == 'error') {
+                        $(anchor.hash).html('Erro ao carregar o conteúdo');
+                    } else {
+                        $(anchor.hash).html(carregando);
+                    }
+                }
+            }
+<?php echo (empty($this->data['id'])) ? ', disabled: [1, 2, 3]' : ''; ?>
+        });
+    });
+</script>

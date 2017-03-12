@@ -1,0 +1,71 @@
+<?php
+if (!isset($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+if (isset($this->model->_addButton)):
+    echo $this->partial('partials/btAdicionar.phtml', array(
+        'controller' => $this->controller,
+        'module' => $this->module,
+        'message' => $this->model->getOption('buttons', 'add')
+    ));
+endif;
+?>
+<form method="post" action="/<?php echo $this->module; ?>/<?php echo $this->controller; ?>/excluir" class="formListagem">
+    <div class="clear margemT"></div>
+    <table class="listagem" id="<?php echo $this->controller; ?>TableList">
+        <thead>
+            <tr>
+                <?php
+                foreach ($this->actions AS $key => $action):
+                    if ($key == 'delete'):
+                        echo $this->partial('partials/btExcluir.phtml', array(
+                            'message' => $this->model->getOption('buttons', 'delete')
+                        ));
+                    else:
+                        echo '<th class="buttonSpace"></th>';
+                    endif;
+                endforeach;
+                $fields = $this->model->getViewFields();
+                foreach ($fields AS $key => $field):
+                    ?>
+                    <th><?php echo $field; ?></th>
+                <?php endforeach; ?>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</form>
+<?php
+if (isset($this->javascripts)):
+    foreach ($this->javascripts AS $javascript):
+        ?>
+        <script src="/<?php echo $javascript; ?>"> </script>
+        <?php
+    endforeach;
+else:
+    ?>
+    <script type="text/javascript">
+        $(function(){
+            var DataTable = $('#<?php echo $this->controller; ?>TableList').dataTable({
+                "aaSorting": [[2,"asc"]],
+                "oLanguage": { "sUrl": "/js/dataTables/pt_BR.txt" },
+                "bJQueryUI": true,
+                "bStateSave": true,
+                "sAjaxSource" : '<?php echo '/' . $this->module . '/submodulo/' . $this->controller . '/data'; ?>'
+            });
+    <?php
+    $i = 0;
+    foreach ($this->actions AS $key => $action):
+        ?>
+        <?php
+        $i++;
+    endforeach;
+    ?>
+        });
+    </script>
+<?php
+endif;
+?>

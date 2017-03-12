@@ -1,0 +1,96 @@
+<?php
+if (!($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+?>
+<div id="modaOrdemServicosServico">
+    <?php
+    if (!empty($this->servicos)):
+        if (!empty($this->total)):
+            $total = $this->total;
+        else:
+            $total = 0;
+            $soma = true;
+        endif;
+        ?>
+        <form method="post" id="FormOrdemServicosServico">
+            <table class="listagem">
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Serviço</th>
+                        <th>Quantidade</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($this->servicos AS $servico):
+                        if (isset($soma)):
+                            $total += $servico['preco'] * $servico['qtde'];
+                        endif;
+                        ?>
+                    <input type="hidden" name="servico[<?php echo $servico['id']; ?>][servico_id]" value="<?php echo $servico['id']; ?>" />
+                    <tr>
+                        <td><?php echo $servico['categoria']; ?></td>
+                        <td><?php echo $servico['servico']; ?></td>
+                        <td><input type="text" value="<?php
+                        if (!empty($servico['qtde'])):
+                            echo $servico['qtde'];
+                        else: echo '0';
+                        endif;
+                        ?>" name="servico[<?php echo $servico['id']; ?>][qtde]" class="filtro qtde calcula" /></td>
+                        <?php if (!empty($servico['valor'])): ?>
+                            <td><input type="text" value="<?php echo $servico['valor']; ?>" name="servico[<?php echo $servico['id']; ?>][valor]" class="filtro dinheiro calcula" /></td>
+                        <?php else: ?>
+                            <td><input type="text" value="<?php echo $servico['preco']; ?>" name="servico[<?php echo $servico['id']; ?>][valor]" class="filtro dinheiro calcula" /></td>
+                        <?php
+                        endif;
+                        ?>
+                    </tr>
+                    <?php
+                endforeach;
+                ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3">Total</th>
+                        <td><input type="text" value="<?php echo $total; ?>" name="valor" id="total" class="filtro dinheiro" /></td>
+                    </tr>
+                    <tr>
+                        <th colspan="4"><button type="submit">Salvar</button></</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    <?php else: ?>
+        <div class="empty">Nenhum serviço atribuido a esse Orçamento.</div>
+<?php endif; ?>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('.calcula').blur(function(){
+            var qtde = $('.qtde.filtro');
+            var total = 0;
+            qtde.each(function(){
+                var qtd = $(this).val();
+                var valor = $(this).parent().parent().find('.filtro.dinheiro').val();
+                total += qtd*valor;
+            });
+            total = parseFloat(total).toFixed(2);
+            $("#total").val(total);
+            $("#valor").val(total);
+        });
+        $("#FormOrdemServicosServico").submit(function(){
+            $(this).ajaxSubmit({
+                url: '/<?php echo $this->module; ?>/submodulo/Ordens-Servico/servicos/<?php echo $this->ordem_servico_id; ?>//false',
+                success: function(msg){
+                    $("#modaOrdemServicosServico").html(msg);
+                }
+            });
+            return false;
+        });
+    });
+</script>

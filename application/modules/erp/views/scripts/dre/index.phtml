@@ -1,0 +1,198 @@
+<h2>Demonstrativo de Resultados</h2>
+<?php
+if ($this->csv) :
+    ?>
+    <script>
+        $(function () {
+            $.jGrowl("Verifique o bloqueio de pop-ups!", {theme: "warning", life: 10000});
+        });
+        window.open('/uploads/<?php echo $this->csv; ?>');
+    </script>
+    <?php
+endif;
+?>
+<form method="POST">
+    <table class="listagem hidden margemB">
+        <tr>
+            <th>Data inicial</th>
+            <td><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></td>
+            <th>Data final</th>
+            <td><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></td>
+            <th>Empresa</th>
+            <th>
+                <select name="empresa_id" id="emprsa_id"  class="ui-corner-all filtro ano">
+                    <option value="">Todas</option>
+                    <?php
+                    $empresas = Empresas_Model::fetchPair();
+                    foreach ($empresas AS $id => $nome):
+                        ?>
+                        <option value="<?php echo $id; ?>" <?php echo ($this->data['empresa_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php
+                    endforeach;
+                    ?>
+                </select>
+            </th>
+            <th rowspan="2"><button type="submit">Filtrar</button></th>
+            <th rowspan="2"><button type="button" id="btImprimir">Imprimir</button></th>
+            <th rowspan="2"><button type="button" id="btExportarCSV">Exportar em CSV</button>
+                <input type="checkbox" class="invisivel" name="gera_csv" id="gera_csv" /></th>
+        </tr>
+    </table>
+</form>
+<?php
+if (!empty($this->data['faturamento']) || !empty($this->data['custo_fixo'])):
+
+    $item = $this->data;
+    $contribuicao = $item['faturamento'] - $item['custo_variavel'] - $item['valor_retido'];
+    $item['depreciacao'] = -1 * $item['depreciacao'];
+    $lucroOperacional = $contribuicao - $item['custo_fixo'];
+    $saldo = $lucroOperacional - $item['depreciacao'];
+
+    if (!empty($this->data['bens'])):
+        $BensModel = new Bens_Model();
+        $total = array('compra' => 0, 'atual' => 0, 'depreciado' => 0, 'depreciacao' => 0);
+        foreach ($this->data['bens'] AS $investimento):
+            $investimento = $BensModel->adjustToView($investimento, WS_Date::adjustToDb($this->data['data_final']), WS_Date::adjustToDb($this->data['data_inicial']));
+
+//            Zend_Debug::dump($investimento);
+//            exit();
+
+            $total['compra'] += $investimento['valor_compra'];
+            $total['depreciado'] += $investimento['valor_depreciado'];
+            $total['atual'] += $investimento['valor_atual'];
+            if ($investimento['meses'] == $investimento['meses_quitacao']):
+                $investimento['depreciacao'] = 0;
+            endif;
+            $total['depreciacao'] += $investimento['depreciacao'];
+        endforeach;
+        $perc = array('atual' => 0, 'recuperar' => 0);
+        $perc['atual'] = (100 * $total['atual']) / $total['compra'];
+        $perc['recuperar'] = 100 - $perc['atual'];
+
+        $item['depreciacao'] = $total['depreciacao'];
+        $saldo = $lucroOperacional - $total['depreciacao'];
+    endif;
+    ?>
+    <h2>Demonstrativo de resultados do Período (<?php echo $item['data_inicial'] . ' - ' . $item['data_final']; ?>)</h2>
+    <table class="listagem">
+        <thead>
+            <tr>
+                <th colspan="2">Discriminação</th>
+                <th>Valor</th>
+                <th>%</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>1</th>
+                <th>Faturamento</th>
+                <td><?php echo WS_Money::adjustToView($item['faturamento']); ?> (CTE: <?php echo WS_Money::adjustToView($item['faturamento_ctes']); ?> | CTE Acqualife: <?php echo WS_Money::adjustToView($item['faturamento_ctes_acqualife']); ?> | Notas: <?php echo WS_Money::adjustToView($item['faturamento_notas']); ?>)</td>
+                <td>100%</td>
+            </tr>
+            <tr>
+                <th>2</th>
+                <th>Retenção de Impostos</th>
+                <td><?php echo WS_Money::adjustToView($item['valor_retido']); ?></td>
+                <td><?php echo number_format($item['valor_retido'] * 100 / $item['faturamento'], 2, ',', '.'); ?>%</td>
+            </tr>
+            <tr>
+                <th>3</th>
+                <th>Custo Variável</th>
+                <td><?php echo WS_Money::adjustToView($item['custo_variavel']); ?></td>
+                <td><?php echo number_format($item['custo_variavel'] * 100 / $item['faturamento'], 2, ',', '.'); ?>%</td>
+            </tr>
+            <tr>
+                <th>4</th>
+                <th>Margem de Contribuição (1-2-3)</th>
+                <td><?php echo WS_Money::adjustToView($contribuicao); ?></td>
+                <td><?php echo number_format($contribuicao * 100 / $item['faturamento'], 2, ',', '.'); ?>%</td>
+            </tr>
+            <tr>
+                <th>5</th>
+                <th>Custo Fixo</th>
+                <td><?php echo WS_Money::adjustToView($item['custo_fixo']); ?></td>
+                <td><?php echo number_format($item['custo_fixo'] * 100 / $item['faturamento'], 2, ',', '.'); ?>%</td>
+            </tr>
+            <tr>
+                <th>6</th>
+                <th>Lucro Operacional (4-5)</th>
+                <td><?php echo WS_Money::adjustToView($lucroOperacional); ?></td>
+                <td><?php echo number_format($lucroOperacional * 100 / $item['faturamento'], 2, ',', '.'); ?>%</td>
+            </tr>
+            <tr>
+                <th>7</th>
+                <th>Depreciação no período</th>
+                <td><?php echo WS_Money::adjustToView($item['depreciacao']); ?></td>
+                <td><?php echo number_format($item['depreciacao'] * 100 / $item['faturamento'], 2, ',', '.'); ?>%</td>
+            </tr>
+            <tr>
+                <th>8</th>
+                <th>Lucro Líquido (6 - 7)</th>
+                <td><?php echo WS_Money::adjustToView($saldo); ?></td>
+                <td><?php echo number_format($saldo * 100 / $item['faturamento'], 2, ',', '.'); ?>%</td>
+            </tr>
+        </tbody>
+    </table>
+    <?php
+    if (!empty($this->data['bens'])):
+        ?>
+        <h2 class="margemT">Investimentos</h2>
+        <table class="listagem">
+            <tbody>
+                <tr>
+                    <th>Investimento Total</th>
+                    <td><?php echo WS_Money::adjustToView($total['compra']); ?></td>
+                    <td>100%</td>
+                </tr>
+                <tr>
+                    <th>Investimento a Recuperar</th>
+                    <td><?php echo WS_Money::adjustToView($total['atual']); ?></td>
+                    <td><?php echo number_format($perc['atual'], 2, ',', '.'); ?>%</td>
+                </tr>
+                <tr>
+                    <th>Retorno do Investimento</th>
+                    <td><?php echo WS_Money::adjustToView($total['depreciado']); ?></td>
+                    <td><?php echo number_format($perc['recuperar'], 2, ',', '.'); ?>%</td>
+                </tr>
+            </tbody>
+        </table>
+    <?php endif; ?>
+    <h2 class="margemT">Categorias de Contas</h2>
+    <table class="listagem">
+        <thead>
+            <tr>
+                <th>Categoria</th>
+                <th>Total</th>
+                <th>% Faturamento</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $total = array('custo' => 0, 'porcentagem' => 0);
+            foreach ($item['despesasCategoria'] AS $categoria):
+                $porcentagem = number_format($categoria['total'] * 100 / $item['faturamento'], 2, ',', '.');
+                $total['custo'] += $categoria['total'];
+                $total['porcentagem'] += $categoria['total'] * 100 / $item['faturamento'];
+                ?>
+                <tr>
+                    <th><?php echo $categoria['categoria']; ?></th>
+                    <td><?php echo WS_Money::adjustToView($categoria['total']); ?></td>
+                    <td><?php echo $porcentagem; ?>%</td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Total</th>
+                <th><?php echo WS_Money::adjustToView($total['custo']); ?></th>
+                <th><?php echo number_format($total['porcentagem'], 2, ',', '.'); ?>%</th>
+            </tr>
+        </tfoot>
+    </table>
+<?php else: ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php
+endif;
+?>

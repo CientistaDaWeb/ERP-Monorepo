@@ -1,0 +1,19 @@
+<?php
+$configs = Zend_Registry::get('application');
+$dominio = $configs->cliente->dominio;
+$data['url'] = 'http://' . $dominio . '/erp/print/Orcamentos/ver/10';
+$data['pasta'] = 'teste/';
+$data['arquivo'] = 'teste.pdf';
+?>
+<div id="retorno"></div>
+<script>
+    $(function() {
+        $.ajax({
+            url: '/erp/Index/mpdf',
+            type: 'POST',
+            data: {url: '<?php echo $data['url']; ?>', pasta: '<?php echo $data['pasta']; ?>', arquivo: '<?php echo $data['arquivo']; ?>'}
+        }).done(function(msg) {
+            $("#retorno").html(msg);
+        });
+    });
+</script>

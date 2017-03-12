@@ -1,0 +1,47 @@
+<div class="container_12" id="home">
+    <div id="area_atuacao">
+        <ul>
+            <li id="casa">
+                <a href="/servicos/residencia">
+                    <div class="marcador"></div>
+                    Acquasana <span>para sua casa</span>
+                </a>
+            </li>
+            <li id="condominio">
+                <a href="/servicos/condominio">
+                    <div class="marcador"></div>
+                    Acquasana <span>para seu condomínio</span>
+                </a>
+            </li>
+            <li id="industria">
+                <a href="/servicos/empresa">
+                    <div class="marcador"></div>
+                    Acquasana <span>para sua indústria</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    $(function() {
+        $("#area_atuacao li").hover(
+                function() {
+                    $(this).find('.marcador').stop().animate({
+                        marginTop: '0px',
+                        marginBottom: '60px'
+                    }, 100);
+                    $(this).find('span').stop().animate({
+                        color: '#849a34'
+                    }, 250);
+                },
+                function() {
+                    $(this).find('.marcador').stop().animate({
+                        marginTop: '30px',
+                        marginBottom: '30px'
+                    }, 200);
+                    $(this).find('span').stop().animate({
+                        color: '#21374c'
+                    }, 500);
+                });
+    });
+</script>

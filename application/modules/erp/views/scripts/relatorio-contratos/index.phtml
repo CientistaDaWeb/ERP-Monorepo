@@ -1,0 +1,90 @@
+<h2><?php echo $this->model->getOption('title'); ?></h2>
+<div class="hidden">
+    <form method="post" id="Form_Relatorio_Contratos">
+        <table class="listagem">
+            <tr>
+                <th>Assinatura - Data Inicial</th>
+                <th><input type="text" name="assinatura_data_inicial" value="<?php echo $this->data['assinatura_data_inicial']; ?>" class="filter date" /></th>
+                <th>Assinatura - Data Final</th>
+                <th><input type="text" name="assinatura_data_final" value="<?php echo $this->data['assinatura_data_final']; ?>" class="filter date" /></th>
+                <th rowspan="4"><button type="submit">Filtrar</button></th>
+                <th rowspan="4"><button type="button" id="btImprimir">Imprimir</button></th>
+            </tr>
+            <tr>
+                <th>Encerramento - Data Inicial</th>
+                <th><input type="text" name="encerramento_data_inicial" value="<?php echo $this->data['encerramento_data_inicial']; ?>" class="filter date" /></th>
+                <th>Encerramento - Data Final</th>
+                <th><input type="text" name="encerramento_data_final" value="<?php echo $this->data['encerramento_data_final']; ?>" class="filter date" /></th>
+            </tr>
+            <tr>
+                <th colspan="2">Cliente</th>
+                <?php $ClientesModel = new Clientes_Model(); ?>
+                <th colspan="2"><select name="cliente_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($ClientesModel->fetchPair() as $id => $nome): ?>
+                            <option value="<?php echo $id; ?>" <?php echo ($this->data['cliente_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+            <tr>
+                <th>Serviço Contratado</th>
+                <?php $servico_contratado = $this->model->listOptions('servico_contratado'); ?>
+                <th><select name="servico_contratado">
+                        <option value="">Todos</option>
+                        <?php foreach ($servico_contratado AS $key => $servico): ?>
+                            <option value="<?php echo $key; ?>" <?php echo ($this->data['servico_contratado'] == $key) ? 'selected="selected"' : ''; ?>><?php echo $servico; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+                <th>Tipo de Efluente</th>
+                <?php $tipo_efluentes = $this->model->listOptions('tipo_efluente'); ?>
+                <th><select name="tipo_efluente">
+                        <?php foreach ($tipo_efluentes AS $key => $efluente): ?>
+                            <option value="<?php echo $key; ?>" <?php echo ($this->data['tipo_efluente'] == $key) ? 'selected="selected"' : ''; ?>><?php echo $efluente; ?></option>
+                        <?php endforeach; ?>
+                    </select></th>
+            </tr>
+        </table>
+    </form>
+</div>
+<?php if (!empty($this->items)): ?>
+    <div class="print">
+        <table class="listagem">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Orçamento</th>
+                    <th>Data de Assinatura</th>
+                    <th>Data de Encerramento</th>
+                    <th>Serviço</th>
+                    <th>Efluente</th>
+                    <th>Valor Transporte</th>
+                    <th>Valor Tratamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $OrcamentosModel = new Orcamentos_Model();
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <td><a class="buttonLink hidden" target="_blank" href="/<?php echo $this->module; ?>/Clientes/formulario/<?php echo $item['cliente_id']; ?>" title="<?php echo $ClientesModel->getOption('buttons', 'go'); ?>"><?php echo $ClientesModel->getOption('buttons', 'go'); ?></a> <?php echo $item['cliente']; ?></td>
+                        <td><a class="buttonLink hidden" target="_blank" href="/<?php echo $this->module; ?>/Orcamentos/formulario/<?php echo $item['orcamento_id']; ?>" title="<?php echo $OrcamentosModel->getOption('buttons', 'go'); ?>"><?php echo $OrcamentosModel->getOption('buttons', 'go'); ?></a> <?php echo $item['orcamento_id']; ?></td>
+                        <td align="center"><?php echo $item['data_assinatura']; ?></td>
+                        <td align="center"><?php echo $item['data_encerramento']; ?></td>
+                        <td align="center"><?php echo $item['servico_contratado']; ?></td>
+                        <td align="center"><?php echo $item['tipo_efluente']; ?></td>
+                        <td align="center"><?php echo $item['valor_transporte']; ?></td>
+                        <td align="center"><?php echo $item['valor_tratamento']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php
+else:
+    ?>
+    <div class="empty">
+        Nenhum dado filtrado
+    </div>
+<?php endif; ?>

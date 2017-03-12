@@ -1,0 +1,4 @@
+<?php echo $this->partial('emails/header.phtml'); ?>
+<p><?php echo $this->conteudo['descricao']; ?></p>
+<p>Segue anexo o arquivo <?php echo $this->conteudo['arquivo']; ?>.</p>
+<?php echo $this->partial('emails/footer.phtml'); ?>

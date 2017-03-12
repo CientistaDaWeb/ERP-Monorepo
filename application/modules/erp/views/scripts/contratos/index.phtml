@@ -1,0 +1,64 @@
+<?php
+if (!($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+?>
+<?php if (!empty($this->items)): ?>
+    <form method="post" action="/<?php echo $this->module; ?>/<?php echo $this->controller; ?>/excluir" class="formListagem">
+        <table class="listagem" id="ContratosListagem">
+            <thead>
+                <tr>
+                    <?php echo $this->partial('partials/btExcluir.phtml', array('controller' => $this->controller, 'model' => $this->model)); ?>
+                    <th></th>
+                    <th>Orçamento</th>
+                    <th>Cliente</th>
+                    <th>Data de Assinatura</th>
+                    <th>Data de Encerramento</th>
+                    <th>Número de Coletas</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($this->items AS $item):
+                    $item = $this->model->adjustToView($item);
+                    ?>
+                    <tr>
+                        <?php echo $this->partial('partials/itemDel.phtml', array('item' => $item)); ?>
+                        <?php echo $this->partial('partials/btEditar.phtml', array('controller' => $this->controller, 'model' => $this->model, 'item' => $item)); ?>
+                        <td><?php echo $item['orcamento_id']; ?></td>
+                        <td><?php echo $item['cliente']; ?></td>
+                        <td align="center"><?php echo $item['data_assinatura']; ?></td>
+                        <td align="center"><?php echo $item['data_encerramento']; ?></td>
+                        <td align="center"><?php echo $item['coletas']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </form>
+    <?php
+else:
+    echo $this->partial('partials/empty.phtml', array(
+        'message' => $this->model->getOption('messages', 'empty')
+    ));
+endif;
+?>
+<script type="text/javascript">
+    $(function(){
+        $('#ContratosListagem').dataTable({
+            "oLanguage": { "sUrl": "/js/dataTables/pt_BR.txt" },
+            "bJQueryUI": true,
+            "aaSorting": [[5,"asc"]],
+            "aoColumns":[
+                {"bSortable": false},
+                {"bSortable": false},
+                {"bSortable": true},
+                {"bSortable": true},
+                {"bSortable": true},
+                {"bSortable": true},
+                {"bSortable": true}
+            ]
+        });
+    });
+</script>

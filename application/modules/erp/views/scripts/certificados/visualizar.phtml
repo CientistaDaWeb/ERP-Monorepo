@@ -1,0 +1,70 @@
+<link href="/css/certificado.css" rel="stylesheet" type="text/css" />
+<div class="alignCenter">
+    <img src="/images/topo_certificado.jpg">
+</div>
+<h1>CERTIFICADO DE TRATAMENTO DE EFLUENTES LÍQUIDOS<br />CERTIFICADO Nº <?php echo $this->certificado['numero']; ?></h1>
+<p>Certificamos que recebemos o efluente líquido abaixo relacionado e que procedemos a tratabilidade em total acordo com a Licença de Operação FEPAM LO Nº 7138/2008 DL.</p>
+<h2>GERADOR</h2>
+<p>Cliente/Gerador: <?php echo $this->certificado['cliente_nome']; ?></p>
+<p>Endereço: <?php echo $this->certificado['cliente_endereco']; ?></p>
+<p>Município/Estado: <?php echo $this->certificado['cliente_cidade']; ?></p>
+<h2>TRANSPORTADOR</h2>
+<p><?php echo $this->certificado['transportador_nome']; ?></p>
+<p><?php echo $this->certificado['transportador_endereco']; ?></p>
+<p>LO Transporte: <?php echo $this->certificado['transportador_lo']; ?></p>
+<br /><br />
+<table class="listagem">
+    <thead>
+        <tr>
+            <th>Data de Coleta</th>
+            <th>Período de Tratamento</th>
+            <th>MTR</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><?php echo $this->certificado['inicio_tratamento']; ?></td>
+            <td><?php echo $this->certificado['tratamento']; ?></td>
+            <td><?php echo $this->certificado['mtr']; ?></td>
+        </tr>
+    </tbody>
+</table>
+<br />
+<table class="listagem">
+    <thead>
+        <tr>
+            <th>Caracterização do Efluente Líquido</th>
+            <th>Quantidade</th>
+            <th>Unidade</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><?php echo $this->certificado['tipo_efluente']; ?></td>
+            <td><?php echo $this->certificado['quantidade']; ?></td>
+            <td>m³</td>
+        </tr>
+        <tr>
+            <th>Validade deste certificado</th>
+            <th colspan="2">Legislação Vigente</th>
+        </tr>
+        <tr>
+            <td>12 meses</td>
+            <td colspan="2">ABNT/NBR 7229/1993</td>
+        </tr>
+    </tbody>
+</table>
+<br />
+<p class="float right">Garibaldi, <?php echo $this->certificado['fim_tratamento']; ?></p>
+<br /><br />
+<br /><br />
+<br /><br />
+<br /><br />
+<br /><br />
+<br /><br />
+<br /><br />
+<br /><br />
+<div class="alignCenter">
+    <img src="/images/rodape_certificado.jpg">
+</div>
+

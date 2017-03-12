@@ -1,0 +1,73 @@
+<div class="grid_12">
+    <?php
+    if (!isset($this->noLayout)):
+        echo $this->partial('partials/title.phtml', array(
+            'title' => $this->model->getOption('title')
+        ));
+    endif;
+    ?>
+    <div id="OrcamentosConfiguracaoModal">
+        <?php echo $this->form; ?>
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            //Envia o formulário por ajax
+            $('#OrcamentosConfiguracaoForm').die('submit');
+            $("#OrcamentosConfiguracaoForm").live('submit', function(){
+                $("#OrcamentosConfiguracaoForm").ajaxSubmit({
+                    type: 'post',
+                    url: "/<?php echo $this->module; ?>/submodulo/<?php echo $this->controller; ?>/configuracao/",
+                    success: function(data){
+                        $("#OrcamentosConfiguracaoModal").html(data);
+                    }
+                });
+                return false;
+            });
+
+            $("#condicao_pagamento_id").change(function(){
+                var id = $(this).select().val();
+                $.ajax({
+                    url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/'+id,
+                    datatype : 'GET',
+                    success: function(data){
+                        if(data != "")
+                            $("#condicoes_pagamento").val(data);
+                    }
+                });
+            });
+            $("#prazo_entrega_id").change(function(){
+                var id = $(this).select().val();
+                $.ajax({
+                    url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/'+id,
+                    datatype : 'GET',
+                    success: function(data){
+                        if(data != "")
+                            $("#prazo_entrega").val(data);
+                    }
+                });
+            });
+            $("#observacao_id").change(function(){
+                var id = $(this).select().val();
+                $.ajax({
+                    url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/'+id,
+                    datatype : 'GET',
+                    success: function(data){
+                        if(data != "")
+                            $("#observacoes").val(data);
+                    }
+                });
+            });
+            $("#titulo_id").change(function(){
+                var id = $(this).select().val();
+                $.ajax({
+                    url: '/<?php echo $this->module; ?>/submodulo/Textos/pegatexto/'+id,
+                    datatype : 'GET',
+                    success: function(data){
+                        if(data != "")
+                            $("#titulo").val(data);
+                    }
+                });
+            });
+        });
+    </script>
+</div>

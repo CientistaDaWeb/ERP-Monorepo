@@ -1,0 +1,122 @@
+<?php
+if (!isset($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+if (empty($this->data['id'])):
+    $FormasPagamentoModel = new FormasPagamento_Model();
+    $FormasPagamento = $FormasPagamentoModel->buscaGeraRemessa();
+    ?>
+    <div id="empresas">
+        <select name="forma_pagamento_id" id="forma_pagamento_id">
+            <option>Selecione a Forma de Pagamento</option>
+            <?php foreach ($FormasPagamento AS $forma_pagamento): ?>
+                <option value="<?php echo $forma_pagamento['id']; ?>"><?php echo $forma_pagamento['empresa'] . ' - ' . $forma_pagamento['banco'] . ' - ' . $forma_pagamento['forma_pagamento']; ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div id="trocaEmpresa">
+        <button type="button">Trocar de Empresa</button>
+    </div>
+    <div id="contas" class="margemT">
+    </div>
+    <script type="text/javascript">
+        $(function(){
+            $('#trocaEmpresa').hide();
+            $('#contas').hide();
+
+            $('#forma_pagamento_id').die('change');
+            $('#forma_pagamento_id').change(function(){
+                $('#empresas').hide();
+                $('#trocaEmpresa').show();
+                $('#contas').show();
+                $.get('/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/buscacontas//'+$(this).val(),
+                '',
+                function(data){
+                    if(data != ''){
+                        $('#contas').html(data);
+                    }else{
+                        var erro = '<div class="error">Erro ao carregar as contas.</div>';
+                        $('#contas').html(erro);
+                    }
+
+                });
+            });
+
+            $('#trocaEmpresa').die('click');
+            $('#trocaEmpresa').click(function(){
+                $('#empresas').show();
+                $('#trocaEmpresa').hide();
+                $('#contas').hide();
+            });
+        });
+    </script>
+    <?php
+else:
+    $item = $this->model->adjustToView($this->item);
+    if (!empty($item['id'])):
+
+        ?>
+        <div class="botoes">
+            <a class="botao" href="/<?php echo $this->module; ?>/Boleto-Itau/remessa/<?php echo base64_encode($item['id']); ?>" target="_blank">Imprimir Boletos</a>
+            <a class="botao" href="http://itau.com.br/" target="_blank">Ir para o banco</a>
+        </div>
+        <table class="listagem">
+            <tr>
+                <th>Remessa</th>
+                <td><?php echo $item['id']; ?></td>
+            </tr>
+            <tr>
+                <th>Data de Emissão</th>
+                <td><?php echo $item['data_emissao']; ?></td>
+            </tr>
+            <tr>
+                <th>Empresa</th>
+                <td><?php echo $item['empresa']; ?></td>
+            </tr>
+            <tr>
+                <th>Banco</th>
+                <td><?php echo $item['banco']; ?></td>
+            </tr>
+            <tr>
+                <th>Nº Titulos</th>
+                <td><?php echo $item['titulos']; ?></td>
+            </tr>
+            <tr>
+                <th>Arquivo</th>
+                <td><a href="/<?php echo $this->module; ?>/save/<?php echo $this->controller; ?>/salvaarquivo/<?php echo $item['id']; ?>" target="_blank">Baixar arquivo</a></td>
+            </tr>
+        </table>
+        <hr class="margemB margemT" />
+        <table class="listagem">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Data de Vencimento</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $ContasReceberModel = new ContasReceber_Model();
+                foreach ($this->contas AS $conta) :
+                    $conta = $ContasReceberModel->adjustToView($conta);
+                    ?>
+                    <tr>
+                        <td><?php echo $conta['cliente']; ?></td>
+                        <td><?php echo $conta['data_vencimento']; ?></td>
+                        <td class="valor"><?php echo $conta['valor']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <button type="button" class="margemT" onclick="javascript: window.location = '/<?php echo $this->module; ?>/<?php echo $this->controller; ?>/index'">Voltar</button>
+        <?php
+    else:
+        echo $this->partial('partials/empty.phtml', array(
+            'message' => $this->model->getOption('messages', 'empty')
+        ));
+    endif;
+endif;
+?>
