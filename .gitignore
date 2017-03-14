@@ -2,6 +2,7 @@
 /public/uploads/*
 !/public/uploads/usuarios/Cara_Ogro.png
 !/public/uploads/default/*
+/public/.htaccess
 /.idea
 /docs/dados-uteis
 /remover
