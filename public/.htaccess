@@ -1,6 +1,12 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
+
+    #Força remover o www
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+    #Manda tudo pro index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ index.php [L]
