@@ -10,3 +10,5 @@ Inserts iniciais: /docs/inserts.sql
 ## Linguagem de Programação ##
 
 Esse projeto foi desenvolvido com base no Zend Framework e tem como painel administrativo o WS Labs.
+
+# Preciso melhorar muito esse arquivo #
