@@ -8,7 +8,7 @@ defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV
 
 // Define Upload Path
 defined('UPLOAD_PATH')
-        || define('UPLOAD_PATH', APPLICATION_PATH . '/../htdocs/uploads/');
+        || define('UPLOAD_PATH', APPLICATION_PATH . '/../public/uploads/');
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(

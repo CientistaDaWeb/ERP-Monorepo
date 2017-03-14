@@ -1,11 +1,9 @@
 # WS Hydra
-/htdocs/uploads/*
-!/htdocs/uploads/usuarios/Cara_Ogro.png
-!/htdocs/uploads/default/*
+/public/uploads/*
+!/public/uploads/usuarios/Cara_Ogro.png
+!/public/uploads/default/*
 /.idea
-/htdocs/.htaccess
 /docs/dados-uteis
-/docs/ssh
 /remover
 # fim do WS Hydra
 

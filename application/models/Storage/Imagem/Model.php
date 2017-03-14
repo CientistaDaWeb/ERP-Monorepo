@@ -20,7 +20,7 @@ class Storage_Imagem_Model {
             $params[$key] = $value;
         }
 
-        $imagem = APPLICATION_PATH . '/../htdocs/uploads/' . $data['folder'] . '/' . $data['file'];
+        $imagem = APPLICATION_PATH . '/../public/uploads/' . $data['folder'] . '/' . $data['file'];
         if (!is_file($imagem)):
             $data['folder'] = 'default';
             $data['file'] = 'notfound.jpg';
