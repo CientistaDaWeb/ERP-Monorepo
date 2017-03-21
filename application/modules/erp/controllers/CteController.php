@@ -544,7 +544,7 @@ class Erp_CteController extends Erp_Controller_Action {
                                 endif;
                             endforeach;
 
-                            $this->view->arquivosOs = $arquivosOs;
+                            //$this->view->arquivosOs = $arquivosOs;
                         endif;
 
                         $mail->envia('acquasana@acquasana.com.br', 'Acquasana');
@@ -634,6 +634,21 @@ class Erp_CteController extends Erp_Controller_Action {
             endif;
         endif;
         exit();
+    }
+
+    public function verificaStatusServicoAction(){
+        include('Nfephp/libs/ToolsNFePHP.class.php');
+        $tools = new ToolsNFePHP();
+        var_dump($tools->statusServico('RS', 2, 2));
+        exit();
+    }
+
+    public function verificaCertificadoAction(){
+        include('Nfephp/libs/ToolsNFePHP.class.php');
+        $tools = new ToolsNFePHP();
+        var_dump($tools);
+        exit();
+
     }
 
 }
