@@ -1,31 +1,37 @@
 <?php
 
-class Erp_CteController extends Erp_Controller_Action {
+class Erp_CteController extends Erp_Controller_Action
+{
 
-    public function init() {
+    public function init()
+    {
         $this->model = new Ctes_Model();
         $this->form = WS_Form_Generator::generateForm('Ctes', $this->model->getFormFields());
         require_once('Nfephp/libs/CTeNFePHP.class.php');
         parent::init();
     }
 
-    public function indexAction() {
+    public function indexAction()
+    {
         parent::indexAction();
     }
 
-    public function clienteAction() {
+    public function clienteAction()
+    {
         $cliente_id = $this->_getParam('parent_id');
         $items = $this->model->buscarPorCliente($cliente_id);
         $this->view->items = $items;
     }
 
-    public function dadosAction() {
+    public function dadosAction()
+    {
         $cte_id = $this->_getParam('parent_id');
         $item = $this->model->find($cte_id);
         $this->view->item = $item;
     }
 
-    public function formularioAction() {
+    public function formularioAction()
+    {
         $this->options['noList'] = true;
         parent::formularioAction();
         /*
@@ -36,11 +42,13 @@ class Erp_CteController extends Erp_Controller_Action {
          */
     }
 
-    public function corrigirAction() {
+    public function corrigirAction()
+    {
         self::formularioAction();
     }
 
-    public function addfaturaAction() {
+    public function addfaturaAction()
+    {
         try {
             $cte_id = $this->_getParam('cte_id');
             $fatura_id = $this->_getParam('fatura_id');
@@ -61,7 +69,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function cartaAction() {
+    public function cartaAction()
+    {
         $cte_id = $this->_getParam('cte_id');
         $alteracoes = $this->_getParam('alteracoes');
         $cte = $this->model->find($cte_id);
@@ -109,7 +118,8 @@ class Erp_CteController extends Erp_Controller_Action {
         endif;
     }
 
-    public function inutilizarAction() {
+    public function inutilizarAction()
+    {
         $cte_id = $this->_getParam('id');
         $cte = $this->model->find($cte_id);
         $data = new WS_Date($cte['data']);
@@ -138,7 +148,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function previewAction() {
+    public function previewAction()
+    {
         $cte_id = $this->_getParam('cte_id');
         $cte = $this->model->find($cte_id);
         try {
@@ -159,7 +170,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function removefaturaAction() {
+    public function removefaturaAction()
+    {
         try {
             $fatura_id = $this->_getParam('fatura_id');
             $ContasReceberModel = new ContasReceber_Model();
@@ -173,7 +185,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function faturasAction() {
+    public function faturasAction()
+    {
         $cte_id = $this->_getParam('parent_id');
         $cte = $this->model->find($cte_id);
         $ContasReceberModel = new ContasReceber_Model();
@@ -200,7 +213,8 @@ class Erp_CteController extends Erp_Controller_Action {
         $this->view->faturasNaoProcessadas = $faturasNaoProcessadas;
     }
 
-    public function verificaAction() {
+    public function verificaAction()
+    {
         include('Nfephp/libs/ToolsNFePHP.class.php');
         $tools = new ToolsNFePHP();
         $cte_id = $this->_getParam('cte_id');
@@ -214,7 +228,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function validaCertificadoAction() {
+    public function validaCertificadoAction()
+    {
         include('Nfephp/libs/ToolsNFePHP.class.php');
         $tools = new ToolsNFePHP();
         //$validade = $tools->__validCerts();
@@ -222,7 +237,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function geraxmlAction() {
+    public function geraxmlAction()
+    {
         include('Nfephp/libs/ToolsNFePHP.class.php');
         $tools = new ToolsNFePHP();
         $cte_id = $this->_getParam('cte_id');
@@ -248,7 +264,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function validarAction() {
+    public function validarAction()
+    {
         $cte_id = $this->_getParam('cte_id');
         $cte = $this->model->find($cte_id);
         require_once('Nfephp/libs/ToolsNFePHP.class.php');
@@ -268,7 +285,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function transmitirAction() {
+    public function transmitirAction()
+    {
         $cte_id = $this->_getParam('cte_id');
         $cte = $this->model->find($cte_id);
         try {
@@ -327,7 +345,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function gerararquivosAction() {
+    public function gerararquivosAction()
+    {
         $cte_id = $this->_getParam('cte_id');
         $cte = $this->model->find($cte_id);
         try {
@@ -355,7 +374,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function enviararquivosAction() {
+    public function enviararquivosAction()
+    {
         $cte_id = $this->_getParam('cte_id');
         $cte = $this->model->find($cte_id);
 
@@ -374,7 +394,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function arquivosAction() {
+    public function arquivosAction()
+    {
         $cte_id = $this->_getParam('parent_id');
         $cte = $this->model->find($cte_id);
         $arquivo = 'uploads/cte/xml/' . $cte['codigo'] . '-proc.xml';
@@ -429,7 +450,8 @@ class Erp_CteController extends Erp_Controller_Action {
         $this->view->data['id'] = $cte_id;
     }
 
-    public function formenviararquivosAction() {
+    public function formenviararquivosAction()
+    {
         $cte_id = $this->_getParam('cte_id');
         $cte = $this->model->find($cte_id);
         $ClientesModel = new Clientes_Model();
@@ -460,11 +482,11 @@ class Erp_CteController extends Erp_Controller_Action {
                     $OrdensServicoModel = new OrdensServico_Model();
                     $selecionados = $OrdensServicoModel->buscarPorCte($cte_id);
                     if (!empty($selecionados)):
-                        $emailConteudo['descricao'] .='<p>CT-e referente às Ordens de Serviço: <b>';
+                        $emailConteudo['descricao'] .= '<p>CT-e referente às Ordens de Serviço: <b>';
                         foreach ($selecionados AS $selecionado):
                             $emailConteudo['descricao'] .= $selecionado['orcamento_id'] . '.' . $selecionado['sequencial'] . ' ';
                         endforeach;
-                        $emailConteudo['descricao'] .='</b></p>';
+                        $emailConteudo['descricao'] .= '</b></p>';
                     endif;
 
                     $emailConteudo['descricao'] .= '<p>As suas faturas referentes a essa CT-e podem ser consultadas em <a href="' . $link . '">' . $link . '</a>.</p>
@@ -573,7 +595,8 @@ class Erp_CteController extends Erp_Controller_Action {
         endif;
     }
 
-    public function cancelarAction() {
+    public function cancelarAction()
+    {
         $cte_id = $this->_getParam('cte_id');
         $cte = $this->model->find($cte_id);
         $protocolo = $cte['protocolo_sefaz'];
@@ -604,7 +627,8 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function importarAction() {
+    public function importarAction()
+    {
         $WSF = new WS_FOLDER();
         $folder = 'uploads/cte/xml/';
         $arquivos = $WSF->read($folder);
@@ -636,19 +660,12 @@ class Erp_CteController extends Erp_Controller_Action {
         exit();
     }
 
-    public function verificaStatusServicoAction(){
+    public function verificaStatusServicoAction()
+    {
         include('Nfephp/libs/ToolsNFePHP.class.php');
         $tools = new ToolsNFePHP();
         var_dump($tools->statusServico('RS', 2, 2));
         exit();
-    }
-
-    public function verificaCertificadoAction(){
-        include('Nfephp/libs/ToolsNFePHP.class.php');
-        $tools = new ToolsNFePHP();
-        var_dump($tools);
-        exit();
-
     }
 
 }
