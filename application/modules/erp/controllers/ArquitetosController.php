@@ -8,12 +8,6 @@ class Erp_ArquitetosController extends Erp_Controller_Action {
         parent::init();
     }
 
-    public function indexAction() {
-        parent::indexAction();
-    }
 
-    public function formularioAction() {
-        parent::formularioAction();
-    }
 
 }

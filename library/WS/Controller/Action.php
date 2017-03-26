@@ -111,6 +111,7 @@ class WS_Controller_Action extends Zend_Controller_Action {
         /*
           echo '<script type="text/javascript">
           $(function(){
+
           $("#legal").html("legal");
           });
           </script>';

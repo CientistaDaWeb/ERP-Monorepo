@@ -47,9 +47,9 @@ $cnpj = "23661925000189";
 //#### CERITIFICADO DIGITAL #####
 //###############################
 //Nome do certificado que deve ser colocado na pasta certs da API
-$certName = "CER-A1-Acqualife-2016.pfx";
+$certName = "1000308304.pfx";
 //Senha da chave privada
-$keyPass = "A30553686";
+$keyPass = "30553686";
 //Senha de decriptaçao da chave, normalmente não é necessaria
 $passPhrase = "";
 
