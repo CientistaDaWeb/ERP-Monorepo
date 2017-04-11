@@ -58,6 +58,7 @@ class Erp_RelatorioOrdemServicoController extends Erp_Controller_Action {
                 $WF = new WS_File();
                 $file = 'ordem-servico-'.date('U').'.csv';
                 $arquivo = UPLOAD_PATH . '/relatorios/' . $file;
+                $WF->remove($arquivo);
                 $WF->create($arquivo, $linhas);
                 $this->view->csv = $file;
             endif;
