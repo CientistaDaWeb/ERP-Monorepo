@@ -58,7 +58,6 @@ class Erp_RelatorioOrdemServicoController extends Erp_Controller_Action {
                 $WF = new WS_File();
                 $file = 'ordem-servico-'.date('U').'.csv';
                 $arquivo = UPLOAD_PATH . '/relatorios/' . $file;
-                $WF->remove($arquivo);
                 $WF->create($arquivo, $linhas);
                 $this->view->csv = $file;
             endif;
@@ -74,7 +73,7 @@ class Erp_RelatorioOrdemServicoController extends Erp_Controller_Action {
 
             if ($document) :
                 $this->getResponse()
-                        ->setHeader('Content-Disposition', 'attachment; filename=Relatorio-de-Ordens-de-Servico.pdf')
+                        ->setHeader('Content-Disposition', 'attachment; filename=Relatorio-de-Ordens-de-Servico'.date('U').'.pdf')
                         ->setHeader('Content-type', 'application/x-pdf')
                         ->setBody($document);
             endif;
@@ -87,7 +86,7 @@ class Erp_RelatorioOrdemServicoController extends Erp_Controller_Action {
         $document = fopen($arquivo, 'r');
 
         $this->getResponse()
-                ->setHeader('Content-Disposition', 'attachment; filename=Relatório-Fepan.csv')
+                ->setHeader('Content-Disposition', 'attachment; filename=Relatório-Fepan-'.date('U').'.csv')
                 ->setHeader('Content-type', 'application/excel');
         readfile($arquivo);
     }
