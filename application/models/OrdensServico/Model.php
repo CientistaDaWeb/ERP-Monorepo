@@ -322,7 +322,7 @@ class OrdensServico_Model extends WS_Model {
         else:
             $itens = $this->relatorioFepan($data);
 
-            $arquivo = UPLOAD_PATH . '/' . 'RelatorioOrdensServico.csv';
+            $arquivo = UPLOAD_PATH . '/' . 'RelatorioOrdensServico'.date('U').'.csv';
             $fp = fopen($arquivo, 'w');
             $cabecalho = array(
                 'DATA DO RECEBIMENTO',

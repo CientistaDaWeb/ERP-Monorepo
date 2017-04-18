@@ -31,7 +31,7 @@ class WS_File {
         }
         if (count($valid_files)) {
             $zip = new ZipArchive();
-            if ($zip->open($destination, $overwrite ? ZIPARCHIVE::OVERWRITE : ZIPARCHIVE::CREATE) !== true) {
+            if ($zip->open($destination, ZIPARCHIVE::OVERWRITE | ZIPARCHIVE::CREATE) !== true) {
                 return false;
             }
             foreach ($valid_files as $file) {
@@ -43,6 +43,7 @@ class WS_File {
             return file_exists($destination);
         } else {
             return false;
+
         }
     }
 

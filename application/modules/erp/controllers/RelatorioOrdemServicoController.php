@@ -83,7 +83,6 @@ class Erp_RelatorioOrdemServicoController extends Erp_Controller_Action {
     public function xlsAction() {
         $data = $this->_getAllParams();
         $arquivo = $this->model->montaRelatorio($data, 'xls');
-        $document = fopen($arquivo, 'r');
 
         $this->getResponse()
                 ->setHeader('Content-Disposition', 'attachment; filename=Relatório-Fepan-'.date('U').'.csv')
