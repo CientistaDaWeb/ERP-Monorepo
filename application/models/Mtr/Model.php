@@ -66,11 +66,11 @@ class Mtr_Model extends WS_Model {
                 ->from(array('m' => 'mtrs'), array(''))
                 ->joinInner(array('os' => 'ordens_servico'), 'os.id = m.ordem_servico_id', array(''))
                 ->joinInner(array('o' => 'orcamentos'), 'o.id = os.orcamento_id', array(''))
-                ->joinInner(array('cl' => 'clientes'), 'cl.id = o.cliente_id', array('gerador' => 'razao_social', 'gerador_lo' => 'numero_fepan', 'gerador_cnpj' => 'documento', 'gerador_responsavel' => 'contato'))
+                ->joinInner(array('cl' => 'clientes'), 'cl.id = o.cliente_id', array('gerador' => 'razao_social', 'gerador_lo' => 'numero_fepan', 'gerador_cnpj' => 'documento', 'gerador_responsavel' => 'contato', 'gerador_email' => 'email'))
                 ->joinInner(array('t' => 'transportadores'), 't.id = os.transportador_id', array('transportador' => 'razao_social', 'transportador_endereco' => 'CONCAT(t.endereco,", ", t.numero)', 'transportador_fone' => 'telefone', 'transportador_lo' => 'lo', 'transportador_cnpj' => 'documento', 'transportador_cep' => 'cep'))
                 ->joinInner(array('mu' => 'municipios'), 'mu.id = t.municipio_id', array('transportador_municipio' => 'nome'))
                 ->joinInner(array('es' => 'estados'), 'es.id = t.estado_id', array('transportador_estado' => 'uf'))
-                ->joinLeft(array('ce' => 'clientes_enderecos'), 'cl.id = ce.cliente_id', array('gerador_endereco' => 'CONCAT(ce.endereco,", ", ce.numero)'))
+                ->joinLeft(array('ce' => 'clientes_enderecos'), 'cl.id = ce.cliente_id', array('gerador_endereco' => 'CONCAT(ce.endereco,", ", ce.numero)', 'gerador_cep' => 'cep'))
                 ->joinInner(array('muc' => 'municipios'), 'muc.id = ce.municipio_id', array('gerador_municipio' => 'nome'))
                 ->joinLeft(array('ct' => 'clientes_telefones'), 'cl.id = ct.cliente_id', array('gerador_telefone' => 'telefone'))
                 ->where('m.id = ?', $id);

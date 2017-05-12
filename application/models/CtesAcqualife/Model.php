@@ -400,7 +400,7 @@ class CtesAcqualife_Model extends WS_Model {
     }
 
     public function adjustToView(array $data) {
-        $data['boletos'] = '<a href="/erp/Boleto-Itau/cte/' . base64_encode($data['id']) . '" class="buttonLink" target="_blank">Boletos</a>';
+        $data['boletos'] = '<a href="/erp/Boleto-Itau/cte-acqualife/' . base64_encode($data['id']) . '" class="buttonLink" target="_blank">Boletos</a>';
         return parent::adjustToView($data);
     }
 

@@ -448,7 +448,7 @@ class Erp_CteAcqualifeController extends Erp_Controller_Action {
 
                     $EstadosModel = new Estados_Model();
                     $estado = $EstadosModel->find($empresa['estado_id']);
-                    $link = 'http://www.acquasana.com.br/erp/Boleto-Itau/cte/' . base64_encode($cte_id);
+                    $link = 'http://www.acquasana.com.br/erp/Boleto-Itau/cte-acqualife/' . base64_encode($cte_id);
 
                     $emailConteudo['descricao'] = '<p>' . $saudacao . ', ' . $cliente['contato'] . '</p>
                             <p>' . nl2br($dados['mensagem']) . '</p>';

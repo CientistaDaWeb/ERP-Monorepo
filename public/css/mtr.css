@@ -34,13 +34,16 @@
     width: 5.5cm;
 }
 #gerador_endereco{
-    width: 13.5cm;
+    width: 10.3cm;
+}
+#gerador_cep{
+    width: 2.7cm;
 }
 #gerador_municipio{
     width: 5.5cm;
 }
 #gerador_responsavel{
-    width: 13.5cm;
+    width: 7cm;
     display: block;
 }
 #gerador_telefone{
@@ -48,6 +51,9 @@
 }
 #gerador_ramal{
     width: 1.5cm;
+}
+#gerador_email{
+    width: 5.5cm;
 }
 #box_residuos{
     margin-top: 0.9cm;

@@ -58,11 +58,13 @@ class Erp_MtrController extends Erp_Controller_Action {
                 $dados['gerador']['cnpj'] = $mtr_dados['gerador_cnpj'];
                 $dados['responsavel']['gerador'] = $mtr_dados['responsavel_gerador'];
                 $dados['gerador']['lo'] = $mtr_dados['gerador_lo'];
+                $dados['gerador']['cep'] = $mtr_dados['gerador_cep'];
                 $dados['gerador']['endereco'] = $mtr_dados['gerador_endereco'];
                 $dados['gerador']['municipio'] = $mtr_dados['gerador_municipio'];
                 $dados['gerador']['responsavel'] = $mtr_dados['gerador_responsavel'];
                 $dados['gerador']['telefone'] = $mtr_dados['gerador_telefone'];
                 $dados['gerador']['ramal'] = $mtr_dados['gerador_ramal'];
+                $dados['gerador']['email'] = $mtr_dados['gerador_email'];
 
                 $dados['residuos'] = $mtr_dados['residuos'];
                 $dados['quantidade'] = $mtr_dados['quantidade'];
@@ -112,10 +114,12 @@ class Erp_MtrController extends Erp_Controller_Action {
                 $dados['gerador']['cnpj'] = $mtr['gerador_cnpj'];
                 $dados['gerador']['lo'] = $mtr['gerador_lo'];
                 $dados['gerador']['endereco'] = $mtr['gerador_endereco'];
+                $dados['gerador']['cep'] = $mtr['gerador_cep'];
                 $dados['gerador']['municipio'] = $mtr['gerador_municipio'];
                 $dados['gerador']['responsavel'] = $mtr['gerador_responsavel'];
                 $dados['gerador']['telefone'] = $mtr['gerador_telefone'];
                 $dados['gerador']['ramal'] = '';
+                $dados['gerador']['email'] = $mtr['gerador_email'];
 
                 $dados['residuos'] = '';
                 $dados['quantidade'] = '';
