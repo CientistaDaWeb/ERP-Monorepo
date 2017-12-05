@@ -241,7 +241,7 @@ class Clientes_Model extends WS_Model {
         $CaracteresAceitos = '0123456789';
         $max = strlen($CaracteresAceitos) - 1;
         $password = null;
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 6; $i++) {
             $password .= $CaracteresAceitos{mt_rand(0, $max)};
         }
         return $password;

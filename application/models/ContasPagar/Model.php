@@ -98,8 +98,18 @@ class ContasPagar_Model extends WS_Model {
                 'label' => 'Valor',
                 'required' => true,
             ),
+            'valor_pago' => array(
+                'type' => 'Money',
+                'label' => 'Valor Pago',
+                'required' => true,
+            ),
+            'data_pagamento' => array(
+                'type' => 'Date',
+                'required' => true,
+                'label' => 'Data de Pagamento',
+            ),
             'data_lancamento' => array(
-                'type' => 'Hidden',
+                'type' => 'Date',
                 'required' => true,
                 'label' => 'Data de Lançamento',
                 'value' => date('d/m/Y')
@@ -140,9 +150,9 @@ class ContasPagar_Model extends WS_Model {
     public function setAdjustFields() {
         $this->_adjustFields = array(
             'data_pagamento' => 'date',
-            'valor' => 'money',
             'data_vencimento' => 'date',
             'data_lancamento' => 'date',
+            'valor' => 'money',
             'valor_pago' => 'money'
         );
     }

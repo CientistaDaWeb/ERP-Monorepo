@@ -4,8 +4,25 @@ class Erp_ContasPagarController extends Erp_Controller_Action {
 
     public function init() {
         $this->model = new ContasPagar_Model();
-        $this->form = WS_Form_Generator::generateForm('ContasPagar', $this->model->getFormFields());
         $this->actions['pay'] = 'btPay';
+
+        $data = $this->_request->getParams();
+
+        if(empty($data['id'])):
+            unset($this->model->_formFields['valor_pago']);
+            unset($this->model->_formFields['data_pagamento']);
+            unset($this->model->_formFields['data_lancamento']);
+        else:
+            $item = $this->model->find($data['id']);
+            if(empty($item['valor_pago'])):
+                unset($this->model->_formFields['valor_pago']);
+                unset($this->model->_formFields['data_pagamento']);
+                unset($this->model->_formFields['data_lancamento']);
+            endif;
+        endif;
+
+        $this->form = WS_Form_Generator::generateForm('ContasPagar', $this->model->getFormFields());
+
         parent::init();
     }
 
