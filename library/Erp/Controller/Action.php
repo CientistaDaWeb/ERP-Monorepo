@@ -44,7 +44,7 @@ class Erp_Controller_Action extends WS_Controller_Action {
         require_once $path . '/mpdf.php';
 
         $mpdf = new mPDF();
-        $mpdf->debug = false;
+        $mpdf->debug = true;
         $mpdf->simpleTables = true;
         $mpdf->SetAutoFont();
         $mpdf->WriteHTML($html);
