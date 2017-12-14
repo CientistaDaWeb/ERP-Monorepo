@@ -46,6 +46,7 @@ class Erp_Controller_Action extends WS_Controller_Action {
         $mpdf = new mPDF();
         $mpdf->debug = true;
         $mpdf->simpleTables = true;
+        $mpdf->showImageErrors = true;
         $mpdf->SetAutoFont();
         $mpdf->WriteHTML($html);
 
