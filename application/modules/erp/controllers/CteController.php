@@ -271,7 +271,7 @@ class Erp_CteController extends Erp_Controller_Action
         require_once('Nfephp/libs/ToolsNFePHP.class.php');
         $nfe = new ToolsNFePHP();
         $filename = 'uploads/cte/xml/' . $cte['codigo'] . '.xml';
-        $xsd = realpath('../library/Nfephp/schemes/PL_CTe_200/cte_v2.00.xsd');
+        $xsd = realpath('../library/Nfephp/schemes/PL_CTe_300/cte_v3.00.xsd');
         if (!$nfe->validXML($filename, $xsd, $error)):
             foreach ($error AS $e):
                 $this->alerta('error', $e);
