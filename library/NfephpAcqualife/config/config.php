@@ -17,7 +17,7 @@ $ambiente = $configs->cte->ambiente->codigo;
 //incluindo a versao dos mesmos, pois alguns estados não estão utilizando as
 //mesmas versões
 $arquivoURLxml = "nfe_ws2.xml";
-$arquivoURLxmlCTe = "cte_ws2.xml";
+$arquivoURLxmlCTe = "cte_ws3.xml";
 //Diretório onde serão mantidos os arquivos com as NFe em xml
 //a partir deste diretório serão montados todos os subdiretórios do sistema
 //de manipulação e armazenamento das NFe e CTe
@@ -29,7 +29,7 @@ $arquivosDirCTe = realpath("uploads/cte");
 $baseurl = $configs->cliente->dominio;
 //Versão em uso dos schemas utilizados para validação dos xmls
 $schemes = "PL_008d";
-$schemesCTe = "PL_CTe_200";
+$schemesCTe = "PL_CTe_300";
 
 //###############################
 //###### EMPRESA EMITENTE #######
