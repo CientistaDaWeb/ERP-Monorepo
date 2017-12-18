@@ -451,7 +451,7 @@ class CtesAcqualife_Model extends WS_Model {
 
         $linhas = '<?xml version="1.0" encoding="UTF-8"?>';
         $linhas .= '<CTe xmlns="http://www.portalfiscal.inf.br/cte">';
-        $linhas .= '<infCte versao="2.00" Id="CTe' . WS_Text::clearSpaces($cte['codigo']) . '">';
+        $linhas .= '<infCte versao="3.00" Id="CTe' . WS_Text::clearSpaces($cte['codigo']) . '">';
         $linhas .= '<ide>';
         $linhas .= '<cUF>' . WS_Text::clearSpaces($empresa['codigo_uf']) . '</cUF>';
         $linhas .= '<cCT>' . WS_Text::clearSpaces($cte['chave']) . '</cCT>';
