@@ -31,7 +31,7 @@ class Mtr_Model extends WS_Model {
                 'descricao' => 'Substância Infectante que afeta seres humanos - Efluente Doméstico',
                 'estado' => 'L',
                 'classificacao' => 'I',
-                'codigo' => 'X042',
+                'codigo' => 'A018.1',
                 'unidade' => 'm³',
                 'onu' => '2814',
             ),
