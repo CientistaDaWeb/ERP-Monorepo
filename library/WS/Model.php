@@ -561,7 +561,7 @@ class WS_Model {
     }
 
     /**
-     * [pt-br] Método para serializar um campo específico
+     * [pt-br] Mï¿½todo para serializar um campo especï¿½fico
      * [en] Method to serialize a especific field
      * @params arrat data
      * @return array
@@ -580,7 +580,7 @@ class WS_Model {
     }
 
     /**
-     * [pt-br] Método para serializar um campo específico
+     * [pt-br] Mï¿½todo para serializar um campo especï¿½fico
      * [en] Method to serialize a especific field
      * @params arrat data
      * @return array
@@ -610,6 +610,52 @@ class WS_Model {
         if (!empty($item)):
             return $item;
         endif;
+    }
+
+    /**
+     * [pt-br] MÃ©todo para buscar um ou mais registros no banco de dados atravÃ©s de um ou mais parÃ¢metros
+     * [en] Method to seek one or more records in the database through one or more parameters
+     * @param array $params
+     * @return array
+     */
+    public function findBy(array $params) {
+        $sql = clone ($this->_basicSearch);
+        foreach ($params AS $param => $value):
+            $sql->orWhere("$param = ?", $value);
+        endforeach;
+
+        if (!empty($this->_orderFields)):
+            foreach ($this->_orderFields AS $key => $order):
+                $sql->order("$key $order");
+            endforeach;
+        endif;
+
+        $items = $sql->query()->fetchAll();
+        return $items;
+    }
+
+    /**
+     * [pt-br] MÃ©todo para buscar um ou mais registros no banco de dados atravÃ©s de um ou mais parÃ¢metros
+     * [en] Method to seek one or more records in the database through one or more parameters
+     * @param array $params
+     * @return array
+     */
+    public function findByAnd(array $params) {
+        $sql = clone ($this->_basicSearch);
+        foreach ($params AS $param => $value):
+            $sql->where("$param = ?", $value);
+        endforeach;
+
+        if (!empty($this->_orderFields)):
+            foreach ($this->_orderFields AS $key => $order):
+                $sql->order("$key $order");
+            endforeach;
+        endif;
+
+        echo $sql->__toString();
+
+        $items = $sql->query()->fetchAll();
+        return $items;
     }
 
     /**
