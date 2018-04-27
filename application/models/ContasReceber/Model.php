@@ -1,8 +1,9 @@
 <?php
 
-class ContasReceber_Model extends WS_Model {
-
-    public function __construct() {
+class ContasReceber_Model extends WS_Model
+{
+    public function __construct()
+    {
         $this->_db = new ContasReceber_Db();
         $this->_title = 'Gerenciador de Contas a Receber';
         $this->_singular = 'Conta a Receber';
@@ -19,7 +20,8 @@ class ContasReceber_Model extends WS_Model {
         $this->_buttons['print'] = 'Imprimir a ' . $this->_singular;
     }
 
-    public function setBasicSearch() {
+    public function setBasicSearch()
+    {
         $this->_basicSearch = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('*'))
@@ -31,7 +33,8 @@ class ContasReceber_Model extends WS_Model {
                 ->order('cr.data_vencimento DESC');
     }
 
-    public function setFormFields() {
+    public function setFormFields()
+    {
         $this->_formFields = array(
             'id' => array(
                 'type' => 'Hidden'
@@ -92,7 +95,8 @@ class ContasReceber_Model extends WS_Model {
         );
     }
 
-    public function setFormFieldsPagar() {
+    public function setFormFieldsPagar()
+    {
         $this->_formFields = array(
             'id' => array(
                 'type' => 'Hidden',
@@ -122,13 +126,15 @@ class ContasReceber_Model extends WS_Model {
         );
     }
 
-    public function setOrderFields() {
+    public function setOrderFields()
+    {
         $this->_orderFields = array(
             'data_vencimento' => 'desc'
         );
     }
 
-    public function setSearchFields() {
+    public function setSearchFields()
+    {
         $this->_searchFields = array(
             'cr.id' => 'text',
             'e.razao_social' => 'text',
@@ -142,7 +148,8 @@ class ContasReceber_Model extends WS_Model {
         );
     }
 
-    public function setAdjustFields() {
+    public function setAdjustFields()
+    {
         $this->_adjustFields = array(
             'data_vencimento' => 'date',
             'valor' => 'money',
@@ -153,7 +160,8 @@ class ContasReceber_Model extends WS_Model {
         );
     }
 
-    public function setViewFields() {
+    public function setViewFields()
+    {
         $this->_viewFields = array(
             'id' => 'Código',
             'cliente' => 'Cliente',
@@ -168,7 +176,8 @@ class ContasReceber_Model extends WS_Model {
         );
     }
 
-    public function adjustToView(array $data) {
+    public function adjustToView(array $data)
+    {
         $WD = new WS_Date();
         $data['valor'] = $data['valor'] - $data['valor_retido'];
         $data = parent::adjustToView($data);
@@ -176,28 +185,28 @@ class ContasReceber_Model extends WS_Model {
         $Vencimento = new WS_Date($data['data_vencimento']);
         if (!empty($data['valor_pago'])):
             $data['status'] = 'Pago';
-            $data['class'] = 'pago';
-        elseif ($Vencimento->compare($WD->today()) == 1):
+        $data['class'] = 'pago'; elseif ($Vencimento->compare($WD->today()) == 1):
             $data['status'] = 'Em Aberto';
-            $data['class'] = 'aberto';
-        else:
+        $data['class'] = 'aberto'; else:
             $data['status'] = 'Atrasada';
-            $data['class'] = 'atrasada';
+        $data['class'] = 'atrasada';
         endif;
         $data['linkBoleto'] = '<a target="blank" href="/erp/Boleto-Itau/boleto/' . base64_encode($data['id']) . '">Imprimir</a>';
         return $data;
     }
 
-    public function ajusteFluxo($data) {
+    public function ajusteFluxo($data)
+    {
         if (!empty($data)):
-            foreach ($data AS $item):
+            foreach ($data as $item):
                 $ret[$item['ano'] . '-' . substr('0' . $item['mes'], -2)]['contas_receber'] = $item['soma'];
-            endforeach;
-            return $ret;
+        endforeach;
+        return $ret;
         endif;
     }
 
-    public function buscarPorPeriodo($dataInicial = '', $dataFinal = '', $empresa_id = '') {
+    public function buscarPorPeriodo($dataInicial = '', $dataFinal = '', $empresa_id = '')
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from('contas_receber', array('ano' => 'YEAR(data_pagamento)', 'mes' => 'MONTH(data_pagamento)', 'soma' => 'SUM(valor_pago)', 'soma_retido' => 'SUM(valor_retido)'))
@@ -208,16 +217,15 @@ class ContasReceber_Model extends WS_Model {
 
         if (!isset($dataInicial) && !isset($dataFinal)):
             $data = new Zend_Date(date('Y') . '-' . date('m') . '-01');
-            $dataFinal = $data->addMonth(6)->toString('yyyy-MM-dd');
-            $dataInicial = $data->subMonth(12)->toString('yyyy-MM-dd');
+        $dataFinal = $data->addMonth(6)->toString('yyyy-MM-dd');
+        $dataInicial = $data->subMonth(12)->toString('yyyy-MM-dd');
         endif;
 
         if (!empty($empresa_id)):
-            if(is_array($empresa_id)):
-                $consulta->where('empresa_id IN (?)', $empresa_id);
-            else:
+            if (is_array($empresa_id)):
+                $consulta->where('empresa_id IN (?)', $empresa_id); else:
                 $consulta->where('empresa_id = ?', $empresa_id);
-            endif;
+        endif;
         endif;
 
         $consulta->where('data_pagamento >= ?', $dataInicial);
@@ -226,7 +234,8 @@ class ContasReceber_Model extends WS_Model {
         return $consulta->query()->fetchAll();
     }
 
-    public function find($id) {
+    public function find($id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('*'))
@@ -239,7 +248,8 @@ class ContasReceber_Model extends WS_Model {
         return $item;
     }
 
-    public function busca($busca = '', $page = 1) {
+    public function busca($busca = '', $page = 1)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('id', 'valor', 'data_vencimento', 'valor_pago', 'data_pagamento', 'orcamento_id', 'valor_retido'))
@@ -254,7 +264,8 @@ class ContasReceber_Model extends WS_Model {
         return $paginator;
     }
 
-    public function buscarAcumulado($data_inicial, $empresa_id = '') {
+    public function buscarAcumulado($data_inicial, $empresa_id = '')
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('soma' => 'SUM(valor_pago)'))
@@ -262,18 +273,18 @@ class ContasReceber_Model extends WS_Model {
 
         if (!empty($empresa_id)):
             $consulta->joinInner(array('o' => 'orcamentos'), 'o.id = cr.orcamento_id', array('empresa_id'));
-            if(is_array($empresa_id)):
-                $consulta->where('o.empresa_id IN (?)', $empresa_id);
-            else:
+        if (is_array($empresa_id)):
+                $consulta->where('o.empresa_id IN (?)', $empresa_id); else:
                 $consulta->where('o.empresa_id = ?', $empresa_id);
-            endif;
+        endif;
         endif;
 
         $item = $consulta->query()->fetch();
         return $item;
     }
 
-    public function contasAtrasadas() {
+    public function contasAtrasadas()
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('data_vencimento', 'valor', 'id'))
@@ -285,7 +296,8 @@ class ContasReceber_Model extends WS_Model {
         return $consulta->query()->fetchAll();
     }
 
-    public function contasVencendo() {
+    public function contasVencendo()
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('data_vencimento', 'valor', 'id'))
@@ -298,7 +310,8 @@ class ContasReceber_Model extends WS_Model {
         return $consulta->query()->fetchAll();
     }
 
-    public function Relatorio($data) {
+    public function Relatorio($data)
+    {
         $WD = new WS_Date();
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
@@ -309,8 +322,7 @@ class ContasReceber_Model extends WS_Model {
                 ->joinInner(array('fp' => 'formas_pagamento'), 'fp.id = cr.forma_pagamento_id', array('forma_pagamento'));
 
         if (!empty($data['ordem'])):
-            $consulta->order($data['ordem'] . ' ' . $data['ordem_tipo']);
-        else:
+            $consulta->order($data['ordem'] . ' ' . $data['ordem_tipo']); else:
             $consulta->order('cr.data_vencimento ASC');
         endif;
 
@@ -340,14 +352,12 @@ class ContasReceber_Model extends WS_Model {
 
         if (!empty($data['status'])):
             if ($data['status'] == 'pagas'):
-                $consulta->where('cr.valor_pago IS NOT NULL');
-            elseif ($data['status'] == 'vencidas'):
+                $consulta->where('cr.valor_pago IS NOT NULL'); elseif ($data['status'] == 'vencidas'):
                 $consulta->where('cr.valor_pago IS NULL');
-                $consulta->where('cr.data_vencimento < ?', date('Y-m-d'));
-            elseif ($data['status'] == 'aberto'):
+        $consulta->where('cr.data_vencimento < ?', date('Y-m-d')); elseif ($data['status'] == 'aberto'):
                 $consulta->where('cr.valor_pago IS NULL');
-                $consulta->where('cr.data_vencimento >= ?', date('Y-m-d'));
-            endif;
+        $consulta->where('cr.data_vencimento >= ?', date('Y-m-d'));
+        endif;
         endif;
 
         if (!empty($data['empresa_id'])):
@@ -367,7 +377,8 @@ class ContasReceber_Model extends WS_Model {
         return $itens;
     }
 
-    public function buscarPorOrcamento($orcamento_id) {
+    public function buscarPorOrcamento($orcamento_id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('*'))
@@ -378,7 +389,8 @@ class ContasReceber_Model extends WS_Model {
         return $itens;
     }
 
-    public function somaValores($orcamento_id) {
+    public function somaValores($orcamento_id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('*', 'soma' => '(SUM(cr.valor))'))
@@ -387,7 +399,8 @@ class ContasReceber_Model extends WS_Model {
         return $itens;
     }
 
-    public function buscarDadosPorOrcamento($orcamento_id) {
+    public function buscarDadosPorOrcamento($orcamento_id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('total' => 'COUNT(cr.id)', 'soma' => 'SUM(cr.valor)', 'retido' => 'SUM(cr.valor_retido)'))
@@ -397,7 +410,8 @@ class ContasReceber_Model extends WS_Model {
         return $item;
     }
 
-    public function buscarPorCliente($cliente_id) {
+    public function buscarPorCliente($cliente_id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('id', 'data_vencimento', 'valor', 'data_pagamento', 'valor_pago', 'orcamento_id', 'valor_retido', 'cte_id', 'cte_acqualife_id'))
@@ -409,7 +423,8 @@ class ContasReceber_Model extends WS_Model {
         return $itens;
     }
 
-    public function buscarSemRemessa($forma_pagamento_id) {
+    public function buscarSemRemessa($forma_pagamento_id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('id', 'valor', 'data_vencimento', 'valor_retido'))
@@ -423,7 +438,8 @@ class ContasReceber_Model extends WS_Model {
         return $itens;
     }
 
-    public function buscarDadosCnab($conta_id) {
+    public function buscarDadosCnab($conta_id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('id', 'data_vencimento', 'valor', 'created', 'valor_retido'))
@@ -435,7 +451,8 @@ class ContasReceber_Model extends WS_Model {
         return $item;
     }
 
-    public function buscarPorRemessa($remessa_id) {
+    public function buscarPorRemessa($remessa_id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('data_vencimento', 'valor', 'id', 'valor_retido'))
@@ -448,7 +465,8 @@ class ContasReceber_Model extends WS_Model {
         return $itens;
     }
 
-    public function buscarPorRetorno($retorno_id) {
+    public function buscarPorRetorno($retorno_id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('data_vencimento', 'valor', 'data_pagamento', 'valor_pago', 'orcamento_id', 'id'))
@@ -461,7 +479,8 @@ class ContasReceber_Model extends WS_Model {
         return $itens;
     }
 
-    public function buscarParaBoleto($boleto_id) {
+    public function buscarParaBoleto($boleto_id)
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('data_vencimento', 'valor', 'id', 'descricao', 'valor_retido'))
@@ -482,7 +501,8 @@ class ContasReceber_Model extends WS_Model {
         return $item;
     }
 
-    public function getBillingByPeriod($dataInicial, $dataFinal) {
+    public function getBillingByPeriod($dataInicial, $dataFinal)
+    {
         $sql = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('faturamento' => 'SUM(cr.valor)'))
@@ -491,7 +511,8 @@ class ContasReceber_Model extends WS_Model {
         return $sql->query()->fetch();
     }
 
-    public function getExtractBillingByPeriod($dataInicial, $dataFinal) {
+    public function getExtractBillingByPeriod($dataInicial, $dataFinal)
+    {
         $sql = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('*'))
@@ -500,7 +521,8 @@ class ContasReceber_Model extends WS_Model {
         return $sql->query()->fetchAll();
     }
 
-    public function getRetainedByPeriod($dataInicial, $dataFinal, $empresa_id = '') {
+    public function getRetainedByPeriod($dataInicial, $dataFinal, $empresa_id = '')
+    {
         $sql = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('retido' => 'SUM(cr.valor_retido)'))
@@ -514,7 +536,8 @@ class ContasReceber_Model extends WS_Model {
         return $sql->query()->fetch();
     }
 
-    public function buscaNaoProcessadasPorCliente($cliente_id) {
+    public function buscaNaoProcessadasPorCliente($cliente_id)
+    {
         $sql = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('*'))
@@ -526,7 +549,8 @@ class ContasReceber_Model extends WS_Model {
         return $sql->query()->fetchAll();
     }
 
-    public function buscaPorCte($cte_id) {
+    public function buscaPorCte($cte_id)
+    {
         $sql = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('*'))
@@ -534,7 +558,8 @@ class ContasReceber_Model extends WS_Model {
         return $sql->query()->fetchAll();
     }
 
-    public function buscaPorCteAcqualife($cte_id) {
+    public function buscaPorCteAcqualife($cte_id)
+    {
         $sql = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('*'))
@@ -542,7 +567,8 @@ class ContasReceber_Model extends WS_Model {
         return $sql->query()->fetchAll();
     }
 
-    public function buscaSomaPorCte($cte_id) {
+    public function buscaSomaPorCte($cte_id)
+    {
         $sql = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('total' => 'SUM(cr.valor)'))
@@ -550,7 +576,9 @@ class ContasReceber_Model extends WS_Model {
                 ->group('cr.cte_id');
         return $sql->query()->fetch();
     }
-    public function buscaSomaPorCteAcqualife($cte_id) {
+
+    public function buscaSomaPorCteAcqualife($cte_id)
+    {
         $sql = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('total' => 'SUM(cr.valor)'))
@@ -559,7 +587,8 @@ class ContasReceber_Model extends WS_Model {
         return $sql->query()->fetch();
     }
 
-    public function buscarPorCategoria($dataInicial = '', $dataFinal = '', $categoria_id = '', $empresa_id = '') {
+    public function buscarPorCategoria($dataInicial = '', $dataFinal = '', $categoria_id = '', $empresa_id = '')
+    {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
                 ->from(array('cr' => 'contas_receber'), array('total' => 'SUM(valor_pago)'))
@@ -571,17 +600,16 @@ class ContasReceber_Model extends WS_Model {
         ;
 
         if (!empty($empresa_id)):
-            if(is_array($empresa_id)):
-                $consulta->where('o.empresa_id IN (?)', $empresa_id);
-            else:
+            if (is_array($empresa_id)):
+                $consulta->where('o.empresa_id IN (?)', $empresa_id); else:
                 $consulta->where('o.empresa_id = ?', $empresa_id);
-            endif;
+        endif;
         endif;
 
         if (!isset($dataInicial) && !isset($dataFinal)):
             $data = new Zend_Date(date('Y') . '-' . date('m') . '-01');
-            $dataFinal = $data->addMonth(6)->toString('yyyy-MM-dd');
-            $dataInicial = $data->subMonth(12)->toString('yyyy-MM-dd');
+        $dataFinal = $data->addMonth(6)->toString('yyyy-MM-dd');
+        $dataInicial = $data->subMonth(12)->toString('yyyy-MM-dd');
         endif;
 
         $consulta->where('cr.data_pagamento >= ?', $dataInicial);
@@ -593,4 +621,12 @@ class ContasReceber_Model extends WS_Model {
         return $itens;
     }
 
+    public function buscaPorClienteParaCte($cliente_id)
+    {
+        $sql = clone ($this->_basicSearch);
+        $sql->where('o.cliente_id = ?', $cliente_id)
+            ->where('cr.cte_id IS NULL');
+
+        return $sql->query()->fetchAll();
+    }
 }

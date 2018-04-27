@@ -1,8 +1,9 @@
 <?php
 
-class Erp_ContasReceberController extends Erp_Controller_Action {
-
-    public function init() {
+class Erp_ContasReceberController extends Erp_Controller_Action
+{
+    public function init()
+    {
         $this->model = new ContasReceber_Model();
         unset($this->buttons['add']);
         $this->actions['pay'] = 'btPay';
@@ -10,7 +11,8 @@ class Erp_ContasReceberController extends Erp_Controller_Action {
         parent::init();
     }
 
-    public function formularioAction() {
+    public function formularioAction()
+    {
         $OrcamentoModel = new Orcamentos_Model();
         $ClientesEnderecosModel = new ClientesEnderecos_Model();
 
@@ -22,23 +24,24 @@ class Erp_ContasReceberController extends Erp_Controller_Action {
         endif;
         if (!empty($id)):
             $fatura = $this->model->find($id);
-            $orcamento_id = $fatura['orcamento_id'];
+        $orcamento_id = $fatura['orcamento_id'];
         endif;
 
         if (!empty($orcamento_id)):
             $orcamento = $OrcamentoModel->find($orcamento_id);
-            $cliente_id = $orcamento['cliente_id'];
-            $enderecos = $ClientesEnderecosModel->fetchPair($cliente_id);
-            $this->model->_formFields['endereco_id']['options'] = $enderecos;
-            $this->form = WS_Form_Generator::generateForm('ContasReceber', $this->model->getFormFields());
+        $cliente_id = $orcamento['cliente_id'];
+        $enderecos = $ClientesEnderecosModel->fetchPair($cliente_id);
+        $this->model->_formFields['endereco_id']['options'] = $enderecos;
+        $this->form = WS_Form_Generator::generateForm('ContasReceber', $this->model->getFormFields());
 
-            $this->model->_params['orcamento_id'] = $orcamento_id;
+        $this->model->_params['orcamento_id'] = $orcamento_id;
         endif;
 
         parent::formularioAction();
     }
 
-    public function orcamentoAction() {
+    public function orcamentoAction()
+    {
         $orcamento_id = $this->_getParam('parent_id');
         $items = $this->model->buscarPorOrcamento($orcamento_id);
 
@@ -61,13 +64,15 @@ class Erp_ContasReceberController extends Erp_Controller_Action {
         $this->alerta('error', 'Não esqueça de conferir o cep do endereço antes de gerar as faturas!');
     }
 
-    public function clienteAction() {
+    public function clienteAction()
+    {
         $cliente_id = $this->_getParam('parent_id');
         $items = $this->model->buscarPorCliente($cliente_id);
         $this->view->items = $items;
     }
 
-    public function pagarAction() {
+    public function pagarAction()
+    {
         $this->model->setFormFieldsPagar();
         $this->form = WS_Form_Generator::generateForm('ContasReceberPagar', $this->model->getFormFields());
         $this->options['linkUpdate'] = '/' . $this->module . '/' . $this->controller . '/pagar/' . $this->_getParam('id');
@@ -77,30 +82,32 @@ class Erp_ContasReceberController extends Erp_Controller_Action {
         endif;
     }
 
-    public function gerarparcelasAction() {
+    public function gerarparcelasAction()
+    {
         if ($this->_hasParam('valor')):
             $data = $this->_getAllParams();
-            $valorParcela = number_format($data['valor'] / $data['parcelas'], '2', '.', '');
-            $WD = new WS_Date();
-            for ($i = 0; $i < $data['parcelas']; $i++):
+        $valorParcela = number_format($data['valor'] / $data['parcelas'], '2', '.', '');
+        $WD = new WS_Date();
+        for ($i = 0; $i < $data['parcelas']; $i++):
                 $parcela = null;
-                $parcela['valor'] = $valorParcela;
-                if ($i == 0):
+        $parcela['valor'] = $valorParcela;
+        if ($i == 0):
                     $parcela['valor'] = number_format($data['valor'] - ($valorParcela * ($data['parcelas'] - 1)), 2, '.', '');
-                endif;
-                $WD->add($data['periodicidade'], Zend_Date::DAY);
-                $parcela['data'] = $WD->toString('dd/MM/yyyy');
-                $parcelas[] = $parcela;
-            endfor;
-            $this->view->parcelas = $parcelas;
-            $this->view->os = $this->_getParam('os');
+        endif;
+        $WD->add($data['periodicidade'], Zend_Date::DAY);
+        $parcela['data'] = $WD->toString('dd/MM/yyyy');
+        $parcelas[] = $parcela;
+        endfor;
+        $this->view->parcelas = $parcelas;
+        $this->view->os = $this->_getParam('os');
         endif;
     }
 
-    public function salvarparcelasAction() {
+    public function salvarparcelasAction()
+    {
         $data = $this->_getAllParams();
         try {
-            foreach ($data['parcela'] AS $parcela):
+            foreach ($data['parcela'] as $parcela) {
                 $parcela['orcamento_id'] = $data['orcamento_id'];
                 $parcela['orcamento_id'] = $data['orcamento_id'];
                 $parcela['forma_pagamento_id'] = $data['forma_pagamento_id'];
@@ -114,13 +121,13 @@ class Erp_ContasReceberController extends Erp_Controller_Action {
 
                 $conta_receber_id = $this->model->_db->insere($parcela, $this->model->getOption('messages', 'add'), $this->model->_db->getTableName());
 
-                foreach ($data['os'] AS $id => $os):
+                foreach ($data['os'] as $id => $os) {
                     $ContasReceberOrdensServicos = new ContasReceberOrdensServicos_Model();
                     $dados['conta_receber_id'] = $conta_receber_id;
                     $dados['ordem_servico_id'] = $os;
                     $ContasReceberOrdensServicos->addConta($dados);
-                endforeach;
-            endforeach;
+                }
+            }
             $this->alerta('sucess', 'Parcelas criadas com sucesso');
         } catch (Exception $e) {
             $this->alerta('error', 'Erro: ' . $e->getMessage());
@@ -128,4 +135,22 @@ class Erp_ContasReceberController extends Erp_Controller_Action {
         exit();
     }
 
+    public function buscaContasCteAction()
+    {
+        $data = $this->_getAllParams();
+        $retorno = '';
+        if (!empty($data['id'])) {
+            $contas = $this->model->buscaPorClienteParaCte($data['id']);
+            if (!empty($contas)) {
+                foreach ($contas as $conta) {
+                    $conta = $this->model->adjustToView($conta);
+                    $retorno .= '<li><input type="checkbox" name=conta['.$conta['id'].']></input> '.$conta['data_vencimento'].' - '.$conta['valor'].'</li>';
+                }
+            }
+        } else {
+            echo 'nenhuma conta encontrada';
+        }
+        echo $retorno;
+        exit();
+    }
 }
