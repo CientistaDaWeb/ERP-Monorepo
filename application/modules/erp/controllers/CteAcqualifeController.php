@@ -11,6 +11,12 @@ class Erp_CteAcqualifeController extends Erp_Controller_Action {
     }
 
     public function indexAction() {
+        $this->view->buttons['top'][] = [
+            'link' => 'Cte-Acqualife/importar-cte',
+            'title' => 'Importar CTE',
+            'name' => 'importar'
+        ];
+
         parent::indexAction();
     }
 
@@ -631,6 +637,83 @@ class Erp_CteAcqualifeController extends Erp_Controller_Action {
             endif;
         endif;
         exit();
+    }
+
+    public function importarCteAction()
+    {
+        $ClientesModel = new Clientes_Model();
+        $this->view->clientes = $ClientesModel->listagem();
+
+
+        if ($this->_request->isPost()) {
+            $data = $this->_request->getParams();
+
+            if (!empty($data['cliente_id'])) {
+                if (!empty($_FILES['xml'])) {
+                    $xml_content = file_get_contents($_FILES['xml']['tmp_name']);
+                    $xml_content = simplexml_load_string($xml_content);
+                    $codigo = (string) $xml_content->protCTe->infProt->chCTe;
+
+                    $upload = new Upload($_FILES['xml']);
+                    if ($upload->uploaded) {
+                        $upload->file_overwrite = true;
+                        $upload->file_new_name_body = $codigo.'-proc';
+                        $upload->Process(UPLOAD_PATH . '/cte/xml/');
+                        if ($upload->processed) {
+                            $xml = $upload->file_dst_name;
+                        }
+                    } else {
+                        echo 'error : ' . $upload->error;
+                    }
+            
+                    if (!empty($_FILES['pdf'])) {
+                        $upload = new Upload($_FILES['pdf']);
+                        if ($upload->uploaded) {
+                            $upload->file_overwrite = true;
+                            $upload->file_new_name_body = $codigo;
+                            $upload->Process(UPLOAD_PATH . '/cte/pdf/');
+                            if ($upload->processed) {
+                                $pdf = $upload->file_dst_name;
+                            } else {
+                                echo 'error : ' . $upload->error;
+                            }
+                        }
+                    }
+                    $cte['id'] = $data['cte_id'];
+                    $cte['cliente_id'] = $data['cliente_id'];
+                    $cte['endereco_id'] = 27; // número qualquer
+                    $cte['destinatario_id'] = 309;
+                    $cte['destinatario_endereco_id'] = 475;
+                    $cte['status'] = 7;
+                    $cte['cfop_id'] = 2;
+                    $cte['rtnrc'] = 12467693;
+                    $cte['codigo'] = $codigo;
+                    $cte['chave'] = (string) $xml_content->CTe->infCte->ide->cCT;
+                    $cte['quantidade'] = (string) $xml_content->CTe->infCte->infCTeNorm->infCarga->infQ->qCarga;
+                    $cte['created'] = date('Y-m-d');
+                    $cte['data'] = (string) $xml_content->CTe->infCte->infCTeNorm->infDoc->infOutros->dEmi;
+
+                    $verifica = $this->model->find($cte['id']);
+                    if(!empty($verifica)){
+                        $where = $this->model->_db->getAdapter()->quoteInto('id = ?', $cte['id']);
+                        $this->model->_db->update($cte, $where);
+                    }else{
+                        $this->model->_db->insert($cte);
+                    }
+
+                    if(!empty($data['conta'])){
+                        $ContasReceberModel = new ContasReceber_Model();
+                        $dados['cte_acqualife_id'] = $cte['id'];
+                        foreach($data['conta'] as $conta => $value){
+                            $where = $this->model->_db->getAdapter()->quoteInto('id = ?', $conta);
+                            $ContasReceberModel->_db->update($dados, $where);
+                        }
+                    }
+
+                    $this->alerta('sucess', 'CT-e Importada com sucesso!');
+                }
+            }
+        }
     }
 
 }

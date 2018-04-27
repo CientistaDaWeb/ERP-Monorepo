@@ -1,0 +1,74 @@
+<?php
+$configs = Zend_Registry::get('application');
+?>
+<div class="grid_12">
+    <form method="post" enctype="multipart/form-data">
+        <dl class="zend_form">
+            <dt id="cte_id-label">
+                <label for="cte_id" class="required">CTe Acqualife ID</label>
+            </dt>
+            <dd id="cte_id-element">
+                <input name="cte_id" id="cte_id" class="ui-corner-all border filter number" required type="text">
+            </dd>
+            <dt id="cliente_id-label">
+                <label for="cliente_id" class="required">Cliente</label>
+            </dt>
+            <dd id="cliente_id-element">
+                <select name="cliente_id" id="cliente_id" class="ui-corner-all-border">
+                    <option value="">Selecione ...</option>
+                    <?php 
+                    if (!empty($this->clientes)) {
+                        foreach ($this->clientes as $cliente) {
+                            ?>
+                    <option value="<?php echo $cliente['id']; ?>">
+                        <?php echo $cliente['razao_social']; ?>
+                    </option>
+                    <?php
+                        }
+                    }
+                    ?>
+                </select>
+            </dd>
+            <dt id="xml-label">
+                <label for="xml" class="required">XML</label>
+            </dt>
+            <dd id="xml-element">
+                <input name="xml" id="xml" class="ui-corner-all border" required type="file">
+            </dd>
+            <dt id="pdf-label">
+                <label for="pdf" class="required">PDF</label>
+            </dt>
+            <dd id="pdf-element">
+                <input name="pdf" id="pdf" class="ui-corner-all border" type="file">
+            </dd>
+            <div class="margemB">
+                <h2>Contas</h2>
+                <ul id="contas">
+                </ul>
+            </div>
+
+            <button name="salvar" id="salvar" type="submit" value="Salvar" class="btEnviar ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                role="button" aria-disabled="false">
+                <span class="ui-button-text">salvar</span>
+            </button>
+
+            <button name="cancelar" id="cancelar" type="button" value="Cancelar" class="btCancelar ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                role="button" aria-disabled="false">
+                <span class="ui-button-text">cancelar</span>
+            </button>
+        </dl>
+    </form>
+</div>
+<script>
+    $(function() {
+        $('#cliente_id').change(function() {
+            var id = $(this).val();
+            $.get(
+                '/<?php echo $this->module; ?>/submodulo/Contas-Receber/busca-contas-cte/' +
+                id,
+                function(data) {
+                    $('#contas').html(data);
+                })
+        });
+    });
+</script>
