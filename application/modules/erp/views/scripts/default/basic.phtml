@@ -14,6 +14,17 @@ endif;
             'message' => $this->model->getOption('buttons', 'add')
         ));
     endif;
+    if (isset($this->buttons['top'])):
+        foreach($this->buttons['top'] AS $button) {
+            echo $this->partial('partials/btDefault.phtml', array(
+                'link' => $button['link'],
+                'name' => $button['name'],
+                'title' => $button['title'],
+                'controller' => $this->controller,
+                'module' => $this->module,
+            ));
+        }
+    endif;
     ?>
 </div>
 <div id="formSearch" class="ui-widget-header">
