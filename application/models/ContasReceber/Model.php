@@ -625,7 +625,8 @@ class ContasReceber_Model extends WS_Model
     {
         $sql = clone ($this->_basicSearch);
         $sql->where('o.cliente_id = ?', $cliente_id)
-            ->where('cr.cte_id IS NULL');
+            ->where('cr.cte_id IS NULL')
+            ->where('cr.cte_acqualife_id IS NULL');
 
         return $sql->query()->fetchAll();
     }
