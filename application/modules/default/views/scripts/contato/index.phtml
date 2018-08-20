@@ -17,6 +17,14 @@
                     <?php echo $this->form->cidade->renderViewHelper(); ?>
                     <?php echo $this->form->estado->renderViewHelper(); ?>
                     <br />* Campos obrigatórios
+                    <script src='https://www.google.com/recaptcha/api.js'></script>
+
+                    <button
+class="g-recaptcha"
+data-sitekey="6LcScFgUAAAAAIke6uHutdp-01Vcy48yqZn4KBHV"
+data-callback="YourOnSubmitFn">
+Submit
+</button>
                 </div>
                 <div class="grid_6 omega">
                     <?php echo $this->form->mensagem->renderViewHelper(); ?>
