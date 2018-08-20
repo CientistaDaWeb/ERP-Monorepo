@@ -1,147 +1,160 @@
 <?php
 if (!($this->noLayout)):
-    echo $this->partial('partials/title.phtml', array(
-        'title' => $this->model->getOption('title')
-    ));
+  echo $this->partial('partials/title.phtml', array(
+    'title' => $this->model->getOption('title')
+  ));
 endif;
 if (!empty($this->ordemServico)):
-    $ZD = new Zend_Date($this->ordemServico['data_coleta'], 'YYYY-MM-dd');
-    ?>
-    <div class="hidden">
-        <button type="button" id="btImprimir">
-            Imprimir
-        </button>
+  $ZD = new Zend_Date($this->ordemServico['data_coleta'], 'YYYY-MM-dd');
+  ?>
+  <div class="hidden">
+    <button type="button" id="btImprimir">
+      Imprimir
+    </button>
+  </div>
+  <div>
+    <div class="float left margemR">
+      <img src="/images/logos/<?php echo $this->empresa['logomarca']; ?>" border="0" height="80px" />
     </div>
-    <div>
-        <div class="float left margemR">
-            <img src="/images/logos/<?php echo $this->empresa['logomarca']; ?>" border="0" height="80px" />
-        </div>
-        <div class="float left">
-            <p><b><?php echo $this->ordemServico['empresa']; ?></b></p>
-            <p><?php echo $this->ordemServico['endereco']; ?>, <?php echo $this->ordemServico['numero']; ?> <?php echo $this->ordemServico['complemento']; ?> - <?php echo $this->ordemServico['bairro']; ?></p>
-            <p><?php echo $this->ordemServico['cep']; ?> <?php echo $this->ordemServico['cidade']; ?> - <?php echo $this->ordemServico['uf']; ?></p>
-            <p>Fone: <?php echo $this->ordemServico['telefone']; ?><?php
-                if (!empty($this->ordemServico['telefone2'])): echo ' | ' . $this->ordemServico['telefone2'];
-                endif;
-                ?><?php
-                if (!empty($this->ordemServico['telefone3'])): echo ' | ' . $this->ordemServico['telefone3'];
-                endif;
-                ?></p>
-            <p>E-mail: <?php echo $this->ordemServico['email']; ?></p>
-            <p><?php echo $this->ordemServico['website']; ?></p>
-        </div>
+    <div class="float left">
+      <p><b><?php echo $this->ordemServico['empresa']; ?></b></p>
+      <p><?php echo $this->ordemServico['endereco']; ?>
+        , <?php echo $this->ordemServico['numero']; ?> <?php echo $this->ordemServico['complemento']; ?>
+        - <?php echo $this->ordemServico['bairro']; ?></p>
+      <p><?php echo $this->ordemServico['cep']; ?> <?php echo $this->ordemServico['cidade']; ?>
+        - <?php echo $this->ordemServico['uf']; ?></p>
+      <p>Fone: <?php echo $this->ordemServico['telefone']; ?><?php
+        if (!empty($this->ordemServico['telefone2'])): echo ' | ' . $this->ordemServico['telefone2'];
+        endif;
+        ?><?php
+        if (!empty($this->ordemServico['telefone3'])): echo ' | ' . $this->ordemServico['telefone3'];
+        endif;
+        ?></p>
+      <p>E-mail: <?php echo $this->ordemServico['email']; ?></p>
+      <p><?php echo $this->ordemServico['website']; ?></p>
     </div>
-    <div class="clear"></div>
-    <h1 class="alignCenter margemT">Relatório de Prestação de Serviço</h1>
-    <div class="clear"></div>
-    <hr />
-    <table width="100%">
-        <tr>
-            <td width="60%" valign="top">
-                <p>Ordem de Serviço nº <b><?php echo $this->ordemServico['orcamento_id']; ?>.<?php echo $this->ordemServico['sequencial']; ?></b> |
-                    Data da Coleta: <b><?php echo $ZD->toString('dd/MM/YYYY'); ?> - <?php echo $this->ordemServico['hora_coleta']; ?></b> |
-                    Ordem de Compra: <b><?php echo $this->ordemServico['ordem_compra']; ?></b></p>
-                <hr class="clear" />
-                <p><b>Cliente: <?php echo $this->ordemServico['cliente']; ?></b></p>
-                <p>Contato: <?php echo $this->ordemServico['contato']; ?></p>
-                <?php if (!empty($this->ordemServico['sindico'])): ?>
-                    <p>Síndico: <?php echo $this->ordemServico['sindico']; ?></p>
-                <?php endif; ?>
-                <?php if (!empty($this->ordemServico['zelador'])): ?>
-                    <p>Zelador: <?php echo $this->ordemServico['zelador']; ?></p>
-                <?php endif; ?>
-                <p>Fone:
-                    <?php
-                    if (!empty($this->telefones)):
-                        foreach ($this->telefones AS $telefone):
-                            echo $telefone['categoria'] . ' - ' . $telefone['telefone'] . '<br />';
-                        endforeach;
-                    endif;
-                    ?></p>
-                <hr class="clear" />
-                <?php
-                if (!empty($this->endereco)):
-                    $endereco = $this->endereco;
-                    ?>
-                    <p><?php echo $endereco['endereco']; ?>, <?php echo $endereco['numero']; ?> <?php echo $endereco['complemento']; ?> - <?php echo $endereco['bairro']; ?> - <?php echo $endereco['cep']; ?> <?php echo $endereco['municipio']; ?> - <?php echo $endereco['uf']; ?></p>
-                    <br />
-                    <?php
-                endif;
-                ?>
-            </td>
-            <td width="40%" align="right"><?php if ($endereco['imagem']): ?><img src="/storage/imagem/<?php echo $endereco['imagem']; ?>/clientes-enderecos?w=300&h=300&c=fill" style="max-width: 100%" width="200" /><?php endif; ?></td>
-        </tr>
-    </table>
-    <hr class="clear" />
-    <?php if (!empty($this->servicos)): ?>
-        <table class="listagem margemB">
-            <tr>
-                <th>Código</th>
-                <th>Serviço</th>
-                <th>Quantidade</th>
-            </tr>
-            <?php foreach ($this->servicos AS $servico): ?>
-                <tr>
-                    <td><?php echo $servico['id']; ?></td>
-                    <td><?php echo $servico['servico']; ?></td>
-                    <td align="right"><?php echo $servico['qtde'] . ' ' . $servico['unidade']; ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php endif; ?>
-    <br />
-    <hr class="clear" />
-    <h2>Especificação dos Serviços Realizados:</h2>
-    <table class="listagem">
-        <tbody>
-            <tr>
-                <th>TIPO DE RESERVATÓRIO COLETADO:</th>
-                <td><?php echo $this->ordemServico['tipo_reservatorio']; ?></td>
-            </tr>
-            <tr>
-                <th>ACESSO AO PONTO DE COLETA:</th>
-                <td><?php echo $this->ordemServico['acesso']; ?></td>
-            </tr>
-            <tr>
-                <th>METRAGEM DE MANGUEIRA NECESSÁRIA</th>
-                <td><?php echo $this->ordemServico['metragem_mangueira']; ?></td>
-            </tr>
-            <tr>
-                <th>SITUAÇÃO DAS TAMPAS</th>
-                <td><?php echo $this->ordemServico['situacao_tampas']; ?></td>
-            </tr>
-            <tr>
-                <th>SITUAÇÃO DOS EFLUENTES</th>
-                <td><?php echo $this->ordemServico['situacao_efluentes']; ?></td>
-            </tr>
-        </tbody>
-    </table>
-    <br />
-    <p><b>OBSERVAÇÕES PÓS COLETA:</b> <?php echo nl2br($this->ordemServico['observacoes_poscoleta']); ?></p>
-    <h2>Relatório Fotográfico</h2>
-    <div>
-        <?php
-        if (!empty($this->imagens)):
-            $i = 0;
-            foreach ($this->imagens AS $item):
-                if ($i == 3 || $i == 15 || $i == 27 || $i == 39):
-                    echo '<div class="quebraPagina"></div>';
-                endif;
-                ?>
-                <img src="/storage/imagem/<?php echo $item['arquivo']; ?>/ordem-servico?w=190&h=190&c=crop" class="float left margemR margemB" />
-                <?php
-                $i++;
+  </div>
+  <div class="clear"></div>
+  <h1 class="alignCenter margemT">Relatório de Prestação de Serviço</h1>
+  <div class="clear"></div>
+  <hr />
+  <table width="100%">
+    <tr>
+      <td width="60%" valign="top">
+        <p>Ordem de Serviço nº <b><?php echo $this->ordemServico['orcamento_id']; ?>
+            .<?php echo $this->ordemServico['sequencial']; ?></b> |
+          Data da Coleta: <b><?php echo $ZD->toString('dd/MM/YYYY'); ?>
+            - <?php echo $this->ordemServico['hora_coleta']; ?></b> |
+          Ordem de Compra: <b><?php echo $this->ordemServico['ordem_compra']; ?></b></p>
+        <hr class="clear" />
+        <p><b>Cliente: <?php echo $this->ordemServico['cliente']; ?></b></p>
+        <p>Contato: <?php echo $this->ordemServico['contato']; ?></p>
+        <?php if (!empty($this->ordemServico['sindico'])): ?>
+          <p>Síndico: <?php echo $this->ordemServico['sindico']; ?></p>
+        <?php endif; ?>
+        <?php if (!empty($this->ordemServico['zelador'])): ?>
+          <p>Zelador: <?php echo $this->ordemServico['zelador']; ?></p>
+        <?php endif; ?>
+        <p>Fone:
+          <?php
+          if (!empty($this->telefones)):
+            foreach ($this->telefones AS $telefone):
+              echo $telefone['categoria'] . ' - ' . $telefone['telefone'] . '<br />';
             endforeach;
+          endif;
+          ?></p>
+        <hr class="clear" />
+        <?php
+        if (!empty($this->endereco)):
+          $endereco = $this->endereco;
+          ?>
+          <p><?php echo $endereco['endereco']; ?>
+            , <?php echo $endereco['numero']; ?> <?php echo $endereco['complemento']; ?>
+            - <?php echo $endereco['bairro']; ?> - <?php echo $endereco['cep']; ?> <?php echo $endereco['municipio']; ?>
+            - <?php echo $endereco['uf']; ?></p>
+          <br />
+        <?php
         endif;
         ?>
-    </div>
-    <hr class="clear" />
+      </td>
+      <td width="40%" align="right"><?php if ($endereco['imagem']): ?><img
+          src="/storage/imagem/<?php echo $endereco['imagem']; ?>/clientes-enderecos?w=300&h=300&c=fill"
+          style="max-width: 100%" width="200" /><?php endif; ?></td>
+    </tr>
+  </table>
+  <hr class="clear" />
+  <?php if (!empty($this->servicos)): ?>
+  <table class="listagem margemB">
+    <tr>
+      <th>Código</th>
+      <th>Serviço</th>
+      <th>Quantidade</th>
+    </tr>
+    <?php foreach ($this->servicos AS $servico): ?>
+      <tr>
+        <td><?php echo $servico['id']; ?></td>
+        <td><?php echo $servico['servico']; ?></td>
+        <td align="right"><?php echo $servico['qtde'] . ' ' . $servico['unidade']; ?></td>
+      </tr>
+    <?php endforeach; ?>
+  </table>
+<?php endif; ?>
+  <br />
+  <hr class="clear" />
+  <h2>Especificação dos Serviços Realizados:</h2>
+  <table class="listagem">
+    <tbody>
+    <tr>
+      <th>TIPO DE RESERVATÓRIO COLETADO:</th>
+      <td><?php echo $this->ordemServico['tipo_reservatorio']; ?></td>
+    </tr>
+    <tr>
+      <th>ACESSO AO PONTO DE COLETA:</th>
+      <td><?php echo $this->ordemServico['acesso']; ?></td>
+    </tr>
+    <tr>
+      <th>METRAGEM DE MANGUEIRA NECESSÁRIA</th>
+      <td><?php echo $this->ordemServico['metragem_mangueira']; ?></td>
+    </tr>
+    <tr>
+      <th>SITUAÇÃO DAS TAMPAS</th>
+      <td><?php echo $this->ordemServico['situacao_tampas']; ?></td>
+    </tr>
+    <tr>
+      <th>SITUAÇÃO DOS EFLUENTES</th>
+      <td><?php echo $this->ordemServico['situacao_efluentes']; ?></td>
+    </tr>
+    </tbody>
+  </table>
+  <br />
+  <p><b>OBSERVAÇÕES PÓS COLETA:</b> <?php echo nl2br($this->ordemServico['observacoes_poscoleta']); ?></p>
+  <h2>Relatório Fotográfico</h2>
+  <div>
     <?php
-    $data = WS_Date::now();
+    if (!empty($this->imagens)):
+      $i = 0;
+      foreach ($this->imagens AS $item):
+        if ($i == 3 || $i == 15 || $i == 27 || $i == 39):
+          echo '<div class="quebraPagina"></div>';
+        endif;
+        ?>
+        <img src="/storage/imagem/<?php echo $item['arquivo']; ?>/ordem-servico?w=190&h=190&c=crop"
+             class="float left margemR margemB" />
+        <?php
+        $i++;
+      endforeach;
+    endif;
     ?>
-    <div>
-        <br /><br />
-        <div class="float left">Bento Gonçalves <?php echo WS_Date::adjustToView(WS_Date::adjustToDb($data)); ?></div>
-        <div class="float right alignCenter"><img src="/images/assinatura_julia.jpg" height="80" /><br />______________________________________________________________________<br />Acquasana Transporte de Efluentes LTDA</div>
+  </div>
+  <hr class="clear" />
+  <?php
+  $data = WS_Date::now();
+  ?>
+  <div>
+    <br /><br />
+    <div class="float left">Bento Gonçalves <?php echo WS_Date::adjustToView(WS_Date::adjustToDb($data)); ?></div>
+    <div class="float right alignCenter"><img src="/images/assinatura_julia.jpg" height="80" /><br />______________________________________________________________________<br />Acquasana
+      Transporte de Efluentes LTDA
     </div>
+  </div>
 <?php endif; ?>
