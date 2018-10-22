@@ -42,6 +42,14 @@ class Abastecimentos_Model extends WS_Model
 		);
 	}
 
+	public function setSearchFields()
+	{
+		$this->_searchFields = array(
+			'f.razao_social' => 'text',
+			'c.placa' => 'text'
+		);
+	}
+
 	public function setViewFields()
 	{
 		$this->_viewFields = array(
