@@ -1,0 +1,33 @@
+<?php
+if (!isset($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+        'title' => $this->model->getOption('title')
+    ));
+endif;
+?>
+<div class="grid_12">
+    <?php echo $this->form; ?>
+</div>
+<script>
+    $(function(){
+        $('input#status').val(2);
+        $('#cliente_id').die('change').unbind('change').change(function() {
+            var cliente_id = $(this).select().val();
+            $.getJSON("/<?php echo $this->module; ?>/submodulo/Clientes-Enderecos/json//" + cliente_id, function(result) {
+                $('#endereco_id').find('option').remove().end();
+                $.each(result, function() {
+                    $('#endereco_id').append($("<option />").val(this.id).text(this.endereco + ', ' + this.numero + ' - ' + this.municipio));
+                });
+            });
+        });
+        $('#destinatario_id').die('change').unbind('change').change(function() {
+            var cliente_id = $(this).select().val();
+            $.getJSON("/<?php echo $this->module; ?>/submodulo/Clientes-Enderecos/json//" + cliente_id, function(result) {
+                $('#destinatario_endereco_id').find('option').remove().end();
+                $.each(result, function() {
+                    $('#destinatario_endereco_id').append($("<option />").val(this.id).text(this.endereco + ', ' + this.numero + ' - ' + this.municipio));
+                });
+            });
+        });
+    });
+</script>
