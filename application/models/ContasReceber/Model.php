@@ -414,7 +414,7 @@ class ContasReceber_Model extends WS_Model
     {
         $consulta = $this->_db->select()
                 ->setIntegrityCheck(false)
-                ->from(array('cr' => 'contas_receber'), array('id', 'data_vencimento', 'valor', 'data_pagamento', 'valor_pago', 'orcamento_id', 'valor_retido', 'cte_id', 'cte_acqualife_id'))
+                ->from(array('cr' => 'contas_receber'), array('id', 'data_vencimento', 'valor', 'data_pagamento', 'valor_pago', 'orcamento_id', 'valor_retido', 'cte_id', 'cte_acqualife_id', 'cte_acquaservicos_id'))
                 ->joinInner(array('o' => 'orcamentos'), 'o.id = cr.orcamento_id', array(''))
                 ->joininner(array('c' => 'clientes'), 'c.id = o.cliente_id', array(''))
                 ->where('c.id = ?', $cliente_id)
