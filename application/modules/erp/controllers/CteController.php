@@ -674,7 +674,7 @@ class Erp_CteController extends Erp_Controller_Action
                     } else {
                         echo 'error : ' . $upload->error;
                     }
-            
+
                     if (!empty($_FILES['pdf'])) {
                         $upload = new Upload($_FILES['pdf']);
                         if ($upload->uploaded) {
@@ -700,7 +700,7 @@ class Erp_CteController extends Erp_Controller_Action
                     $cte['chave'] = (string) $xml_content->CTe->infCte->ide->cCT;
                     $cte['quantidade'] = (string) $xml_content->CTe->infCte->infCTeNorm->infCarga->infQ->qCarga;
                     $cte['created'] = date('Y-m-d');
-                    $cte['data'] = (string) $xml_content->CTe->infCte->infCTeNorm->infDoc->infOutros->dEmi;
+                    $cte['data'] = (string) $xml_content->CTe->infCte->ide->dhEmi;
 
                     $verifica = $this->model->find($cte['id']);
                     if(!empty($verifica)){
