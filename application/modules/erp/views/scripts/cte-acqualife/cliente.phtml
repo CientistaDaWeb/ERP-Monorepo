@@ -1,86 +1,98 @@
 <div class="grid_12">
-    <?php
-    if (!isset($this->noLayout)):
-        echo $this->partial('partials/title.phtml', array(
-            'title' => $this->model->getOption('title')
-        ));
-    endif;
-    if (!empty($this->items)):
+  <?php
+  if (!isset($this->noLayout)):
+    echo $this->partial('partials/title.phtml', array(
+      'title' => $this->model->getOption('title')
+    ));
+  endif;
+  if (!empty($this->items)):
+    ?>
+    <table class="listagem">
+      <thead>
+      <tr class="ui-widget-header">
+        <th>CT-e</th>
+        <th>Data</th>
+        <th>Valor</th>
+        <th>Faturas</th>
+      </tr>
+      </thead>
+      <tbody>
+      <?php
+      $ContasReceberModel = new ContasReceber_Model();
+      $cliente_id = $this->data['parent_id'];
+      foreach ($this->items AS $item):
+        $item = $this->model->adjustToView($item);
+        $faturasNaoProcessadas = $ContasReceberModel->buscaNaoProcessadasPorCliente($cliente_id);
+        $faturas = $ContasReceberModel->buscaPorCteAcqualife($item['id']);
         ?>
-        <table class="listagem">
-            <thead>
-                <tr class="ui-widget-header">
-                    <th>Data</th>
-                    <th>Valor</th>
-                    <th>Faturas</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $ContasReceberModel = new ContasReceber_Model();
-                $cliente_id = $this->data['parent_id'];
-                foreach ($this->items AS $item):
-                    $item = $this->model->adjustToView($item);
-                    $faturasNaoProcessadas = $ContasReceberModel->buscaNaoProcessadasPorCliente($cliente_id);
-                    $faturas = $ContasReceberModel->buscaPorCteAcqualife($item['id']);
-                    ?>
-                    <tr>
-                        <td><?php echo $item['data']; ?></td>
-                        <td><?php echo $item['total']; ?></td>
-                        <td><?php echo $item['faturas']; ?></td>
-                    </tr>
-                    <tr>
-                        <th colspan="5"><h2>Faturas</h2></th>
-                </tr>
-                <?php
-                if (!empty($faturas)):
-                    ?>
-                    <tr>
-                        <th>Data de Vencimento</th>
-                        <th>Valor</th>
-                        <th>Valor Pago</th>
-                    </tr>
-                    <?php
-                    foreach ($faturas AS $fatura):
-                        $fatura = $ContasReceberModel->adjustToView($fatura);
-                        ?>
-                        <tr>
-                            <td><?php echo $fatura['data_vencimento']; ?></td>
-                            <td><?php echo $fatura['valor']; ?></td>
-                            <td><?php echo $fatura['valor_pago']; ?></td>
-                        </tr>
-                        <?php
-                    endforeach;
-                else:
-                    ?>
-                    <tr>
-                        <th colspan="5"><div class="error">Nenhuma fatura atribuída a cte!</div></th>
-                    </tr>
-                <?php endif; ?>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+        <tr>
+          <td><?php echo $item['id']; ?></td>
+          <td><?php echo $item['data']; ?></td>
+          <td><?php echo $item['total']; ?></td>
+          <td><?php echo $item['faturas']; ?></td>
+        </tr>
         <?php
-    else:
-        echo $this->partial('partials/empty.phtml', array(
-            'message' => $this->model->getOption('messages', 'empty')
-        ));
-    endif;
-    if ($this->noLayout):
-        ?>
-        <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
-        <script type="text/javascript" src="/js/submodulo.js"> </script>
-        <script type="text/javascript">
-            $(function(){
-                $().submodulo({
-                    controller: '<?php echo $this->controller; ?>',
-                    module: '<?php echo $this->module; ?>',
-                    tab: '#CtesTabs',
-                    modal: '#<?php echo $this->controller; ?>Modal',
-                    form: '#<?php echo $this->form->getId(); ?>',
-                    parent_id : '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
-                });
-            });
-        </script>
-    <?php endif; ?>
+        if (!empty($faturas)):
+          ?>
+          <tr>
+            <th colspan="2">Faturas</th>
+            <td colspan="2">
+              <table class="listagem">
+                <tr>
+                  <th>Data de Vencimento</th>
+                  <th>Valor</th>
+                  <th>Valor Pago</th>
+                </tr>
+                <?php
+                foreach ($faturas AS $fatura):
+                  $fatura = $ContasReceberModel->adjustToView($fatura);
+                  ?>
+                  <tr>
+                    <td><?php echo $fatura['data_vencimento']; ?></td>
+                    <td><?php echo $fatura['valor']; ?></td>
+                    <td><?php echo $fatura['valor_pago']; ?></td>
+                  </tr>
+                <?php
+                endforeach;
+                ?>
+              </table>
+            </td>
+          </tr>
+        <?php
+        else:
+          ?>
+          <tr>
+            <th colspan="2">Faturas</th>
+            <th colspan="2"><div class="error">Nenhuma fatura atribuída a cte!</div></th>
+          </tr>
+        <?php endif; ?>
+        <tr>
+          <th colspan="4"><hr /></th>
+        </tr>
+      <?php endforeach; ?>
+      </tbody>
+    </table>
+  <?php
+  else:
+    echo $this->partial('partials/empty.phtml', array(
+      'message' => $this->model->getOption('messages', 'empty')
+    ));
+  endif;
+  if ($this->noLayout):
+    ?>
+    <div id="<?php echo $this->controller; ?>Modal" class="modal" title="<?php echo $this->model->getOption('title'); ?>"></div>
+    <script type="text/javascript" src="/js/submodulo.js"></script>
+    <script type="text/javascript">
+    $(function () {
+      $().submodulo({
+        controller: '<?php echo $this->controller; ?>',
+        module: '<?php echo $this->module; ?>',
+        tab: '#CtesTabs',
+        modal: '#<?php echo $this->controller; ?>Modal',
+        form: '#<?php echo $this->form->getId(); ?>',
+        parent_id: '<?php echo (!empty($this->data['parent_id'])) ? $this->data['parent_id'] : ''; ?>'
+      });
+    });
+    </script>
+  <?php endif; ?>
 </div>
