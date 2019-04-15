@@ -1,68 +1,89 @@
-*{
-    margin:0;
+* {
+    margin: 0;
     padding: 0;
 }
-body{
+
+body {
     font-size: 90%;
 }
-#logo{
+
+#logo {
     margin-bottom: 10px;
 }
-h2{
+
+h2 {
     color: #026890;
     margin-bottom: 5px;
     padding-bottom: 5px;
     border-bottom: 2px solid #026890;
 }
-.listagem{
+
+.listagem {
     width: 100%;
     border-collapse: collapse;
     border: 0;
     margin-top: 10px;
 }
-.listagem th, .listagem td{
+
+.listagem th, .listagem td {
     padding: 3px 5px;
     border: 1px solid #000;
 }
-.listagem th{
+
+.listagem th {
     font-weight: bold;
     color: #000;
     background: #EEE;
 }
-.center{
+
+.center {
     text-align: center;
 }
-.margemB{
+
+.margemB {
     margin-bottom: 10px;
 }
-.margemT{
+
+.margemT {
     margin-top: 10px;
 }
-.margemR{
+
+.margemR {
     margin-right: 10px;
 }
-.margemL{
+
+.margemL {
     margin-left: 10px;
 }
-.float{
+
+.float {
     display: inline;
 }
-.float.left{
+
+.float.left {
     float: left;
 }
-.float.right{
+
+.float.right {
     float: right;
 }
-.clear{
+
+.clear {
     clear: both;
     display: block;
 }
-hr{
+
+hr {
     border: 0;
     border-bottom: 1px solid #CCC;
     padding-top: 10px;
     margin-bottom: 10px;
 }
-.invisivel{
+
+.invisivel {
     display: none;
+}
+
+.page-break {
+    page-break-before: always;
 }
