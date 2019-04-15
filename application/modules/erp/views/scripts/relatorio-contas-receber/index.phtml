@@ -1,215 +1,244 @@
 <h2><?php echo $this->model->getOption('title'); ?></h2>
 <?php
 if ($this->csv) :
-    ?>
-    <script>
-        $(function () {
-            $.jGrowl("Verifique o bloqueio de pop-ups!", {theme: "warning", life: 10000});
-        });
-        window.open('/uploads/<?php echo $this->csv; ?>');
-    </script>
-    <?php
+  ?>
+  <script>
+  $(function () {
+    $.jGrowl("Verifique o bloqueio de pop-ups!", {theme: "warning", life: 10000});
+  });
+  window.open('/uploads/<?php echo $this->csv; ?>');
+  </script>
+<?php
 endif;
 ?>
 <div class="hidden">
-    <form method="post" id="Form_Relatorio_Contas_Receber">
-        <table class="listagem">
-            <tr>
-                <th colspan="4">Data de Vencimento</th>
-                <th rowspan="10">
-                    <button type="submit">Filtrar</button><br /><br />
-                    <button type="button" id="btImprimir">Imprimir</button><br /><br />
-                    <button type="button" id="btExportarCSV">Exportar em CSV</button>
-                    <input type="checkbox" class="invisivel" name="gera_csv" id="gera_csv" />
-                    <!--<button type="button" id="btArquivo">Salvar Arquivo</button>-->
-                </th>
-            </tr>
-            <tr>
-                <th>Data Inicial</th>
-                <td><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>" class="filter date" /></td>
-                <th>Data Final</th>
-                <td><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" /></td>
-            </tr>
-            <tr>
-                <th colspan="4">Data de Pagamento</th>
-            </tr>
-            <tr>
-                <th>Data Inicial</th>
-                <td><input type="text" name="data_inicial_pago" value="<?php echo $this->data['data_inicial_pago']; ?>" class="filter date" /></td>
-                <th>Data Final</th>
-                <td><input type="text" name="data_final_pago" value="<?php echo $this->data['data_final_pago']; ?>" class="filter date" /></td>
-            </tr>
-            <tr>
-                <th colspan="4">Data de Lançamento</th>
-            </tr>
-            <tr>
-                <th>Inicial</th>
-                <td><input type="text" name="data_inicial_lancamento" value="<?php echo $this->data['data_inicial_lancamento']; ?>" class="filter date" /></td>
-                <th>Final</th>
-                <td><input type="text" name="data_final_lancamento" value="<?php echo $this->data['data_final_lancamento']; ?>" class="filter date" /></td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td><select name="status">
-                        <option value="">Todos</option>
-                        <option value="vencidas" <?php echo ($this->data['status'] == 'vencidas') ? 'selected="selected"' : ''; ?>>Atrasadas</option>
-                        <option value="aberto" <?php echo ($this->data['status'] == 'aberto') ? 'selected="selected"' : ''; ?>>Em Aberto</option>
-                        <option value="pagas" <?php echo ($this->data['status'] == 'pagas') ? 'selected="selected"' : ''; ?>>Pagas</option>
-                    </select></td>
-                <th>Empresa</th>
-                <td><select name="empresa_id">
-                        <option value="">Todas</option>
-                        <?php
-                        $EmpresasModel = new Empresas_Model();
-                        foreach ($EmpresasModel->fetchPair() as $id => $razao_social) :
-                            ?>
-                            <option value="<?php echo $id; ?>" <?php echo ($this->data['empresa_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $razao_social; ?></option>
-                        <?php endforeach; ?>
-                    </select></td>
-            </tr>
-            <tr>
-                <th>Forma de Pagamento</th>
-                <td colspan="3"><select name="forma_pagamento_id">
-                        <option value="">Todas</option>
-                        <?php
-                        $FormasPagamentoModel = new FormasPagamento_Model();
-                        foreach ($FormasPagamentoModel->fetchPair() as $id => $forma_pagamento) :
-                            ?>
-                            <option value="<?php echo $id; ?>" <?php echo ($this->data['forma_pagamento_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $forma_pagamento; ?></option>
-                        <?php endforeach; ?>
-                    </select></td>
-            </tr>
-            <tr>
-                <th>Cliente</th>
-                <td colspan="3"><select name="cliente_id">
-                        <option value="">Todas</option>
-                        <?php
-                        $ClientesModel = new Clientes_Model();
-                        foreach ($ClientesModel->fetchPair() as $id => $razao_social) :
-                            ?>
-                            <option value="<?php echo $id; ?>" <?php echo ($this->data['cliente_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $razao_social; ?></option>
-                        <?php endforeach; ?>
-                    </select></td>
-            </tr>
+  <form method="post" id="Form_Relatorio_Contas_Receber">
+    <table class="listagem">
+      <tr>
+        <th colspan="4">Data de Vencimento</th>
+        <th rowspan="10">
+          <button type="submit">Filtrar</button>
+          <br /><br />
+          <button type="button" id="btImprimir">Imprimir</button>
+          <br /><br />
+          <button type="button" id="btExportarCSV">Exportar em CSV</button>
+          <input type="checkbox" class="invisivel" name="gera_csv" id="gera_csv" />
+          <!--<button type="button" id="btArquivo">Salvar Arquivo</button>-->
+        </th>
+      </tr>
+      <tr>
+        <th>Data Inicial</th>
+        <td><input type="text" name="data_inicial" value="<?php echo $this->data['data_inicial']; ?>"
+                   class="filter date" /></td>
+        <th>Data Final</th>
+        <td><input type="text" name="data_final" value="<?php echo $this->data['data_final']; ?>" class="filter date" />
+        </td>
+      </tr>
+      <tr>
+        <th colspan="4">Data de Pagamento</th>
+      </tr>
+      <tr>
+        <th>Data Inicial</th>
+        <td><input type="text" name="data_inicial_pago" value="<?php echo $this->data['data_inicial_pago']; ?>"
+                   class="filter date" /></td>
+        <th>Data Final</th>
+        <td><input type="text" name="data_final_pago" value="<?php echo $this->data['data_final_pago']; ?>"
+                   class="filter date" /></td>
+      </tr>
+      <tr>
+        <th colspan="4">Data de Lançamento</th>
+      </tr>
+      <tr>
+        <th>Inicial</th>
+        <td><input type="text" name="data_inicial_lancamento"
+                   value="<?php echo $this->data['data_inicial_lancamento']; ?>" class="filter date" /></td>
+        <th>Final</th>
+        <td><input type="text" name="data_final_lancamento" value="<?php echo $this->data['data_final_lancamento']; ?>"
+                   class="filter date" /></td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td><select name="status">
+            <option value="">Todos</option>
+            <option value="vencidas" <?php echo ($this->data['status'] == 'vencidas') ? 'selected="selected"' : ''; ?>>
+              Atrasadas
+            </option>
+            <option value="aberto" <?php echo ($this->data['status'] == 'aberto') ? 'selected="selected"' : ''; ?>>Em
+              Aberto
+            </option>
+            <option value="pagas" <?php echo ($this->data['status'] == 'pagas') ? 'selected="selected"' : ''; ?>>Pagas
+            </option>
+          </select></td>
+        <th>Empresa</th>
+        <td><select name="empresa_id">
+            <option value="">Todas</option>
             <?php
-            $ordem = array(
-                'cr.data_pagamento' => 'Data de Pagamento',
-                'cr.data_vencimento' => 'Data de Vencimento',
-                'fp.forma_pagamento' => 'Forma de Pagamento',
-                'cliente' => 'Cliente',
-            );
-            $ordem_tipo = array(
-                'ASC' => 'Crescente',
-                'DESC' => 'Decrescente',
-            );
-            ?>
-            <tr>
-                <th>Ordenação</th>
-                <td>
-                    <select name="ordem">
-                        <?php foreach ($ordem AS $id => $nome): ?>
-                            <option value="<?php echo $id; ?>" <?php echo ($this->data['ordem'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </td>
-                <th>Tipo de Ordenação</th>
-                <td>
-                    <select name="ordem_tipo">
-                        <?php foreach ($ordem_tipo AS $id => $nome): ?>
-                            <option value="<?php echo $id; ?>" <?php echo ($this->data['ordem_tipo'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </td>
-            </tr>
-        </table>
-    </form>
+            $EmpresasModel = new Empresas_Model();
+            foreach ($EmpresasModel->fetchPair() as $id => $razao_social) :
+              ?>
+              <option
+                value="<?php echo $id; ?>" <?php echo ($this->data['empresa_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $razao_social; ?></option>
+            <?php endforeach; ?>
+          </select></td>
+      </tr>
+      <tr>
+        <th>Forma de Pagamento</th>
+        <td colspan="3"><select name="forma_pagamento_id">
+            <option value="">Todas</option>
+            <?php
+            $FormasPagamentoModel = new FormasPagamento_Model();
+            foreach ($FormasPagamentoModel->fetchPair() as $id => $forma_pagamento) :
+              ?>
+              <option
+                value="<?php echo $id; ?>" <?php echo ($this->data['forma_pagamento_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $forma_pagamento; ?></option>
+            <?php endforeach; ?>
+          </select></td>
+      </tr>
+      <tr>
+        <th>Cliente</th>
+        <td colspan="3"><select name="cliente_id">
+            <option value="">Todas</option>
+            <?php
+            $ClientesModel = new Clientes_Model();
+            foreach ($ClientesModel->fetchPair() as $id => $razao_social) :
+              ?>
+              <option
+                value="<?php echo $id; ?>" <?php echo ($this->data['cliente_id'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $razao_social; ?></option>
+            <?php endforeach; ?>
+          </select></td>
+      </tr>
+      <?php
+      $ordem = array(
+        'cr.data_pagamento' => 'Data de Pagamento',
+        'cr.data_vencimento' => 'Data de Vencimento',
+        'fp.forma_pagamento' => 'Forma de Pagamento',
+        'cliente' => 'Cliente',
+      );
+      $ordem_tipo = array(
+        'ASC' => 'Crescente',
+        'DESC' => 'Decrescente',
+      );
+      ?>
+      <tr>
+        <th>Ordenação</th>
+        <td>
+          <select name="ordem">
+            <?php foreach ($ordem AS $id => $nome): ?>
+              <option
+                value="<?php echo $id; ?>" <?php echo ($this->data['ordem'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+            <?php endforeach; ?>
+          </select>
+        </td>
+        <th>Tipo de Ordenação</th>
+        <td>
+          <select name="ordem_tipo">
+            <?php foreach ($ordem_tipo AS $id => $nome): ?>
+              <option
+                value="<?php echo $id; ?>" <?php echo ($this->data['ordem_tipo'] == $id) ? 'selected="selected"' : ''; ?>><?php echo $nome; ?></option>
+            <?php endforeach; ?>
+          </select>
+        </td>
+      </tr>
+    </table>
+  </form>
 </div>
 <?php if (!empty($this->items)): ?>
-    <div class="print">
-        <form method="POST" action="/<?php echo $this->module . '/Boleto-Itau/imprimir'; ?>">
-            <table class="listagem">
-                <thead>
-                    <tr>
-                        <th class="hidden"></th>
-                        <th>Status</th>
-                        <th colspan="3">Vencimento</th>
-                        <th colspan="2">Pagamento</th>
-                        <th colspan="2">Orçamento</th>
-                        <th>Cliente</th>
-                        <th>Empresa</th>
-                        <th>Forma Pag.</th>
-                        <th>CT-e</th>
-                        <th>CT-e Acqualife</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $OrcamentosModel = new Orcamentos_Model();
-                    $valorRecebido = 0;
-                    $total = array('gerado' => 0, 'retido' => 0, 'pago' => 0);
-                    foreach ($this->items AS $item):
-                        $total['gerado'] += $item['valor'];
-                        $total['retido'] += $item['valor_retido'];
-                        $total['pago'] += $item['valor_pago'];
-                        $valor = $item['valor'];
-                        $valorRecebido += $item['valor_pago'];
-                        $item = $this->model->adjustToView($item);
-                        ?>
-                        <tr>
-                            <td class="hidden"><input type="checkbox" name="boleto_id[]" value="<?php echo $item['id']; ?>" /></td>
-                            <td align="center"><a class="buttonLink hidden" target="_blank" href="/<?php echo $this->module; ?>/Contas-Receber/formulario/<?php echo $item['id']; ?>" title="<?php echo $this->model->getOption('buttons', 'go'); ?>"><?php echo $this->model->getOption('buttons', 'go'); ?></a> <?php echo $item['status']; ?></td>
-                            <td><?php echo $item['data_vencimento']; ?></td>
-                            <td class="valor"><?php echo WS_Money::adjustToView($valor); ?></td>
-                            <td class="valor"><?php echo $item['valor_retido']; ?></td>
-                            <td>
-                                <?php echo (($item['data_vencimento'] != $item['data_pagamento'])) ? '<b><i>' . $item['data_pagamento'] . '</i></b>' : $item['data_pagamento']; ?>
-                            </td>
-                            <td class="valor">
-                                <?php echo (($item['valor'] != ($item['valor_pago'] + $item['valor_retido']))) ? '<b><i>' . $item['valor_pago'] . '</i></b>' : $item['valor_pago']; ?>
-                            </td>
-                            <td align="center"><a class="buttonLink hidden" target="_blank" href="/<?php echo $this->module; ?>/Orcamentos/formulario/<?php echo $item['orcamento_id']; ?>" title="<?php echo $OrcamentosModel->getOption('buttons', 'go'); ?>"><?php echo $OrcamentosModel->getOption('buttons', 'go'); ?></a> <?php echo $item['orcamento_id']; ?></td>
-                            <td colspan="2"><a class="buttonLink hidden" target="_blank" href="/<?php echo $this->module; ?>/Clientes/formulario/<?php echo $item['cliente_id']; ?>" title="<?php echo $ClientesModel->getOption('buttons', 'go'); ?>"><?php echo $ClientesModel->getOption('buttons', 'go'); ?></a> <?php echo $item['cliente']; ?></td>
-                            <td><?php echo $item['empresa']; ?></td>
-                            <td><?php echo $item['forma_pagamento']; ?></td>
-                            <td align="center"><?php echo $item['cte_id']; ?></td>
-                            <td align="center"><?php echo $item['cte_acqualife_id']; ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="2">Total Gerado</th>
-                        <th colspan="2" class="valor"><?php echo WS_Money::adjustToView($total['gerado']); ?></th>
-                        <th>Total Retido</th>
-                        <th colspan="2" class="valor"><?php echo WS_Money::adjustToView($total['retido']); ?></th>
-                        <th>Total Gerado - Retido</th>
-                        <th colspan="2" class="valor"><?php echo WS_Money::adjustToView($total['gerado'] - $total['retido']); ?></th>
-                        <th>Total Recebido</th>
-                        <th colspan="3" class="valor"><?php echo WS_Money::adjustToView($total['pago']); ?></th>
-                    </tr>
-                    <tr>
-                        <td class="hidden" colspan="14">
-                            <button type="submit">Imprimir Boletos</button>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-        </form>
-    </div>
-    <script type="text/javascript">
-        $(function () {
-            $("#btArquivo").click(function () {
-                var form = $("#Form_Relatorio_Contas_Receber");
-                form.attr("target", "_blank").attr("action", '/<?php echo $this->module; ?>/Relatorio-Contas-Receber/gerararquivo/');
-                form.submit();
-                form.attr("target", "_self").attr("action", '');
-            });
-        });
-    </script>
-    <?php
+  <div class="print">
+    <form method="POST" action="/<?php echo $this->module . '/Boleto-Itau/imprimir'; ?>">
+      <table class="listagem">
+        <thead>
+        <tr>
+          <th class="hidden"></th>
+          <th>Status</th>
+          <th colspan="3">Vencimento</th>
+          <th colspan="2">Pagamento</th>
+          <th colspan="2">Orçamento</th>
+          <th>Cliente</th>
+          <th>Empresa</th>
+          <th>Forma Pag.</th>
+          <th>CT-e</th>
+          <th>CT-e Acqualife</th>
+          <th>CT-e Acquaserviços</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        $OrcamentosModel = new Orcamentos_Model();
+        $valorRecebido = 0;
+        $total = array('gerado' => 0, 'retido' => 0, 'pago' => 0);
+        foreach ($this->items AS $item):
+          $total['gerado'] += $item['valor'];
+          $total['retido'] += $item['valor_retido'];
+          $total['pago'] += $item['valor_pago'];
+          $valor = $item['valor'];
+          $valorRecebido += $item['valor_pago'];
+          $item = $this->model->adjustToView($item);
+          ?>
+          <tr>
+            <td class="hidden"><input type="checkbox" name="boleto_id[]" value="<?php echo $item['id']; ?>" /></td>
+            <td align="center"><a class="buttonLink hidden" target="_blank"
+                                  href="/<?php echo $this->module; ?>/Contas-Receber/formulario/<?php echo $item['id']; ?>"
+                                  title="<?php echo $this->model->getOption('buttons', 'go'); ?>"><?php echo $this->model->getOption('buttons', 'go'); ?></a> <?php echo $item['status']; ?>
+            </td>
+            <td><?php echo $item['data_vencimento']; ?></td>
+            <td class="valor"><?php echo WS_Money::adjustToView($valor); ?></td>
+            <td class="valor"><?php echo $item['valor_retido']; ?></td>
+            <td>
+              <?php echo (($item['data_vencimento'] != $item['data_pagamento'])) ? '<b><i>' . $item['data_pagamento'] . '</i></b>' : $item['data_pagamento']; ?>
+            </td>
+            <td class="valor">
+              <?php echo (($item['valor'] != ($item['valor_pago'] + $item['valor_retido']))) ? '<b><i>' . $item['valor_pago'] . '</i></b>' : $item['valor_pago']; ?>
+            </td>
+            <td align="center"><a class="buttonLink hidden" target="_blank"
+                                  href="/<?php echo $this->module; ?>/Orcamentos/formulario/<?php echo $item['orcamento_id']; ?>"
+                                  title="<?php echo $OrcamentosModel->getOption('buttons', 'go'); ?>"><?php echo $OrcamentosModel->getOption('buttons', 'go'); ?></a> <?php echo $item['orcamento_id']; ?>
+            </td>
+            <td colspan="2"><a class="buttonLink hidden" target="_blank"
+                               href="/<?php echo $this->module; ?>/Clientes/formulario/<?php echo $item['cliente_id']; ?>"
+                               title="<?php echo $ClientesModel->getOption('buttons', 'go'); ?>"><?php echo $ClientesModel->getOption('buttons', 'go'); ?></a> <?php echo $item['cliente']; ?>
+            </td>
+            <td><?php echo $item['empresa']; ?></td>
+            <td><?php echo $item['forma_pagamento']; ?></td>
+            <td align="center"><?php echo $item['cte_id']; ?></td>
+            <td align="center"><?php echo $item['cte_acqualife_id']; ?></td>
+            <td align="center"><?php echo $item['cte_acquaservicos_id']; ?></td>
+          </tr>
+        <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+        <tr>
+          <th colspan="2">Total Gerado</th>
+          <th colspan="2" class="valor"><?php echo WS_Money::adjustToView($total['gerado']); ?></th>
+          <th>Total Retido</th>
+          <th colspan="2" class="valor"><?php echo WS_Money::adjustToView($total['retido']); ?></th>
+          <th>Total Gerado - Retido</th>
+          <th colspan="2" class="valor"><?php echo WS_Money::adjustToView($total['gerado'] - $total['retido']); ?></th>
+          <th>Total Recebido</th>
+          <th colspan="4" class="valor"><?php echo WS_Money::adjustToView($total['pago']); ?></th>
+        </tr>
+        <tr>
+          <td class="hidden" colspan="15">
+            <button type="submit">Imprimir Boletos</button>
+          </td>
+        </tr>
+        </tfoot>
+      </table>
+    </form>
+  </div>
+  <script type="text/javascript">
+  $(function () {
+    $("#btArquivo").click(function () {
+      var form = $("#Form_Relatorio_Contas_Receber");
+      form.attr("target", "_blank").attr("action", '/<?php echo $this->module; ?>/Relatorio-Contas-Receber/gerararquivo/');
+      form.submit();
+      form.attr("target", "_self").attr("action", '');
+    });
+  });
+  </script>
+<?php
 else:
-    ?>
-    <div class="empty">
-        Nenhum dado filtrado
-    </div>
+  ?>
+  <div class="empty">
+    Nenhum dado filtrado
+  </div>
 <?php endif; ?>

@@ -68,7 +68,7 @@ if (!empty($this->ordemServico)):
         ?>
     </div>
     <div class="float right" id="fachada">
-        <?php if ($endereco['imagem']): ?><img src="/storage/imagem/<?php echo $endereco['imagem']; ?>/clientes-enderecos?w=300&h=300&c=fill" /><?php endif; ?>
+        <?php if ($endereco['imagem']): ?><img src="/storage/imagem/<?php echo $endereco['imagem']; ?>/clientes-enderecos?w=250&h=250&c=fill" /><?php endif; ?>
     </div>
     <hr class="clear" />
     <?php if (!empty($this->endereco['coordenadas'])): ?>
@@ -112,6 +112,7 @@ if (!empty($this->ordemServico)):
         <li>Assinar e receber as vias da MTR, confirmar a quantidade de efluente coletado e 	assinar a ordem de serviço.</li>
         <li>Após o término do tratamento será disponibilizado via e-mail, o certificado de 	tratamento, o  relatório de coleta, o conhecimento de transporte e o boleto bancário.</li>
     </ul>
+    <div class="page-break"></div>
     <div>
         <div class="float left margemR">
             <img src="/images/logos/<?php echo $this->empresa['logomarca']; ?>" border="0" height="80px" />
