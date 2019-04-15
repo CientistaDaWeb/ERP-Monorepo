@@ -567,6 +567,15 @@ class ContasReceber_Model extends WS_Model
         return $sql->query()->fetchAll();
     }
 
+  public function buscaPorCteAcquaservicos($cte_id)
+  {
+    $sql = $this->_db->select()
+      ->setIntegrityCheck(false)
+      ->from(array('cr' => 'contas_receber'), array('*'))
+      ->where('cr.cte_acquaservicos_id = ? ', $cte_id);
+    return $sql->query()->fetchAll();
+  }
+
     public function buscaSomaPorCte($cte_id)
     {
         $sql = $this->_db->select()

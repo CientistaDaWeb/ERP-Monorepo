@@ -22,7 +22,7 @@
                 foreach ($this->items AS $item):
                     $item = $this->model->adjustToView($item);
                     $faturasNaoProcessadas = $ContasReceberModel->buscaNaoProcessadasPorCliente($cliente_id);
-                    $faturas = $ContasReceberModel->buscaPorCteAcqualife($item['id']);
+                    $faturas = $ContasReceberModel->buscaPorCteAcquaservicos($item['id']);
                     ?>
                     <tr>
                         <td><?php echo $item['data']; ?></td>
