@@ -10,7 +10,7 @@ class PesquisaSatisfacao_Model extends WS_Model {
         $this->_singular = 'Pesquisa de Satisfação';
         $this->_plural = 'Pesquisas de Satisfação';
         $this->_layoutList = 'basic';
-        $this->_primary = 'p.id';
+        $this->_primary = 'ps.id';
 
         $this->_satisfacao = $this->_atendimento_telefone = $this->_atendimento_coleta = $this->_documentacao = $this->_atendimento_servico = array(
             'MS' => 'Muito Satisfeito',
