@@ -12,7 +12,7 @@
     var markers = [
 <?php
 foreach ($this->enderecos AS $endereco):
-    echo '["' . $endereco['razao_social'] . ' (' . $endereco['categoria'] . ')",' . $endereco['coordenadas'] . '],';
+    echo '["' . $endereco['razao_social'] . ' (' . $endereco['categoria'] . ')",' . $endereco['coordenadas'] . '],'.PHP_EOL;
 endforeach;
 ?>
     ];

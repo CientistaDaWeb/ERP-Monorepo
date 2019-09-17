@@ -55,14 +55,6 @@ if (!empty($this->ordemServico)):
         <?php if (!empty($this->ordemServico['zelador'])): ?>
           <p>Zelador: <?php echo $this->ordemServico['zelador']; ?></p>
         <?php endif; ?>
-        <p>Fone:
-          <?php
-          if (!empty($this->telefones)):
-            foreach ($this->telefones AS $telefone):
-              echo $telefone['categoria'] . ' - ' . $telefone['telefone'] . '<br />';
-            endforeach;
-          endif;
-          ?></p>
         <hr class="clear" />
         <?php
         if (!empty($this->endereco)):
