@@ -1,0 +1,547 @@
+@import 'quasar.variables.styl'
+// app global css
+h1, .h1
+  font-size 40px
+  margin-top 0
+  margin-bottom 15px
+
+h2, .h2
+  font-size 30px
+  margin-top 0px
+  margin-bottom 10px
+
+.subtitle
+  border-left 5px solid $primary
+  background #EFEFEF
+  padding 5px 10px
+
+h3, .h3
+  font-size 20px
+  margin-top 0px
+  margin-bottom 10px
+
+.page-title
+  background #EFEFEF
+  padding 5px 10px
+  border-left 5px solid #027be3
+  margin 0
+  margin-bottom 10px
+  font-size 30px
+
+  i
+    margin-right 15px
+
+.q-breadcrumbs
+  margin-bottom 15px
+
+.telefone
+  color #FFF
+  text-decoration none
+
+.q-card-section.q-card-container
+  overflow auto
+
+.table
+.q-table--horizontal-separator
+  background $grey-1
+  max-width 100%
+  border-collapse collapse
+
+  thead
+  tfoot
+    tr
+      background $grey-4
+
+      th
+        font-weight bold
+
+  tbody
+    td
+    td.q-table--col-auto-width
+      white-space -o-pre-wrap
+      word-wrap break-word
+      white-space pre-wrap
+      white-space -moz-pre-wrap
+      white-space -pre-wrap
+      border-right-width  1px !important
+      border-right-style solid !important
+      border-bottom-width  1px !important
+      border-bottom-style solid !important
+      padding .1rem .5rem !important
+      border-color $grey-3
+
+    td:last-child
+      border-right 0
+
+    tr:nth-child(odd)
+      background-color $grey-2
+
+    tr:hover
+      background-color $secondary !important
+
+.table.table-error
+  tbody
+    tr
+      background-color $red-2
+
+    tr:nth-child(odd)
+      background-color $red-3
+
+    td
+      border-color $red-5
+
+.table.table-warning
+  tbody
+    tr
+      background-color $amber-2
+
+    tr:nth-child(odd)
+      background-color $amber-3
+
+    td
+      border-color $amber-5
+
+.table
+  thead
+  tbody
+  tfoot
+    tr
+    td
+    th
+      &.error
+        background-color $red-2
+
+      &.success
+        background-color $green-2
+
+      &.warning
+        background-color $amber-2
+
+.content-breakline
+  p
+  h1
+    white-space pre-line
+    word-wrap normal
+
+.print-page
+  page-break-after always;
+
+.q-table-title
+  color: #0c0c0c
+
+.table-header-title
+  font-size 1.3em
+
+.tab-pane-content
+  background #f9f9f9
+  border 1px solid #e7e7e7
+  border-top 0
+
+.q-item-section
+  color #b0dfe4
+
+.text-brand-1
+  color #899B30
+
+.bg-brand-1
+  background-color #899B30
+
+.text-brand-2
+  color #3E7D9F
+
+.bg-brand-2
+  background-color #3E7D9F
+
+.text-brand-3
+  color #b0dfe4
+
+.bg-brand-3
+  background-color #b0dfe4
+
+/* https://materialuicolors.co/ */
+.text-red-material
+  color #F44336
+
+.bg-red-material
+  background-color #F44336
+
+.text-pink-material
+  color #E91E63
+
+.bg-pink-material
+  background-color #E91E63
+
+.text-purple-material
+  color #9C27B0
+
+.bg-purple-material
+  background-color #9C27B0
+
+.text-deep-purple-material
+  color #673AB7
+
+.bg-deep-purple-material
+  background-color #673AB7
+
+.text-indigo-material
+  color #3F51B5
+
+.bg-indigo-material
+  background-color #3F51B5
+
+.text-blue-material
+  color #2196F3
+
+.bg-blue-material
+  background-color #2196F3
+
+.text-light-blue-material
+  color #03A9F4
+
+.bg-light-blue-material
+  background-color #03A9F4
+
+.text-cyan-material
+  color #00BCD4
+
+.bg-cyan-material
+  background-color #00BCD4
+
+.text-teal-material
+  color #009688
+
+.bg-teal-material
+  background-color #009688
+
+.text-green-material
+  color #4CAF50
+
+.bg-green-material
+  background-color #4CAF50
+
+.text-light-green-material
+  color #8BC34A
+
+.bg-light-green-material
+  background-color #8BC34A
+
+.text-lime-material
+  color #CDDC39
+
+.bg-lime-material
+  background-color #CDDC39
+
+.text-yellow-material
+  color #FFEB3B
+
+.bg-yellow-material
+  background-color #FFEB3B
+
+.text-amber-material
+  color #FFC107
+
+.bg-amber-material
+  background-color #FFC107
+
+.text-orange-material
+  color #FF9800
+
+.bg-orange-material
+  background-color #704214
+
+.text-deep-orange-material
+  color #FF5722
+
+.bg-deep-orange-material
+  background-color #f3a683
+
+.text-brow-material
+  color #795548
+
+.bg-brow-material
+  background-color #795548
+
+.text-grey-material
+  color #9E9E9E
+
+.bg-grey-material
+  background-color #9E9E9E
+
+.text-blue-grey-material
+  color #607D8B
+
+.bg-blue-grey-material
+  background-color #607D8B
+
+/* https://www.flatuicolors.net */
+
+.text-plum-material
+  color #dda0dd
+
+.bg-plum-material
+  background-color #dda0dd
+
+.text-bottle-green-material
+  color #006a4e
+
+.bg-bottle-green-material
+  background-color #006a4e
+
+.text-pastel-brown-material
+  color #836953
+
+.bg-pastel-brown-material
+  background-color #836953
+
+/* https://flatuicolors.com/palette/defo */
+.text-turquoise
+  color #1abc9c
+
+.bg-turquoise
+  background-color #1abc9c
+
+.text-green-sea
+  color #16a085
+
+.bg-green-sea
+  background-color #16a085
+
+.text-emerald
+  color #2ecc71
+
+.bg-emerald
+  background-color #2ecc71
+
+.text-nephritis
+  color #27ae60
+
+.bg-nephritis
+  background-color #27ae60
+
+.text-peter-river
+  color #3498db
+
+.bg-peter-river
+  background-color #3498db
+
+.text-belize-hole
+  color #2980b9
+
+.bg-belize-hole
+  background-color #2980b9
+
+.text-amethyst
+  color #9b59b6
+
+.bg-amethyst
+  background-color #9b59b6
+
+.text-wisteria
+  color #8e44ad
+
+.bg-wisteria
+  background-color #8e44ad
+
+.text-wet-asphalt
+  color #34495e
+
+.bg-wet-asphalt
+  background-color #34495e
+
+.text-midnight-blur
+  color #2c3e50
+
+.bg-midnight-blue
+  background-color #2c3e50
+
+.text-sun-flower
+  color #f1c40f
+
+.bg-sun-flower
+  background-color #f1c40f
+
+.text-orange
+  color #f39c12
+
+.bg-orange
+  background-color #f39c12
+
+.text-carrot
+  color #e67e22
+
+.bg-carrot
+  background-color #e67e22
+
+.text-pumpkin
+  color #d35400
+
+.bg-pumpkin
+  background-color #d35400
+
+.text-alizarin
+  color #e74c3c
+
+.bg-alizarin
+  background-color #e74c3c
+
+.text-pomegranate
+  color #c0392b
+
+.bg-promegranate
+  background-color #c0392b
+
+.text-clouds
+  color #ecf0f1
+
+.bg-clouds
+  background-color #ecf0f1
+
+.text-silver
+  color #bdc3c7
+
+.bg-silver
+  background-color #bdc3c7
+
+.text-concrete
+  color #95a5a6
+
+.bg-concrete
+  background-color #95a5a6
+
+.text-asbestos
+  color #7f8c8d
+
+.bg-asbestos
+  background-color #7f8c8d
+
+/* https://flatuicolors.com/palette/ru */
+.text-creamy-peach
+  color #f3a683
+
+.bg-creamy-peach
+  background-color #f3a683
+
+.text-sawtooth-aak
+  color #f19066
+
+.bg-sawtooth-aak
+  background-color #f19066
+
+.text-rosy-highlight
+  color #f7d794
+
+.bg-rosy-highlight
+  background-color #f7d794
+
+.text-summertime
+  color #f5cd79
+
+.bg-summertime-
+  background-color #f5cd79
+
+.text-soft-blue
+  color #778beb
+
+.bg-soft-blue
+  background-color #778beb
+
+.text-cornflower
+  color #546de5
+
+.bg-cornflower
+  background-color #546de5
+
+.text-brewed-mustard
+  color #e77f67
+
+.bg-brewed-mustard
+  background-color #e77f67
+
+.text-tigerilily
+  color #e15f41
+
+.bg-tigerilily
+  background-color #e15f41
+
+.text-old-geranium
+  color #cf6a87
+
+.bg-old-geranium
+  background-color #cf6a87
+
+.text-deep-rose
+  color #c44569
+
+.bg-deep-rose
+  background-color #c44569
+
+.text-purple-montain-majesty
+  color #786fa6
+
+.bg-purple-montaim-majesty
+  background-color #786fa6
+
+.text-purple-corallite
+  color #574b90
+
+.bg-purple-corallite
+  background-color #574b90
+
+.text-rogue-pink
+  color #f8a5c2
+
+.bg-rogue-pink
+  background-color #f8a5c2
+
+.text-flamingo-pink
+  color #f78fb3
+
+.bg-flamingo-pink
+  background-color #f78fb3
+
+.text-squeaky
+  color #63cdda
+
+.bg-squeaky
+  background-color #63cdda
+
+.text-blue-curacao
+  color #3dc1d3
+
+.bg-blue-curacao
+  background-color #3dc1d3
+
+.text-apple-valley
+  color #ea8685
+
+.bg-apple-valley
+  background-color #ea8685
+
+.text-porcelain-rose
+  color #e66767
+
+.bg-porcelain-rose
+  background-color #e66767
+
+.text-pencil-lead
+  color #596275
+
+.bg-pencil-lead
+  background-color #596275
+
+.text-biscay
+  color #303952
+
+.bg-biscay
+  background-color #303952
+
+@media screen
+  .screen-hide
+    display none !important
+
+@media print
+  .print-show
+    display block !important
+
+  .q-layout-page.layout-padding
+    padding 0
