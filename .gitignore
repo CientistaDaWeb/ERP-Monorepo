@@ -1,13 +1,6 @@
-# WS Hydra
-/public/uploads/*
-!/public/uploads/usuarios/Cara_Ogro.png
-!/public/uploads/default/*
-!/public/uploads/**/.gitkeep
-/public/.htaccess
-/.idea
-/docs/dados-uteis
+.idea
+docs/dados-uteis
 .history
-# fim do WS Hydra
 
-#Acquasana
+
 .svn/*
