@@ -1,0 +1,116 @@
+version: '3.7'
+services:
+  api_php:
+    build:
+      context: .
+      dockerfile: ./.docker/api/php/Dockerfile
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html
+    environment:
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./api/:/var/www/html
+    networks:
+      - acquasana_net
+
+  api_nginx:
+    image: nginx:1.19.0-alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "4431:443"
+    volumes:
+      - ./api/:/var/www/html
+      - ./.docker/api/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/api/nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - acquasana_net
+
+  erp_node:
+    build:
+      context: .
+      dockerfile: ./.docker/erp/Dockerfile
+      target: 'develop-stage'
+    restart: unless-stopped
+    ports:
+      - "4432:8080"
+    tty: true
+    volumes:
+      - ./erp/:/app
+    command: /bin/sh -c "yarn && quasar dev"
+    networks:
+      - acquasana_net
+
+  site_php:
+    build:
+      context: .
+      dockerfile: ./.docker/site/php/Dockerfile
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html
+    environment:
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./site/:/var/www/html
+    networks:
+      - acquasana_net
+
+  site_nginx:
+    image: nginx:1.19.0-alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "4433:443"
+    volumes:
+      - ./site/:/var/www/html
+      - ./.docker/site/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/site/nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - acquasana_net
+
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${DB_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./.docker/mysql/dbdata:/var/lib/mysql/
+      - ./.docker/mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - acquasana_net
+
+  api_composer_installation:
+    image: composer
+    volumes:
+      - ./api/:/app
+    command: composer install --ignore-platform-reqs
+
+  site_composer_installation:
+    image: composer
+    volumes:
+      - ./site/:/app
+    command: composer install --ignore-platform-reqs
+
+networks:
+  acquasana_net:
+    driver: bridge
+volumes:
+  mysqldata:
+    driver: local

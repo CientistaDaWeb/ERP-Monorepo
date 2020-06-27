@@ -19,14 +19,3 @@ yarn-error.log
 /src-cordova/www
 yarn-debug.log*
 /public
-
-package-lock.json
-
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sublime-workspace

@@ -13,10 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/user', function (Request $request) {
-  $user = $request->user();
-  return $user;
-})->middleware(['auth:api', 'cors']);
+Route::get(
+  '/user',
+  function (Request $request) {
+    $user = $request->user();
+    return $user;
+  }
+)->middleware(['auth:api', 'cors']);
 
 Route::get('/orcamentos-servicos/download/{arq}', 'Api\OrcamentosServicosController@downloadPdf');
 Route::get('/download/{nome}/{ext}/{arq}', 'Api\DownloadController@download');
@@ -24,7 +27,6 @@ Route::get('/download/{nome}/{ext}/{arq}', 'Api\DownloadController@download');
 Route::group(
   ['middleware' => ['client', 'cors']],
   function () {
-
     Route::resource(
       '/abastecimentos',
       'Api\AbastecimentosController'
@@ -205,7 +207,7 @@ Route::group(
 
     Route::resource(
       '/fornecedores-arquivos',
-      'Api\FornecedoresArquviosController'
+      'Api\FornecedoresArquivosController'
     );
 
     Route::resource(
@@ -308,8 +310,8 @@ Route::group(
     );
 
     Route::resource(
-      '/ordens-servicos-servicos',
-      'Api\OrdensServicosServicosController'
+      '/ordens-servico-servicos',
+      'Api\OrdensServicoServicosController'
     );
 
     Route::resource(
@@ -376,7 +378,7 @@ Route::group(
 
     Route::resource(
       '/projetos-hidro',
-      'Api\projetosHidroController'
+      'Api\ProjetosHidroController'
     );
 
     Route::resource(

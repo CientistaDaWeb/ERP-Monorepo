@@ -60,18 +60,11 @@ module.exports = function (ctx) {
       }
     },
     devServer: {
-      // https: true,
+      https: true,
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
-      port: 8090,
-      open: true, // opens browser window automatically
-      /*
-      proxy: {
-        '/api': 'http://localhost:8000',
-        '/storage': 'http://localhost:8000',
-      },
-      */
+      open: false, // opens browser window automatically
       historyApiFallback: true
     },
     // framework: 'all' --- includes everything; for dev only!
