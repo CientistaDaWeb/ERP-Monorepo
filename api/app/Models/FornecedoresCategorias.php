@@ -6,32 +6,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FornecedoresCategorias extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'categoria'
-  ];
+    protected $fillable = [
+        'categoria'
+    ];
 
-  public $filters = [
-    'categoria' =>
-      [
-        'column' => 'categoria',
-        'type' => 'like'
-      ]
-  ];
+    public $filters = [
+        'categoria' =>
+            [
+                'column' => 'categoria',
+                'type' => 'like'
+            ]
+    ];
 
-  public function fornecedores()
-  {
-    return $this->hasMany('App\Models\Fornecedores', 'categoria_id', 'id');
-  }
+    public function fornecedores()
+    {
+        return $this->hasMany(Fornecedores::class, 'categoria_id', 'id');
+    }
 
-  protected $appends = ['fornecedoresCount'];
+    protected $appends = ['fornecedoresCount'];
 
-  public function getFornecedoresCountAttribute()
-  {
-    return $this->fornecedores()->count();
-  }
+    public function getFornecedoresCountAttribute()
+    {
+        return $this->fornecedores()->count();
+    }
 }

@@ -9,6 +9,7 @@ RUN apk update && apk add --no-cache \
     build-base \
     shadow \
     curl \
+    tzdata \
     php7 \
     php7-fpm \
     php7-common \
@@ -25,14 +26,28 @@ RUN apk update && apk add --no-cache \
     php7-gd \
     php7-dom \
     php7-session \
-    php7-zlib
+    php7-zlib \
+    bash
 
 # Add and Enable PHP-PDO Extenstions
 RUN docker-php-ext-install pdo pdo_mysql
 RUN docker-php-ext-enable pdo_mysql
 
+# Adjust TimeZone
+RUN cp  /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+RUN echo "America/Sao_Paulo" > /etc/timezone
+
+# Install Xdebug
+RUN apk add --no-cache $PHPIZE_DEPS \
+    && pecl install xdebug-2.9.6 \
+    && docker-php-ext-enable xdebug
+
 # Install PHP Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+# Add Entrypoint
+COPY /.docker/api/php/entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 
 # Remove Cache
 RUN rm -rf /var/cache/apk/*
@@ -48,4 +63,4 @@ USER www-data
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
-CMD ["php-fpm"]
+CMD ["/entrypoint.sh"]

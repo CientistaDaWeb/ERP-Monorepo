@@ -6,27 +6,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Estados extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'estado',
-    'uf',
-    'codigo'
-  ];
+    protected $fillable = [
+        'estado',
+        'uf',
+        'codigo'
+    ];
 
-  public $filters = [
-    'estado' =>
-      [
-        'column' => 'estado',
-        'type' => 'like'
-      ],
-    'uf' =>
-      [
-        'column' => 'uf',
-        'type' => 'like'
-      ]
-  ];
+    public $filters = [
+        'estado' =>
+            [
+                'column' => 'estado',
+                'type' => 'like'
+            ],
+        'uf' =>
+            [
+                'column' => 'uf',
+                'type' => 'like'
+            ]
+    ];
 }

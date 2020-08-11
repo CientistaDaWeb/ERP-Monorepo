@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     tty: true
     working_dir: /var/www/html
+    command: /entrypoint.sh
     environment:
       DB_CONNECTION: ${DB_CONNECTION}
       DB_HOST: ${DB_HOST}
@@ -24,7 +25,7 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "4431:443"
+      - "4461:443"
     volumes:
       - ./api/:/var/www/html
       - ./.docker/api/nginx/conf.d/:/etc/nginx/conf.d/
@@ -39,7 +40,7 @@ services:
       target: 'develop-stage'
     restart: unless-stopped
     ports:
-      - "4432:8080"
+      - "4462:8080"
     tty: true
     volumes:
       - ./erp/:/app
@@ -54,6 +55,7 @@ services:
     restart: unless-stopped
     tty: true
     working_dir: /var/www/html
+    command: /entrypoint.sh
     environment:
       DB_CONNECTION: ${DB_CONNECTION}
       DB_HOST: ${DB_HOST}
@@ -71,11 +73,44 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "4433:443"
+      - "4463:443"
     volumes:
       - ./site/:/var/www/html
       - ./.docker/site/nginx/conf.d/:/etc/nginx/conf.d/
       - ./.docker/site/nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - acquasana_net
+
+  legado_php:
+    build:
+      context: .
+      dockerfile: ./.docker/legado/php/Dockerfile
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html
+    command: /entrypoint.sh
+    environment:
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_LEGADO_HOST}
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./legado/:/var/www/html
+    networks:
+      - acquasana_net
+
+  legado_nginx:
+    image: nginx:1.19.0-alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "4464:443"
+    volumes:
+      - ./legado/:/var/www/html
+      - ./.docker/legado/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/legado/nginx/ssl/:/etc/nginx/ssl/
     networks:
       - acquasana_net
 
@@ -96,17 +131,22 @@ services:
     networks:
       - acquasana_net
 
-  api_composer_installation:
-    image: composer
+  db_legado:
+    image: mysql:5.5
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${DB_LEGADO_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - ./api/:/app
-    command: composer install --ignore-platform-reqs
-
-  site_composer_installation:
-    image: composer
-    volumes:
-      - ./site/:/app
-    command: composer install --ignore-platform-reqs
+      - ./.docker/mysql_legado/dbdata:/var/lib/mysql/
+      - ./.docker/mysql_legado/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - acquasana_net
 
 networks:
   acquasana_net:

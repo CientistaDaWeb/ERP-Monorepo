@@ -6,21 +6,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FornecedoresArquivos extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'fornecedor_id',
-    'arquivo',
-    'descricao'
-  ];
-  public $filters = [
-  ];
+    protected $fillable = [
+        'fornecedor_id',
+        'arquivo',
+        'descricao'
+    ];
+    public $filters = [
+    ];
 
-  public function fornecedor()
-  {
-    return $this->belongsTo('App\Models\Fornecedores');
-  }
+    public function fornecedor()
+    {
+        return $this->belongsTo(Fornecedores::class);
+    }
 }

@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class LogTrait extends Model
 {
-  protected $dispatchesEvents = [
-    /*
-    'created' => LogCreate::class,
-    'updated' => LogUpdate::class,
-    'deleted' => LogDelete::class,
-    */
-  ];
+    protected $dispatchesEvents = [
+        /*
+        'created' => LogCreate::class,
+        'updated' => LogUpdate::class,
+        'deleted' => LogDelete::class,
+        */
+    ];
 }

@@ -2,37 +2,36 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProjetosArquitetonicosArquivos extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'arquitetonico_id',
-    'arquivo',
-    'descricao'
-  ];
+    protected $fillable = [
+        'arquitetonico_id',
+        'arquivo',
+        'descricao'
+    ];
 
-  public $filters = [
-    'arquivo' =>
-      [
-        'column' => 'arquivo',
-        'type' => 'like'
-      ],
-    'descricao' =>
-      [
-        'column' => 'descricao',
-        'type' => 'like'
-      ]
-  ];
+    public $filters = [
+        'arquivo' =>
+            [
+                'column' => 'arquivo',
+                'type' => 'like'
+            ],
+        'descricao' =>
+            [
+                'column' => 'descricao',
+                'type' => 'like'
+            ]
+    ];
 
-  public function arquitetonico()
-  {
-    return $this->belongsTo('App\Models\ProjetosArquitetonicos');
-  }
+    public function arquitetonico()
+    {
+        return $this->belongsTo(ProjetosArquitetonicos::class);
+    }
 }

@@ -2,31 +2,30 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UsuariosModulos extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'usuario_id',
-    'modulo_id',
-  ];
+    protected $fillable = [
+        'usuario_id',
+        'modulo_id',
+    ];
 
-  public $filters = [
-  ];
+    public $filters = [
+    ];
 
-  public function usuario()
-  {
-    return $this->belongsTo('App\Models\Usuarios');
-  }
+    public function usuario()
+    {
+        return $this->belongsTo(Usuarios::class);
+    }
 
-  public function modulo()
-  {
-    return $this->belongsTo('App\Models\Modulos');
-  }
+    public function modulo()
+    {
+        return $this->belongsTo(Modulos::class);
+    }
 }

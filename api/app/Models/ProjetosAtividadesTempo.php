@@ -6,29 +6,29 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProjetosAtividadesTempo extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'projeto_atividade_id',
-    'data',
-    'hora',
-    'minutos',
-    'usuario_id'
-  ];
+    protected $fillable = [
+        'projeto_atividade_id',
+        'data',
+        'hora',
+        'minutos',
+        'usuario_id'
+    ];
 
-  public $filters = [
-  ];
+    public $filters = [
+    ];
 
-  public function projetoAtividade()
-  {
-    return $this->belongsTo('App\Models\ProjetosAtividades');
-  }
+    public function projetoAtividade()
+    {
+        return $this->belongsTo(ProjetosAtividades::class);
+    }
 
-  public function usuario()
-  {
-    return $this->belongsTo('App\Models\Usuarios');
-  }
+    public function usuario()
+    {
+        return $this->belongsTo(Usuarios::class);
+    }
 }

@@ -6,26 +6,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AdministradoresCrm extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $table = 'administradores_crm';
+    protected $table = 'administradores_crm';
 
-  protected $fillable = [
-    'administrador_id',
-    'usuario_id',
-    'data',
-    'descricao',
-    'status'
-  ];
+    protected $fillable = [
+        'administrador_id',
+        'usuario_id',
+        'data',
+        'descricao',
+        'status'
+    ];
 
-  public $filters = [
-    'descricao' =>
-      [
-        'column' => 'descricao',
-        'type' => 'like'
-      ],
+    public $filters = [
+        'descricao' =>
+            [
+                'column' => 'descricao',
+                'type' => 'like'
+            ],
     ];
 }

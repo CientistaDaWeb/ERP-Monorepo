@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Folgas extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'titulo',
-    'data',
-    'hora_inicio',
-    'hora_fim'
-  ];
-  public $filters = [
-  ];
+    protected $fillable = [
+        'titulo',
+        'data',
+        'hora_inicio',
+        'hora_fim'
+    ];
+    public $filters = [
+    ];
 }

@@ -6,39 +6,39 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Manutencoes extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'fornecedor_id',
-    'data',
-    'valor',
-    'observacoes'
-  ];
+    protected $fillable = [
+        'fornecedor_id',
+        'data',
+        'valor',
+        'observacoes'
+    ];
 
-  public $filters = [
-    'observacoes' => [
-      'column' => 'observacoes',
-      'type' => 'like'
-    ]
-  ];
+    public $filters = [
+        'observacoes' => [
+            'column' => 'observacoes',
+            'type' => 'like'
+        ]
+    ];
 
-  public function fornecedor()
-  {
-    return $this->belongsTo('App\Models\Fornecedores');
-  }
+    public function fornecedor()
+    {
+        return $this->belongsTo(Fornecedores::class);
+    }
 
-  public function pecas()
-  {
-    return $this->hasMany('App\Models\ManutencoesPecas', 'manutencao_id', 'id');
-  }
+    public function pecas()
+    {
+        return $this->hasMany(ManutencoesPecas::class, 'manutencao_id', 'id');
+    }
 
-  protected $appends = ['pecasCount'];
+    protected $appends = ['pecasCount'];
 
-  public function getPecasCountAttribute()
-  {
-    return $this->pecas()->count();
-  }
+    public function getPecasCountAttribute()
+    {
+        return $this->pecas()->count();
+    }
 }

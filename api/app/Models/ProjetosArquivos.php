@@ -33,11 +33,11 @@ class ProjetosArquivos extends LogTrait
 
   public function categoria()
   {
-    return $this->belongsTo('App\Models\ProjetosCategorias');
+    return $this->belongsTo(ProjetosCategorias::class);
   }
 
   public function projeto()
   {
-    return $this->belongsTo('App\Models\Projetos');
+    return $this->belongsTo(Projetos::class);
   }
 }

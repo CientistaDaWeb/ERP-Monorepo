@@ -2,65 +2,64 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Projetos extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'categoria_id',
-    'construtora_id',
-    'arquiteto_id',
-    'nome',
-    'proprietario',
-    'endereco',
-    'observacoes',
-    'diretorio',
-    'numero_protocolo',
-    'status_ppci',
-    'status_hidro'
-  ];
+    protected $fillable = [
+        'categoria_id',
+        'construtora_id',
+        'arquiteto_id',
+        'nome',
+        'proprietario',
+        'endereco',
+        'observacoes',
+        'diretorio',
+        'numero_protocolo',
+        'status_ppci',
+        'status_hidro'
+    ];
 
-  public $filters = [
-    'nome' =>
-      [
-        'column' => 'nome',
-        'type' => 'like'
-      ]
-  ];
+    public $filters = [
+        'nome' =>
+            [
+                'column' => 'nome',
+                'type' => 'like'
+            ]
+    ];
 
-  public function categoria()
-  {
-    return $this->belongsTo('App\Models\ProjetosCategorias');
-  }
+    public function categoria()
+    {
+        return $this->belongsTo(ProjetosCategorias::class);
+    }
 
-  public function construtora()
-  {
-    return $this->belongsTo('App\Models\Construtoras');
-  }
+    public function construtora()
+    {
+        return $this->belongsTo(Construtoras::class);
+    }
 
-  public function arquiteto()
-  {
-    return $this->belongsTo('App\Models\Arquitetos');
-  }
+    public function arquiteto()
+    {
+        return $this->belongsTo(Arquitetos::class);
+    }
 
-  public function alteracoes()
-  {
-    return $this->hasMany('App\Models\ProjetosAlteracoes');
-  }
+    public function alteracoes()
+    {
+        return $this->hasMany(ProjetosAlteracoes::class);
+    }
 
-  public function atividades()
-  {
-    return $this->hasMany('App\Models\ProjetosAtividades');
-  }
+    public function atividades()
+    {
+        return $this->hasMany(ProjetosAtividades::class);
+    }
 
-  public function ultimaInteracao()
-  {
-    return $this->hasOne('App\Models\ProjetosCrm', 'projeto_id', 'id')->orderBy('data', 'DESC');
-  }
+    public function ultimaInteracao()
+    {
+        return $this->hasOne(ProjetosCrm::class, 'projeto_id', 'id')->orderBy('data', 'DESC');
+    }
 }

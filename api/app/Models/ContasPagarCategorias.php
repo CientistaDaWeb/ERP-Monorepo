@@ -7,32 +7,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ContasPagarCategorias extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'categoria'
-  ];
+    protected $fillable = [
+        'categoria'
+    ];
 
-  public $filters = [
-    'categoria' =>
-      [
-        'column' => 'categoria',
-        'type' => 'like'
-      ]
-  ];
+    public $filters = [
+        'categoria' =>
+            [
+                'column' => 'categoria',
+                'type' => 'like'
+            ]
+    ];
 
-  public function contasPagar()
-  {
-    return $this->hasMany('App\Models\ContasPagar', 'categoria_id', 'id');
-  }
+    public function contasPagar()
+    {
+        return $this->hasMany(ContasPagar::class, 'categoria_id', 'id');
+    }
 
-  protected $appends = ['contasPagarCount'];
+    protected $appends = ['contasPagarCount'];
 
-  public function getContasPagarCountAttribute()
-  {
-    return $this->contasPagar()->count();
-  }
+    public function getContasPagarCountAttribute()
+    {
+        return $this->contasPagar()->count();
+    }
 }

@@ -2,122 +2,122 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Orcamentos extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $_status;
-  protected $_vantagens;
+    protected $_status;
+    protected $_vantagens;
 
-  function __construct(array $attributes = [])
-  {
-    $this->_status = [
-      1 => 'Rascunho',
-      2 => 'Aguardando Aprovação',
-      3 => 'Aprovado',
-      4 => 'Não Aprovado'
+    function __construct(array $attributes = [])
+    {
+        $this->_status = [
+            1 => 'Rascunho',
+            2 => 'Aguardando Aprovação',
+            3 => 'Aprovado',
+            4 => 'Não Aprovado'
+        ];
+        $this->_vantagens = [
+            'S' => 'Sim',
+            'N' => 'Não'
+        ];
+
+        parent::__construct($attributes);
+    }
+
+    protected $fillable = [
+        'empresa_id',
+        'cliente_id',
+        'usuario_id',
+        'titulo',
+        'condicoes_pagamento',
+        'prazo_entrega',
+        'observacoes',
+        'data_emissao',
+        'status',
+        'valor_total',
+        'vantagens'
     ];
-    $this->_vantagens = [
-      'S' => 'Sim',
-      'N' => 'Não'
+
+    public $filters = [
+        'id' =>
+            [
+                'column' => 'id',
+                'type' => '='
+            ]
     ];
 
-    parent::__construct($attributes);
-  }
+    public function orcamentosServicos()
+    {
+        return $this->hasMany(OrcamentosServicos::class, 'orcamento_id');
+    }
 
-  protected $fillable = [
-    'empresa_id',
-    'cliente_id',
-    'usuario_id',
-    'titulo',
-    'condicoes_pagamento',
-    'prazo_entrega',
-    'observacoes',
-    'data_emissao',
-    'status',
-    'valor_total',
-    'vantagens'
-  ];
+    public function empresa()
+    {
+        return $this->belongsTo(Empresas::class);
+    }
 
-  public $filters = [
-    'id' =>
-      [
-        'column' => 'id',
-        'type' => '='
-      ]
-  ];
+    public function cliente()
+    {
+        return $this->belongsTo(Clientes::class);
+    }
 
-  public function orcamentosServicos()
-  {
-    return $this->hasMany(OrcamentosServicos::class, 'orcamento_id');
-  }
+    public function usuario()
+    {
+        return $this->belongsTo(Usuarios::class);
+    }
 
-  public function empresa()
-  {
-    return $this->belongsTo('App\Models\Empresas');
-  }
+    public function contasReceber()
+    {
+        return $this->hasMany(ContasReceber::class, 'orcamento_id', 'id');
+    }
 
-  public function cliente()
-  {
-    return $this->belongsTo('App\Models\Clientes');
-  }
+    public function ordensServico()
+    {
+        return $this->hasMany(OrdensServico::class, 'orcamento_id', 'id');
+    }
 
-  public function usuario()
-  {
-    return $this->belongsTo('App\Models\Usuarios');
-  }
+    public function ultimaOS()
+    {
+        return $this->hasOne(OrdensServico::class, 'orcamento_id', 'id')->orderBy('data_coleta', 'DESC');
+    }
 
-  public function contasReceber()
-  {
-    return $this->hasMany('App\Models\ContasReceber', 'orcamento_id', 'id');
-  }
+    public function ultimaOrdemServico()
+    {
+        return $this->hasMany(OrdensServico::class, 'orcamento_id', 'id')->orderBy('data_coleta', 'DESC')->first();
+    }
 
-  public function ordensServico()
-  {
-    return $this->hasMany('App\Models\OrdensServico', 'orcamento_id', 'id');
-  }
+    protected $appends = ['statusHumanized', 'vantagensHumanized', 'saldo', 'osCount', 'faturasCount'];
 
-  public function ultimaOS()
-  {
-    return $this->hasOne('App\Models\OrdensServico', 'orcamento_id', 'id')->orderBy('data_coleta', 'DESC');
-  }
+    public function getStatusHumanizedAttribute()
+    {
+        return $this->_status[$this->status];
+    }
 
-  public function ultimaOrdemServico()
-  {
-    return $this->hasMany('App\Models\OrdensServico', 'orcamento_id', 'id')->orderBy('data_coleta', 'DESC')->first();
-  }
+    public function getVantagensHumanizedAttribute()
+    {
+        return $this->_vantagens[$this->vantagens];
+    }
 
-  protected $appends = ['statusHumanized', 'vantagensHumanized', 'saldo', 'osCount', 'faturasCount'];
+    public function getSaldoAttribute()
+    {
+        return $this->contasReceber()->sum('valor') - $this->ordensServico()->sum('valor') - $this->ordensServico(
+            )->sum('desconto');
+    }
 
-  public function getStatusHumanizedAttribute()
-  {
-    return $this->_status[$this->status];
-  }
+    public function getOsCountAttribute()
+    {
+        return $this->ordensServico()->count();
+    }
 
-  public function getVantagensHumanizedAttribute()
-  {
-    return $this->_vantagens[$this->vantagens];
-  }
-
-  public function getSaldoAttribute()
-  {
-    return $this->contasReceber()->sum('valor') - $this->ordensServico()->sum('valor') - $this->ordensServico()->sum('desconto');
-  }
-
-  public function getOsCountAttribute()
-  {
-    return $this->ordensServico()->count();
-  }
-
-  public function getFaturasCountAttribute()
-  {
-    return $this->contasReceber()->count();
-  }
+    public function getFaturasCountAttribute()
+    {
+        return $this->contasReceber()->count();
+    }
 
 }

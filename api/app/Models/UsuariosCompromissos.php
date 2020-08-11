@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UsuariosCompromissos extends LogTrait
@@ -38,11 +37,11 @@ class UsuariosCompromissos extends LogTrait
 
   public function usuario()
   {
-    return $this->belongsTo('App\Models\Usuarios');
+    return $this->belongsTo(Usuarios::class);
   }
 
   public function cliente()
   {
-    return $this->belongsTo('App\Models\Clientes');
+    return $this->belongsTo(Clientes::class);
   }
 }

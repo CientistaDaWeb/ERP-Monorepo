@@ -2,36 +2,36 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class EnderecosCategorias extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'categoria'
-  ];
+    protected $fillable = [
+        'categoria'
+    ];
 
-  public $filters = [
-    'categoria' =>
-      [
-        'column' => 'categoria',
-        'type' => 'like'
-      ]
-  ];
+    public $filters = [
+        'categoria' =>
+            [
+                'column' => 'categoria',
+                'type' => 'like'
+            ]
+    ];
 
-  public function enderecos()
-  {
-    return $this->hasMany('App\Models\ClientesEnderecos', 'categoria_id', 'id');
-  }
+    public function enderecos()
+    {
+        return $this->hasMany(ClientesEnderecos::class, 'categoria_id', 'id');
+    }
 
-  protected $appends = ['enderecosCount'];
+    protected $appends = ['enderecosCount'];
 
-  public function getEnderecosCountAttribute()
-  {
-    return $this->enderecos()->count();
-  }
+    public function getEnderecosCountAttribute()
+    {
+        return $this->enderecos()->count();
+    }
 }

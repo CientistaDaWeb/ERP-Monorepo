@@ -7,32 +7,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TelefonesCategorias extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'categoria',
-  ];
+    protected $fillable = [
+        'categoria',
+    ];
 
-  public $filters = [
-    'categoria' =>
-      [
-        'column' => 'categoria',
-        'type' => 'like'
-      ]
-  ];
+    public $filters = [
+        'categoria' =>
+            [
+                'column' => 'categoria',
+                'type' => 'like'
+            ]
+    ];
 
-  public function telefones()
-  {
-    return $this->hasMany('App\Models\ClientesTelefones', 'categoria_id', 'id');
-  }
+    public function telefones()
+    {
+        return $this->hasMany(ClientesTelefones::class, 'categoria_id', 'id');
+    }
 
-  protected $appends = ['telefonesCount'];
+    protected $appends = ['telefonesCount'];
 
-  public function getTelefonesCountAttribute()
-  {
-    return $this->telefones()->count();
-  }
+    public function getTelefonesCountAttribute()
+    {
+        return $this->telefones()->count();
+    }
 }

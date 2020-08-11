@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transportadores extends LogTrait
@@ -48,17 +47,17 @@ class Transportadores extends LogTrait
 
   public function estado()
   {
-    return $this->belongsTo('App\Models\Estados');
+    return $this->belongsTo(Estados::class);
   }
 
   public function municipio()
   {
-    return $this->belongsTo('App\Models\Municipio');
+    return $this->belongsTo(Municipio::class);
   }
 
   public function ordensServico()
   {
-    return $this->hasMany('App\Models\OrdensServico', 'transportador_id', 'id');
+    return $this->hasMany(OrdensServico::class, 'transportador_id', 'id');
   }
 
   protected $appends = ['ordensServicoCount'];

@@ -2,37 +2,36 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ClientesCategorias extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'categoria'
-  ];
+    protected $fillable = [
+        'categoria'
+    ];
 
-  public $filters = [
-    'categoria' =>
-      [
-        'column' => 'categoria',
-        'type' => 'like'
-      ]
-  ];
+    public $filters = [
+        'categoria' =>
+            [
+                'column' => 'categoria',
+                'type' => 'like'
+            ]
+    ];
 
-  public function clientes()
-  {
-    return $this->hasMany('App\Models\Clientes', 'categoria_id', 'id');
-  }
+    public function clientes()
+    {
+        return $this->hasMany(Clientes::class, 'categoria_id', 'id');
+    }
 
-  protected $appends = ['clientesCount'];
+    protected $appends = ['clientesCount'];
 
-  public function getClientesCountAttribute()
-  {
-    return $this->clientes()->count();
-  }
+    public function getClientesCountAttribute()
+    {
+        return $this->clientes()->count();
+    }
 }

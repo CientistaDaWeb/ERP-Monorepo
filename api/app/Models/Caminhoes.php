@@ -2,31 +2,30 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Caminhoes extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'nome',
-    'placa'
-  ];
+    protected $fillable = [
+        'nome',
+        'placa'
+    ];
 
-  public $filters = [
-    'nome' =>
-      [
-        'column' => 'nome',
-        'type' => 'like'
-      ],
-    'placa' =>
-      [
-        'column' => 'placa',
-        'type' => 'like'
-      ],
-  ];
+    public $filters = [
+        'nome' =>
+            [
+                'column' => 'nome',
+                'type' => 'like'
+            ],
+        'placa' =>
+            [
+                'column' => 'placa',
+                'type' => 'like'
+            ],
+    ];
 }

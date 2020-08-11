@@ -2,55 +2,54 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class NotasFiscais extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'orcamento_id',
-    'empresa_id',
-    'data_geracao',
-    'valor',
-    'numero',
-    'tipo',
-    'valor_retido'
-  ];
+    protected $fillable = [
+        'orcamento_id',
+        'empresa_id',
+        'data_geracao',
+        'valor',
+        'numero',
+        'tipo',
+        'valor_retido'
+    ];
 
-  public $filters = [
-  ];
+    public $filters = [
+    ];
 
-  protected $_tipo;
+    protected $_tipo;
 
-  public function __construct(array $attributes = [])
-  {
-    $this->_tipo = array(
-      'S' => 'Serviços',
-      'P' => 'Projetos'
-    );
+    public function __construct(array $attributes = [])
+    {
+        $this->_tipo = array(
+            'S' => 'Serviços',
+            'P' => 'Projetos'
+        );
 
-    parent::__construct($attributes);
-  }
+        parent::__construct($attributes);
+    }
 
-  public function empresa()
-  {
-    return $this->belongsTo('App\Models\Empresas');
-  }
+    public function empresa()
+    {
+        return $this->belongsTo(Empresas::class);
+    }
 
-  public function orcamento()
-  {
-    return $this->belongsTo('App\Models\Orcamentos');
-  }
+    public function orcamento()
+    {
+        return $this->belongsTo(Orcamentos::class);
+    }
 
-  protected $appends = ['tipoHumanized'];
+    protected $appends = ['tipoHumanized'];
 
-  public function getTipoHumanizedAttribute()
-  {
-    return $this->_tipo[$this->tipo];
-  }
+    public function getTipoHumanizedAttribute()
+    {
+        return $this->_tipo[$this->tipo];
+    }
 }

@@ -2,41 +2,40 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Servicos extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'categoria_id',
-    'servico',
-    'valor_unitario',
-    'descricao',
-    'certificado',
-    'tipo',
-    'unidade'
-  ];
+    protected $fillable = [
+        'categoria_id',
+        'servico',
+        'valor_unitario',
+        'descricao',
+        'certificado',
+        'tipo',
+        'unidade'
+    ];
 
-  public $filters = [
-    'servico' =>
-      [
-        'column' => 'servico',
-        'type' => 'like'
-      ],
-    'descricao' =>
-      [
-        'column' => 'descricao',
-        'type' => 'like'
-      ]
-  ];
+    public $filters = [
+        'servico' =>
+            [
+                'column' => 'servico',
+                'type' => 'like'
+            ],
+        'descricao' =>
+            [
+                'column' => 'descricao',
+                'type' => 'like'
+            ]
+    ];
 
-  public function categoria()
-  {
-    return $this->belongsTo('App\Models\ServicosCategorias');
-  }
+    public function categoria()
+    {
+        return $this->belongsTo(ServicosCategorias::class);
+    }
 }

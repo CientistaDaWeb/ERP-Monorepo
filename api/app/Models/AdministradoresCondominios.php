@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 class AdministradoresCondominios extends LogTrait
 {
   use SoftDeletes;
@@ -52,7 +51,7 @@ class AdministradoresCondominios extends LogTrait
 
   public function clientes()
   {
-    return $this->hasMany('App\Models\Clientes');
+    return $this->hasMany(Clientes::class);
   }
 
 }

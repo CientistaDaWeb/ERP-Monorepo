@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProjetosEnvios extends LogTrait
@@ -40,6 +39,6 @@ class ProjetosEnvios extends LogTrait
 
   public function projeto()
   {
-    return $this->belongsTo('App\Models\Projetos');
+    return $this->belongsTo(Projetos);
   }
 }

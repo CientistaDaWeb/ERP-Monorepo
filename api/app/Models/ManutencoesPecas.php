@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ManutencoesPecas extends LogTrait
@@ -24,12 +23,12 @@ class ManutencoesPecas extends LogTrait
 
   public function manutencao()
   {
-    return $this->belongsTo('App\Models\Manutencoes');
+    return $this->belongsTo(Manutencoes::class);
   }
 
   public function peca()
   {
-    return $this->belongsTo('App\Models\Pecas');
+    return $this->belongsTo(Pecas::class);
   }
 
 }

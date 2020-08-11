@@ -2,32 +2,31 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Textos extends LogTrait
 {
-  use SoftDeletes;
+    use SoftDeletes;
 
-  const CREATED_AT = 'created';
-  const UPDATED_AT = 'updated';
+    const CREATED_AT = 'created';
+    const UPDATED_AT = 'updated';
 
-  protected $fillable = [
-    'categoria_id',
-    'titulo',
-    'descricao',
-  ];
+    protected $fillable = [
+        'categoria_id',
+        'titulo',
+        'descricao',
+    ];
 
-  public $filters = [
-    'titulo' =>
-      [
-        'column' => 'titulo',
-        'type' => 'like'
-      ],
-  ];
+    public $filters = [
+        'titulo' =>
+            [
+                'column' => 'titulo',
+                'type' => 'like'
+            ],
+    ];
 
-  public function categoria()
-  {
-    return $this->belongsTo('App\Models\TextosCategorias');
-  }
+    public function categoria()
+    {
+        return $this->belongsTo(TextosCategorias::class);
+    }
 }
