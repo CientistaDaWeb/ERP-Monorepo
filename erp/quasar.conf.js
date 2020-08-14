@@ -34,6 +34,7 @@ module.exports = function (ctx) {
       scopeHoisting: true,
       vueRouterMode: 'history',
       env: envparser(),
+      modern: true,
       // vueCompiler: true,
       // gzip: true,
       // analyze: true,
