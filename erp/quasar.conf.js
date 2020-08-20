@@ -61,6 +61,7 @@ module.exports = function (ctx) {
       }
     },
     devServer: {
+      port:4462,
       https: true,
       headers: {
         'Access-Control-Allow-Origin': '*'

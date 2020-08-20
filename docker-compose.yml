@@ -40,7 +40,7 @@ services:
       target: 'develop-stage'
     restart: unless-stopped
     ports:
-      - "4462:8080"
+      - "4462:4462"
     tty: true
     volumes:
       - ./erp/:/app
