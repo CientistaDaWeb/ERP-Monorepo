@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-table
+
       :loading="loading"
       :data="list"
       :columns="columns"
@@ -11,17 +12,15 @@
       selection="multiple"
       :selected.sync="selected"
       class="table"
-      color="primary"
     >
       <template
         slot="top-left"
       >
         <q-btn-group outline>
           <q-btn
-            color="negative"
+            color="red-3"
             @click="deleteItem"
             icon="fa fa-trash"
-            glossy
             :label="module.btn.del"
           />
         </q-btn-group>
@@ -50,7 +49,14 @@
             <q-checkbox
               checked-icon="fa fa-trash"
               v-model="props.selected"
-            />
+            >
+              <q-tooltip
+                content-class="bg-red"
+                content-style="font-size: 12px"
+              >
+                Excluir Contrato
+              </q-tooltip>
+            </q-checkbox>
           </q-td>
           <q-td
             key="options"
@@ -61,10 +67,13 @@
                 @click="$router.push({name:'contratos.editar', params: {id: props.row.id }})"
                 icon="fa fa-edit"
                 size="sm"
-                color="primary"
-                glossy
+                color="#bbd3df"
+                text-color="blue-9"
               >
-                <q-tooltip>
+                <q-tooltip
+                  content-class="bg-indigo"
+                  content-style="font-size: 12px"
+                >
                   {{ module.btn.edit }}
                 </q-tooltip>
               </q-btn>
@@ -300,3 +309,19 @@ export default {
   }
 }
 </script>
+<style lang="sass">
+.table
+  height: 580px
+  width: 1000px !important
+
+  td:first-child
+    background-color: #bbd3df !important
+    height: 10px
+    width: 450px
+
+  td:nth-child(2)
+    background-color: #bbd3df !important
+    height: 10px
+    width: 10px  !important
+    font-size: 10px
+</style>

@@ -11,11 +11,19 @@ export default {
     }
   },
   filter: '',
-  item: {},
-  list: [],
   currentId: '',
   loading: true,
   certificados: [
+    {
+      label: 'Sim',
+      value: 'S'
+    },
+    {
+      label: 'Não',
+      value: 'N'
+    }
+  ],
+  encerrado: [
     {
       label: 'Sim',
       value: 'S'
@@ -46,5 +54,20 @@ export default {
       label: 'Transporte',
       value: 'T'
     }
+  ],
+  servicosContratado: [
+    {
+      label: 'Transporte',
+      value: '1'
+    },
+    {
+      label: 'Tratamento',
+      value: '2'
+    },
+    {
+      label: 'Transporte e tratamento',
+      value: '3'
+    }
+
   ]
 }

@@ -57,6 +57,7 @@ import transportadores from './transportadores'
 import users from './users'
 import usuarios from './usuarios'
 import usuariosCompromissos from './usuarios-compromissos'
+import efluentes from './efluentes'
 
 Vue.use(Vuex)
 
@@ -117,7 +118,8 @@ const store = new Vuex.Store({
     transportadores,
     users,
     usuarios,
-    usuariosCompromissos
+    usuariosCompromissos,
+    efluentes
   }
 })
 

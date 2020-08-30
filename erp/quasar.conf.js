@@ -61,7 +61,7 @@ module.exports = function (ctx) {
       }
     },
     devServer: {
-      port:4462,
+      port: 4462,
       https: true,
       headers: {
         'Access-Control-Allow-Origin': '*'
@@ -75,6 +75,7 @@ module.exports = function (ctx) {
       components: [
         'QLayout',
         'QHeader',
+        'QDate',
         'QFooter',
         'QDrawer',
         'QPageContainer',
@@ -115,8 +116,8 @@ module.exports = function (ctx) {
           customClass: 'bg-primary'
         },
         cordova: {
-          iosStatusBarPadding: true/false, // add the dynamic top padding on iOS mobile devices
-          backButtonExit: true/false // Quasar handles app exit on mobile phone back button
+          iosStatusBarPadding: true / false, // add the dynamic top padding on iOS mobile devices
+          backButtonExit: true / false // Quasar handles app exit on mobile phone back button
         }
       }
     },
