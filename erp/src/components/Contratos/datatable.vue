@@ -12,6 +12,10 @@
       selection="multiple"
       :selected.sync="selected"
       class="table"
+      color="primary"
+      card-class="bg-blue-2 text-brown"
+      table-class="bg-blue-2"
+      table-header-class="bg-blue-3"
     >
       <template
         slot="top-left"
@@ -310,6 +314,9 @@ export default {
 }
 </script>
 <style lang="sass">
+.table td
+    white-space: nowrap !important
+
 .table
   height: 580px
   width: 1000px !important
