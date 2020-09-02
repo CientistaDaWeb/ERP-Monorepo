@@ -12,17 +12,13 @@
       selection="multiple"
       :selected.sync="selected"
       class="table"
-      color="primary"
-      card-class="bg-blue-2 text-brown"
-      table-class="bg-blue-2"
-      table-header-class="bg-blue-3"
     >
       <template
         slot="top-left"
       >
         <q-btn-group outline>
           <q-btn
-            color="red-3"
+            color="red"
             @click="deleteItem"
             icon="fa fa-trash"
             :label="module.btn.del"
@@ -323,12 +319,8 @@ export default {
 
   td:first-child
     background-color: #bbd3df !important
-    height: 10px
-    width: 450px
 
   td:nth-child(2)
     background-color: #bbd3df !important
-    height: 10px
-    width: 10px  !important
-    font-size: 10px
+
 </style>

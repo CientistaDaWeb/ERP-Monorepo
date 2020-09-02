@@ -14,6 +14,18 @@
       color="primary"
     >
       <template
+        slot="top-left"
+      >
+        <q-btn-group outline>
+          <q-btn
+            color="red"
+            @click="deleteItem"
+            icon="fa fa-trash"
+            :label="module.btn.del"
+          />
+        </q-btn-group>
+      </template>
+      <template
         slot="top-right"
       >
         <q-input
@@ -40,7 +52,14 @@
             <q-checkbox
               checked-icon="fa fa-trash"
               v-model="props.selected"
-            />
+            >
+              <q-tooltip
+                content-class="bg-red"
+                content-style="font-size: 12px"
+              >
+                Excluir Contrato
+              </q-tooltip>
+            </q-checkbox>
           </q-td>
           <q-td
             key="options"
@@ -51,10 +70,12 @@
                 @click="$router.push({name:'mtrs.editar', params: {id: props.row.id }})"
                 icon="fa fa-edit"
                 size="sm"
-                color="primary"
-                glossy
+                text-color="blue-9"
               >
-                <q-tooltip>
+                <q-tooltip
+                  content-class="bg-indigo"
+                  content-style="font-size: 12px"
+                >
                   Editar Mtr
                 </q-tooltip>
               </q-btn>
@@ -64,13 +85,13 @@
             key="codigo"
             :props="props"
           >
-            {{ props.row.id }}
+            {{ props.row.ordem_servico.codigo }}
           </q-td>
           <q-td
             key="certificado"
             :props="props"
           >
-            {{ (props.row.certificados) ? props.row.certificados.id : 'Gere o Certificado' }}
+            {{ props.row.mtr }}
           </q-td>
           <q-td
             key="ordem_servico"
@@ -134,18 +155,19 @@ export default {
       {
         name: 'options'
       },
-      {
-        name: 'codigo',
-        label: 'Código',
-        align: 'center',
-        sortable: false,
-        style: 'width: 90px'
-      },
+
       {
         name: 'certificado',
         label: 'Certificado',
         align: 'center',
         sortable: false
+      },
+      {
+        name: 'codigo',
+        label: 'MTR',
+        align: 'center',
+        sortable: false,
+        style: 'width: 90px'
       },
       {
         name: 'ordem_servico',
@@ -168,6 +190,37 @@ export default {
     ]
   }),
   methods: {
+    deleteItem () {
+      if (this.selected.length > 0) {
+        this.$q.dialog(
+          {
+            title: this.module.btn.del,
+            message: 'Deseja excluir esses ' + this.module.plural + '?',
+            ok: 'Sim, tenho certeza',
+            cancel: 'Não'
+          })
+          .onOk(() => {
+            let id = ''
+            for (var i = 0; i < this.selected.length; i++) {
+              id = this.selected[i]['id']
+              this.$store.dispatch('mtrs/deleteItem', id)
+                .then(() => {
+                  this.searchList({
+                    pagination: this.pagination,
+                    filter: this.filter
+                  })
+                })
+            }
+            this.selected = []
+          })
+      } else {
+        this.$q.notify({
+          message: 'Nenhum registro selecionado',
+          color: 'negative',
+          icon: 'fa fa-ban'
+        })
+      }
+    },
     searchList (payload) {
       this.$store.dispatch('mtrs/searchList', payload)
         .then((data) => {
@@ -178,6 +231,9 @@ export default {
   computed: {
     list () {
       return this.$store.state.mtrs.list
+    },
+    module () {
+      return this.$store.state.mtrs.module
     },
     loading: {
       get () {
