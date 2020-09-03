@@ -12,6 +12,7 @@ export default {
     const module = state.module
     const orderDirection = (pagination.descending) ? 'DESC' : 'ASC'
     const url = `${process.env.DATA_URL}api/${module.url}?page=${pagination.page}&limit=${pagination.rowsPerPage}&order=${pagination.sortBy},${orderDirection}&filter=${filter}${where}${whereHas}`
+
     commit('setList', [])
     return axios
       .get(url)
@@ -35,7 +36,7 @@ export default {
     const where = urlEncodeSearch(payload.where, 'where')
     const module = state.module
     const url = `${process.env.DATA_URL}api/${module.url}?limit=10000&filter=${filter}` + where
-    console.log(module.url, url)
+    console.log(url)
     commit('setList', [])
     return axios
       .get(url)

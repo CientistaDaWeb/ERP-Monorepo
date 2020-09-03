@@ -5,7 +5,7 @@
         <div class="row q-col-gutter-md">
           <div class="col col-sm-2 col-xs-12">
             <q-input
-              v-model="model.numero_mtr"
+              v-model="model.mtr"
               label="Nº do MTR"
               data-vv-name="numero_mtr"
               v-validate="'required'"
@@ -15,7 +15,7 @@
           </div>
           <div class="col col-sm-10 col-xs-12">
             <q-input
-              v-model="model.nome"
+              v-model="model.terceiro"
               label="Nome do Terceiro"
               data-vv-name="nome"
               :error="errors.has('nome')"
@@ -24,8 +24,8 @@
           </div>
           <div class="col col-sm-2 col-xs-12">
             <q-select
-              :options="mtr_gerado"
-              v-model="model.mtr_gerado"
+              :options="MTRGerado"
+              v-model="selectMTRGerado"
               label="MTR Gerado"
               data-vv-name="mtr_gerado"
               v-validate="'required'"
@@ -35,8 +35,8 @@
           </div>
           <div class="col col-sm-3 col-xs-12">
             <q-select
-              :options="gerar_certificado"
-              v-model="model.gerar_certificado"
+              :options="MtrGerarCertificado"
+              v-model="selectMtrGerarCertificado"
               label="MTR precisa gerar certificado"
               data-vv-name="gerar_certificado"
               v-validate="'required'"
@@ -46,8 +46,8 @@
           </div>
           <div class="col col-sm-7 col-xs-12">
             <q-select
-              :options="endereco"
-              v-model="model.endereco"
+              :options="clientesEnderecos"
+              v-model="selectClientesEnderecos"
               label="Endereço"
               data-vv-name="endereco"
               v-validate="'required'"
@@ -90,7 +90,7 @@ import {
   QInput,
   QSelect
 } from 'quasar'
-import _ from 'lodash'
+
 export default {
   name: 'MtrsForm',
   props: {
@@ -109,7 +109,22 @@ export default {
     QSelect
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    MTRGerado: [],
+    selectMTRGerado: {
+      label: '',
+      value: ''
+    },
+    clientesEnderecos: [],
+    selectClientesEnderecos: {
+      label: '',
+      value: ''
+    },
+    MtrGerarCertificado: [],
+    selectMtrGerarCertificado: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -118,9 +133,6 @@ export default {
       } else {
         this.$store.commit('mtrs/setItem', {})
       }
-      this.$store.dispatch('mtrs/loadList', {})
-      this.$store.dispatch('gerar_certificado/loadList', {})
-      this.$store.dispatch('endereco/loadList', {})
     },
     save () {
       this.$validator.validate()
@@ -160,37 +172,49 @@ export default {
   computed: {
     model () {
       return this.$store.state.mtrs.item
-    },
-    mtr_gerado () {
-      return _.orderBy(this.$store.state.mtrs.list.map(
-        data =>
-          ({
-            label: data.mtr,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    gerar_certificado () {
-      return _.orderBy(this.$store.state.certificados.list.map(
-        data =>
-          ({
-            label: data.certificado,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    endereco () {
-      return _.orderBy(this.$store.state.clientesEnderecos.list.map(
-        data =>
-          ({
-            label: data.endereco,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('clientesEnderecos/loadList',
+      {
+        where: {
+          cliente_id: this.model.ordem_servico.orcamento.cliente_id
+        }
+      }).then((data) => {
+      this.clientesEnderecos = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.ordem_servico.endereco_id)) {
+          this.selectClientesEnderecos.value = data.id
+          this.selectClientesEnderecos.label = data.endereco + ' ' + data.numero + ' - ' + data.bairro
+        }
+        return {
+          label: data.endereco,
+          value: data.id
+        }
+      }
+      )
+    })
+    this.MTRGerado = this.$store.state.mtrs.MtrGerado.map(data => {
+      if (data.value === this.model.dono) {
+        this.selectMTRGerado.value = data.value
+        this.selectMTRGerado.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+    this.MtrGerarCertificado = this.$store.state.mtrs.MtrGerarCertificado.map(data => {
+      if (data.value === this.model.certificado) {
+        this.selectMtrGerarCertificado.value = data.value
+        this.selectMtrGerarCertificado.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
   }
 }
 </script>

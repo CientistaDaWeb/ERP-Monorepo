@@ -8,7 +8,8 @@
             v-model="model.servico_id"
             :options="servicos"
             label="Serviço"
-            emit-value map-options
+            emit-value
+            map-options
           />
         </div>
         <div class="col col-sm-2 col-xs-12">

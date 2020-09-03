@@ -15,5 +15,25 @@ export default {
   list: [],
   currentId: '',
   loading: true,
-  tipo_efluente: []
+  tipo_efluente: [],
+  MtrGerado: [
+    {
+      label: 'Próprio',
+      value: 'P'
+    },
+    {
+      label: 'Terceiros',
+      value: 'T'
+    }
+  ],
+  MtrGerarCertificado: [
+    {
+      label: 'Sim',
+      value: 'S'
+    },
+    {
+      label: 'Não',
+      value: 'N'
+    }
+  ]
 }
