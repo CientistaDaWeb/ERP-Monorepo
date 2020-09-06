@@ -42,7 +42,7 @@
         class="tab-pane-content"
       >
         <CertificadosForm
-          :mtr-id="id"
+          :mtr-id="parseInt(id)"
           :action="action"
         />
       </q-tab-panel>

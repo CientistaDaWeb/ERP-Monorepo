@@ -42,5 +42,15 @@ export default {
       label: 'Fossa Séptica e Gordura',
       value: '3'
     }
+  ],
+  tipoEfluentes: [
+    {
+      label: 'Lodo de Fossa Séptica',
+      value: 'F'
+    },
+    {
+      label: 'Efluente de Cabine de Pintura',
+      value: 'E'
+    }
   ]
 }

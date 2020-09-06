@@ -75,6 +75,24 @@
           >
             {{ props.row.cliente_nome }}
           </q-td>
+          <q-td
+            key="inicio_tratamento"
+            :props="props"
+          >
+            {{ props.row.inicio_tratamento | formatDate('DD/MM/YYYY') }}
+          </q-td>
+          <q-td
+            key="quantidade"
+            :props="props"
+          >
+            {{ props.row.quantidade }}.0
+          </q-td>
+          <q-td
+            key="tipo_efluente"
+            :props="props"
+          >
+            {{ props.row.tipo_efluente ==='F' ? 'Lodo de Fossa Séptica' : 'Efluente de Cabine de Pintura' }}
+          </q-td>
         </q-tr>
       </template>
     </q-table>
@@ -120,13 +138,6 @@ export default {
         name: 'options'
       },
       {
-        name: 'codigo',
-        label: 'Código',
-        align: 'center',
-        sortable: false,
-        style: 'width: 90px'
-      },
-      {
         name: 'mtr_id',
         label: 'Código',
         align: 'center',
@@ -137,6 +148,27 @@ export default {
         label: 'Cliente',
         align: 'left',
         sortable: false
+      },
+      {
+        name: 'inicio_tratamento',
+        label: 'Início do Tratamento',
+        align: 'center',
+        sortable: false,
+        style: 'width: 90px'
+      },
+      {
+        name: 'quantidade',
+        label: 'Quantidade',
+        align: 'center',
+        sortable: false,
+        style: 'width: 90px'
+      },
+      {
+        name: 'tipo_efluente',
+        label: 'Tipo de Efluente',
+        align: 'center',
+        sortable: false,
+        style: 'width: 90px'
       }
     ]
   }),

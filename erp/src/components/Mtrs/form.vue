@@ -146,14 +146,16 @@ export default {
             this.submitting = true
 
             let data = {
-              numero_mtr: this.model.numero_mtr,
-              nome: this.model.nome,
-              mtr_gerado: this.model.mtr_gerado,
-              gerar_certificado: this.model.gerar_certificado,
-              endereco: this.model.endereco
+              numero_mtr: this.model.mtr,
+              nome: this.model.terceiro,
+              mtr_gerado: this.selectMTRGerado.value,
+              gerar_certificado: this.selectMtrGerarCertificado.value,
+              endereco: this.selectClientesEnderecos.value
             }
             if (this.action === 'edit') {
+              console.log(this.id)
               this.$store.dispatch('mtrs/updateItem', { data: data, id: this.id })
+              // console.log(data)
             } else {
               this.$store.dispatch('mtrs/saveItem', data)
                 .then(() => {

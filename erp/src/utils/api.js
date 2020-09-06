@@ -36,7 +36,7 @@ export default {
     const where = urlEncodeSearch(payload.where, 'where')
     const module = state.module
     const url = `${process.env.DATA_URL}api/${module.url}?limit=10000&filter=${filter}` + where
-    console.log(url)
+    // console.log(url)
     commit('setList', [])
     return axios
       .get(url)

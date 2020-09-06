@@ -5,7 +5,7 @@
         <div class="col col-sm-2 col-xs-12">
           <q-input
             type="number"
-            v-model="model.sequencial"
+            v-model="$store.state.mtrs.item.ordem_servico.sequencial"
             label="Sequencial"
             v-validate="'required'"
             :error="errors.has('sequencial')"
@@ -14,10 +14,10 @@
         </div>
         <div class="col col-sm-4 col-xs-12">
           <q-input
-            mask="#.#"
+            mask="###"
             fill-mask="0"
             reverse-fill-mask
-            v-model="model.quantidade"
+            v-model="$store.state.mtrs.item.certificados.quantidade"
             label="Quantidade"
             v-validate="'required'"
             :error="errors.has('quantidade')"
@@ -26,7 +26,7 @@
         </div>
         <div class="col col-sm-6 col-xs-12">
           <q-input
-            v-model="model.cliente"
+            v-model="$store.state.mtrs.item.certificados.cliente_nome"
             label="Cliente"
             data-vv-name="cliente"
             v-validate="'required'"
@@ -36,7 +36,7 @@
         </div>
         <div class="col col-sm-6 col-xs-12">
           <q-input
-            v-model="model.endereco"
+            v-model="$store.state.mtrs.item.certificados.cliente_endereco"
             label="Endereço do Cliente"
             data-vv-name="endereco"
             v-validate="'required'"
@@ -46,7 +46,7 @@
         </div>
         <div class="col col-sm-6 col-xs-12">
           <q-input
-            v-model="model.cidade"
+            v-model="$store.state.mtrs.item.certificados.cliente_cidade"
             label="Cidade do Cliente"
             data-vv-name="cidade"
             v-validate="'required'"
@@ -56,7 +56,7 @@
         </div>
         <div class="col col-sm-6 col-xs-12">
           <q-input
-            v-model="model.transportador"
+            v-model="$store.state.mtrs.item.certificados.transportador_nome"
             label="Transportador"
             data-vv-name="transportador"
             v-validate="'required'"
@@ -66,7 +66,7 @@
         </div>
         <div class="col col-sm-6 col-xs-12">
           <q-input
-            v-model="model.endereco_transp"
+            v-model="$store.state.mtrs.item.certificados.transportador_endereco"
             label="Endereço do Transportador"
             data-vv-name="endereco_transp"
             v-validate="'required'"
@@ -75,9 +75,8 @@
           />
         </div>
         <div class="col col-sm-3 col-xs-12">
-          <q-select
-            :options="lo_transp"
-            v-model="model.lo_transp"
+          <q-input
+            v-model="$store.state.mtrs.item.certificados.transportador_lo"
             label="LO do Transportador"
             data-vv-name="lo_transp"
             v-validate="'required'"
@@ -87,8 +86,8 @@
         </div>
         <div class="col col-sm-3 col-xs-12">
           <q-select
-            :options="tipo_efluente"
-            v-model="model.tipo_efluente"
+            :options="efluente"
+            v-model="selectTipoEfluente"
             label="Tipo de Efluente"
             data-vv-name="tipo_efluente"
             v-validate="'required'"
@@ -98,7 +97,7 @@
         </div>
         <div class="col col-sm-3 col-xs-12">
           <q-input
-            v-model="model.data_inicio"
+            v-model="inicioTratamento"
             label="Inicio do Tratamento"
             data-vv-name="data_inicio"
             v-validate="'required'"
@@ -118,7 +117,7 @@
                   <q-date
                     today-btn
                     mask="DD/MM/YYYY"
-                    v-model="model.data_inicio"
+                    v-model="inicioTratamento"
                     @input="() => $refs.qDateProxy.hide()"
                   />
                 </q-popup-proxy>
@@ -128,7 +127,7 @@
         </div>
         <div class="col col-sm-3 col-xs-12">
           <q-input
-            v-model="model.data_fim"
+            v-model="fimTratamento"
             label="Fim do Tratamento"
             data-vv-name="data_fim"
             v-validate="'required'"
@@ -148,7 +147,7 @@
                   <q-date
                     today-btn
                     mask="DD/MM/YYYY"
-                    v-model="model.data_fim"
+                    v-model="fimTratamento"
                     @input="() => $refs.qDateProxy.hide()"
                   />
                 </q-popup-proxy>
@@ -217,7 +216,15 @@ export default {
     QIcon
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    selectTipoEfluente: {
+      label: '',
+      value: ''
+    },
+    inicioTratamento: '',
+    fimTratamento: '',
+    efluente: []
+
   }),
   methods: {
     getData () {
@@ -249,7 +256,7 @@ export default {
               transportador: this.model.transportador,
               endereco_transp: this.model.endereco_transp,
               lo_transp: this.model.lo_transp,
-              tipo_efluente: this.model.tipo_efluente,
+              // tipo_efluente: this.model.tipo_efluente,
               data_inicio: date.formatDate(this.model.data_inicio, 'YYYY-MM-DD'),
               data_fim: date.formatDate(this.model.data_fim, 'YYYY-MM-DD')
             }
@@ -272,14 +279,7 @@ export default {
   },
   computed: {
     model () {
-      let store = this.$store.state.certificados.item
-      if (store.data_inicio) {
-        store.data_inicio = date.formatDate(moment(store.data_inicio), 'DD/MM/YYYY')
-      }
-      if (store.data_fim) {
-        store.data_fim = date.formatDate(moment(store.data_fim), 'DD/MM/YYYY')
-      }
-      return store
+      return this.$store.state.mtrs.item
     },
     lo_transp () {
       return _.orderBy(this.$store.state.transportadores.list.map(
@@ -289,19 +289,25 @@ export default {
             value: data.id
           })
       ), 'label', 'ASC')
-    },
-    tipo_efluente () {
-      return _.orderBy(this.$store.state.tipo_efluente.list.map(
-        data =>
-          ({
-            label: data.efluente,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+
   },
   mounted () {
     this.getData()
+    // console.log(this.$store.state.mtrs.item)
+    // console.log(this.model.certificados.inicio_tratamento)
+    this.efluente = this.$store.state.efluentes.tipoEfluentes.map(data => {
+      if (data.value === this.model.certificados.tipo_efluente) {
+        this.selectTipoEfluente.value = data.value
+        this.selectTipoEfluente.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+    this.inicioTratamento = moment(this.model.certificados.inicio_tratamento).format('DD/MM/YYYY')
+    this.fimTratamento = moment(this.model.certificados.fim_tratamento).format('DD/MM/YYYY')
   }
 }
 </script>
