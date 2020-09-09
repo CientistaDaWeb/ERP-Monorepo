@@ -5,52 +5,52 @@
         <div class="row q-col-gutter-md">
           <div class="col col-sm-3 col-xs-12">
             <q-input
-              v-model="model.cnpj"
+              v-model="model.documento"
               label="CNPJ"
-              data-vv-name="CNPJ"
+              data-vv-name="documento"
               v-validate="'required'"
-              :error="errors.has('cnpj')"
-              :error-message="errors.first('cnpj')"
+              :error="errors.has('documento')"
+              :error-message="errors.first('documento')"
             />
           </div>
           <div class="col col-sm-9 col-xs-12">
             <q-input
-              v-model="model.razao"
+              v-model="model.razao_social"
               label="Razão Social / Nome"
-              data-vv-name="razao"
+              data-vv-name="razao_social"
               v-validate="'required'"
-              :error="errors.has('razao')"
-              :error-message="errors.first('razao')"
+              :error="errors.has('razao_social')"
+              :error-message="errors.first('razao_social')"
             />
           </div>
           <div class="co col-md-6 col-xs-12">
             <q-input
-              v-model="model.fantasia"
+              v-model="model.nome_fantasia"
               label="Nome Fantasia / Apelido"
-              data-vv-name="fantasia"
+              data-vv-name="nome_fantasia"
               v-validate="'required'"
-              :error="errors.has('fantasia')"
-              :error-message="errors.first('fantasia')"
+              :error="errors.has('nome_fantasia')"
+              :error-message="errors.first('nome_fantasia')"
             />
           </div>
           <div class="co col-md-3 col-xs-12">
             <q-input
-              v-model="model.ie"
+              v-model="model.inscricao_estadual"
               label="Inscrição Estadual"
-              data-vv-name="ie"
+              data-vv-name="inscricao_estadual"
               v-validate="'required'"
-              :error="errors.has('ie')"
-              :error-message="errors.first('ie')"
+              :error="errors.has('inscricao_estadual')"
+              :error-message="errors.first('inscricao_estadual')"
             />
           </div>
           <div class="co col-md-3 col-xs-12">
             <q-input
-              v-model="model.im"
+              v-model="model.inscricao_municipal"
               label="Inscrição Municipal"
-              data-vv-name="im"
+              data-vv-name="inscricao_municipal"
               v-validate="'required'"
-              :error="errors.has('im')"
-              :error-message="errors.first('im')"
+              :error="errors.has('inscricao_municipal')"
+              :error-message="errors.first('inscricao_municipal')"
             />
           </div>
           <div class="col col-md-5 col-xs-12">
@@ -65,28 +65,28 @@
           </div>
           <div class="col col-md-5 col-xs-12">
             <q-input
-              v-model="model.web"
+              v-model="model.website"
               label="Website"
-              data-vv-name="web"
+              data-vv-name="website"
               v-validate="'required'"
-              :error="errors.has('web')"
-              :error-message="errors.first('web')"
+              :error="errors.has('website')"
+              :error-message="errors.first('website')"
             />
           </div>
           <div class="col col-md-2 col-xs-12">
             <q-input
-              v-model="model.fepan"
+              v-model="model.numero_fepan"
               label="Nº Fepan"
-              data-vv-name="fepan"
+              data-vv-name="numero_fepan"
               v-validate="'required'"
-              :error="errors.has('fepan')"
-              :error-message="errors.first('fepan')"
+              :error="errors.has('numero_fepan')"
+              :error-message="errors.first('numero_fepan')"
             />
           </div>
           <div class="col col-md-3 col-xs-12">
             <q-select
-              :options="uf"
-              v-model="model.uf"
+              :options="estados"
+              v-model="selectEstados"
               label="Estado"
               data-vv-name="uf"
               v-validate="'required'"
@@ -96,8 +96,8 @@
           </div>
           <div class="col col-md-7 col-xs-12">
             <q-select
-              :options="municipio"
-              v-model="model.municipio"
+              :options="municipios"
+              v-model="selectMunicipios"
               label="Municipio"
               data-vv-name="municipio"
               v-validate="'required'"
@@ -183,14 +183,13 @@
           </div>
           <div class="col col-md-6 col-xs-12">
             <q-uploader
-              v-model="model.logo"
-              hide-upload-btn="true"
+              v-model="model.logomarca"
               flat
               bordered
               url="http://localhost"
               label="Enviar um logo"
-              :error="errors.has('logo')"
-              :error-message="errors.first('logo')"
+              :error="errors.has('logomarca')"
+              :error-message="errors.first('logomarca')"
             />
           </div>
         </div>
@@ -229,7 +228,7 @@ import {
   QSelect,
   QUploader
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
 export default {
   name: 'EmpresasForm',
   props: {
@@ -249,7 +248,17 @@ export default {
     QUploader
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    municipios: [],
+    selectMunicipios: {
+      label: '',
+      value: ''
+    },
+    estados: [],
+    selectEstados: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -258,8 +267,9 @@ export default {
       } else {
         this.$store.commit('empresas/setItem', {})
       }
-      this.$store.dispatch('uf/loadList', {})
-      this.$store.dispatch('municipio/loadList', {})
+
+      // this.$store.dispatch('uf/loadList', {})
+      // this.$store.dispatch('municipio/loadList', {})
     },
     save () {
       this.$validator.validate()
@@ -273,16 +283,16 @@ export default {
             this.submitting = true
 
             let data = {
-              cnpj: this.model.cnpj,
-              razao: this.model.razao,
-              fantasia: this.model.fantasia,
-              ie: this.model.ie,
-              im: this.model.im,
+              documento: this.model.documento,
+              razao: this.model.razao_social,
+              fantasia: this.model.nome_fantasia,
+              inscricao_estadual: this.model.inscricao_estadual,
+              inscricao_municipal: this.model.inscricao_municipal,
               email: this.model.email,
-              web: this.model.web,
-              fepan: this.model.fepan,
-              uf: this.model.uf,
-              municipio: this.model.municipio,
+              website: this.model.website,
+              numero_fepan: this.model.numero_fepan,
+              estado_id: this.model.estado_id,
+              municipio_id: this.model.municipio_id,
               cep: this.model.cep,
               endereco: this.model.endereco,
               numero: this.model.numero,
@@ -291,11 +301,12 @@ export default {
               telefone: this.model.telefone,
               telefone2: this.model.telefone2,
               telefone3: this.model.telefone3,
-              logo: this.model.logo
+              logomarca: this.model.logomarca
             }
             if (this.action === 'edit') {
               this.$store.dispatch('empresas/updateItem', { data: data, id: this.id })
             } else {
+              console.log(data)
               this.$store.dispatch('empresas/saveItem', data)
                 .then(() => {
                   this.$router.push({
@@ -313,29 +324,58 @@ export default {
   computed: {
     model () {
       return this.$store.state.empresas.item
-    },
-    uf () {
-      return _.orderBy(this.$store.state.uf.list.map(
-        data =>
-          ({
-            label: data.uf,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    municipio () {
-      return _.orderBy(this.$store.state.municipio.list.map(
-        data =>
-          ({
-            label: data.municipio,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+    // uf () {
+    //   return _.orderBy(this.$store.state.uf.list.map(
+    //     data =>
+    //       ({
+    //         label: data.uf,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // municipio () {
+    //   return _.orderBy(this.$store.state.municipio.list.map(
+    //     data =>
+    //       ({
+    //         label: data.municipio,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('municipios/loadList',
+      {}).then((data) => {
+      this.municipios = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.municipio_id)) {
+          this.selectMunicipios.value = data.id
+          this.selectMunicipios.label = data.nome
+        }
+        return {
+          label: data.nome,
+          value: data.id
+        }
+      }
+      )
+    })
+    this.$store.dispatch('estados/loadList',
+      {}).then((data) => {
+      this.estados = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.estado_id)) {
+          this.selectEstados.value = data.id
+          this.selectEstados.label = data.estado
+        }
+        return {
+          label: data.estado,
+          value: data.id
+        }
+      }
+      )
+    })
   }
+
 }
 </script>
 
