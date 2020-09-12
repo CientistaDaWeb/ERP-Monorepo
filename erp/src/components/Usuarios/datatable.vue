@@ -19,14 +19,12 @@
             color="positive"
             @click="$router.push({name:'usuarios.novo'})"
             icon="fa fa-plus-circle"
-            glossy
             :label="module.btn.new"
           />
           <q-btn
             color="negative"
             @click="deleteItem"
             icon="fa fa-trash"
-            glossy
             :label="module.btn.del"
           />
         </q-btn-group>
@@ -159,7 +157,7 @@ export default {
             ok: 'Sim, tenho certeza',
             cancel: 'Não'
           })
-          .then(() => {
+          .onOk(() => {
             let id = ''
             for (var i = 0; i < this.selected.length; i++) {
               id = this.selected[i]['id']

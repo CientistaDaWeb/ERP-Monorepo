@@ -5,8 +5,8 @@
       :data="list"
       :columns="columns"
       :pagination.sync="pagination"
-      row-key="id"
       :filter="filter"
+      row-key="id"
       @request="searchList"
       selection="multiple"
       :selected.sync="selected"
@@ -21,7 +21,6 @@
             color="negative"
             @click="deleteItem"
             icon="fa fa-trash"
-            glossy
             :label="module.btn.del"
           />
         </q-btn-group>
@@ -231,7 +230,7 @@ export default {
             ok: 'Sim, tenho certeza',
             cancel: 'Não'
           })
-          .then(() => {
+          .onOk(() => {
             let id = ''
             for (var i = 0; i < this.selected.length; i++) {
               id = this.selected[i]['id']
@@ -254,6 +253,7 @@ export default {
       }
     },
     searchList (payload) {
+      console.log(payload)
       this.$store.dispatch('notasFiscais/searchList', payload)
         .then((data) => {
           this.pagination = data
@@ -278,6 +278,7 @@ export default {
       },
       set (value) {
         this.$store.commit('notasFiscais/setFilter', value)
+        console.log('teste')
       }
     },
     module () {

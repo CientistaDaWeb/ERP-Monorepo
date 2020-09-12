@@ -14,5 +14,42 @@ export default {
   item: {},
   list: [],
   currentId: '',
-  loading: true
+  loading: true,
+  ativo: [
+    {
+      label: 'Sim',
+      value: 'S'
+
+    },
+    {
+      label: 'Não',
+      value: 'N'
+
+    }
+  ],
+  ponto: [
+    {
+      label: 'Sim',
+      value: 'S'
+
+    },
+    {
+      label: 'Não',
+      value: 'N'
+
+    }
+  ],
+  papel: [
+    {
+      label: 'Sim',
+      value: 'A'
+
+    },
+    {
+      label: 'Não',
+      value: 'U'
+
+    }
+  ]
+
 }

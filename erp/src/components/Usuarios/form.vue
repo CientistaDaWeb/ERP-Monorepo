@@ -6,7 +6,7 @@
           <div class="col col-sm-3 col-xs-12">
             <q-select
               :options="ativo"
-              v-model="model.ativo"
+              v-model="selectAtivo"
               label="Ativo no Sistema"
               data-vv-name="ativo"
               v-validate="'required'"
@@ -85,7 +85,7 @@
           <div class="col col-sm-3 col-xs-12">
             <q-select
               :options="ponto"
-              v-model="model.ponto"
+              v-model="selectPonto"
               label="Usa o Ponto?"
               data-vv-name="ponto"
               v-validate="'required'"
@@ -106,7 +106,7 @@
           <div class="col col-sm-3 col-xs-12">
             <q-select
               :options="administrador"
-              v-model="model.administrador"
+              v-model="selectAdministrador"
               label="Administrador"
               data-vv-name="administrador"
               v-validate="'required'"
@@ -149,7 +149,7 @@ import {
   QInput,
   QSelect
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
 export default {
   name: 'UsuariosForm',
   props: {
@@ -168,7 +168,22 @@ export default {
     QSelect
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    administrador: [],
+    selectAdministrador: {
+      value: '',
+      label: ''
+    },
+    ativo: [],
+    selectAtivo: {
+      value: '',
+      label: ''
+    },
+    ponto: [],
+    selectPonto: {
+      value: '',
+      label: ''
+    }
   }),
   methods: {
     getData () {
@@ -177,9 +192,9 @@ export default {
       } else {
         this.$store.commit('usuarios/setItem', {})
       }
-      this.$store.dispatch('ativo/loadList', {})
-      this.$store.dispatch('ponto/loadList', {})
-      this.$store.dispatch('administrador/loadList', {})
+      // this.$store.dispatch('ativo/loadList', {})
+      // this.$store.dispatch('ponto/loadList', {})
+      // this.$store.dispatch('administrador/loadList', {})
     },
     save () {
       this.$validator.validate()
@@ -193,7 +208,7 @@ export default {
             this.submitting = true
 
             let data = {
-              ativo: this.model.ativo,
+              ativo: this.selectAtivo.value,
               nome: this.model.nome,
               usuario: this.model.usuario,
               senha: this.model.senha,
@@ -201,11 +216,12 @@ export default {
               pis: this.model.pis,
               telefone: this.model.telefone,
               email: this.model.email,
-              ponto: this.model.ponto,
+              ponto: this.selectPonto.value,
               token: this.model.token,
-              administrador: this.model.administrador
+              administrador: this.selectAdministrador.value
             }
             if (this.action === 'edit') {
+              console.log(data)
               this.$store.dispatch('usuarios/updateItem', { data: data, id: this.id })
             } else {
               this.$store.dispatch('usuarios/saveItem', data)
@@ -225,37 +241,68 @@ export default {
   computed: {
     model () {
       return this.$store.state.usuarios.item
-    },
-    ativo () {
-      return _.orderBy(this.$store.state.ativo.list.map(
-        data =>
-          ({
-            label: data.ativo,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    ponto () {
-      return _.orderBy(this.$store.state.ponto.list.map(
-        data =>
-          ({
-            label: data.ponto,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    administrador () {
-      return _.orderBy(this.$store.state.administrador.list.map(
-        data =>
-          ({
-            label: data.administrador,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+    // ativo () {
+    //   return _.orderBy(this.$store.state.ativo.list.map(
+    //     data =>
+    //       ({
+    //         label: data.ativo,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // ponto () {
+    //   return _.orderBy(this.$store.state.ponto.list.map(
+    //     data =>
+    //       ({
+    //         label: data.ponto,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // administrador () {
+    //   return _.orderBy(this.$store.state.administrador.list.map(
+    //     data =>
+    //       ({
+    //         label: data.administrador,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+    console.log(this.model)
+    this.administrador = this.$store.state.usuarios.papel.map(data => {
+      if (data.value === this.model.papel) {
+        this.selectAdministrador.value = data.value
+        this.selectAdministrador.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+    this.ativo = this.$store.state.usuarios.ativo.map(data => {
+      if (data.value === this.model.ativo) {
+        this.selectAtivo.value = data.value
+        this.selectAtivo.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+    this.ponto = this.$store.state.usuarios.ponto.map(data => {
+      if (data.value === this.model.ponto) {
+        this.selectPonto.value = data.value
+        this.selectPonto.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
   }
 }
 </script>

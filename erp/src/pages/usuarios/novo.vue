@@ -27,7 +27,7 @@
       animated
     >
       <q-tab-panel
-        name="Dados"
+        name="dados"
         class="tab-pane-content"
       >
         <UsuariosForm />

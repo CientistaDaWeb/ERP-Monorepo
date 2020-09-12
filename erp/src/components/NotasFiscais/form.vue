@@ -7,7 +7,7 @@
             <q-select
               filter
               :options="empresas"
-              v-model="model.empresa_id"
+              v-model="selectEmpresas"
               label="Empresa"
               data-vv-name="Empresa"
               v-validate="'required'"
@@ -18,7 +18,7 @@
           <div class="col col-sm-4 col-xs-12">
             <q-select
               :options="tipos"
-              v-model="model.tipo"
+              v-model="selectTipos"
               label="Tipo"
               data-vv-name="Tipo"
               v-validate="'required'"
@@ -124,10 +124,9 @@ import {
   QBtn,
   QDate,
   QPopupProxy,
-  QSelect,
-  date
+  QSelect
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
 import moment from 'moment'
 
 export default {
@@ -150,7 +149,17 @@ export default {
     QSelect
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    empresas: [],
+    selectEmpresas: {
+      label: '',
+      value: ''
+    },
+    tipos: [],
+    selectTipos: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -159,8 +168,8 @@ export default {
       } else {
         this.$store.commit('notasFiscais/setItem', {})
       }
-      this.$store.dispatch('empresas/loadList', {})
-      this.$store.dispatch('tipos/loadList', {})
+      // this.$store.dispatch('empresas/loadList', {})
+      // this.$store.dispatch('tipos/loadList', {})
     },
     save () {
       this.$validator.validate()
@@ -174,15 +183,16 @@ export default {
             this.submitting = true
 
             let data = {
-              empresa_id: this.model.empresa_id,
-              data_geracao: date.formatDate(this.model.data_geracao, 'YYYY-MM-DD'),
-              cliente: this.model.cliente,
+              empresa_id: this.selectEmpresas.value,
+              data_geracao: this.model.data_geracao.split('/').reverse().join('-'),
+              // cliente: this.model.cliente,
               numero: this.model.numero,
               valor: this.model.valor,
               valor_retido: this.model.valor_retido,
-              tipo: this.model.tipo
+              tipo: this.selectTipos.value
             }
             if (this.action === 'edit') {
+              console.log(data)
               this.$store.dispatch('notasFiscais/updateItem', { data: data, id: this.id })
             } else {
               this.$store.dispatch('notasFiscais/saveItem', data)
@@ -203,31 +213,55 @@ export default {
     model () {
       let store = this.$store.state.notasFiscais.item
       if (store.data_geracao) {
-        store.data_geracao = date.formatDate(moment(store.data_geracao), 'DD/MM/YYYY')
+        store.data_geracao = moment(store.data_geracao).format('DD/MM/YYYY')
       }
       return store
-    },
-    empresas () {
-      return _.orderBy(this.$store.state.empresas.list.map(
-        data =>
-          ({
-            label: data.razao_social,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    tipos () {
-      return _.orderBy(this.$store.state.tipos.list.map(
-        data =>
-          ({
-            label: data.tipo,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+    // empresas () {
+    //   return _.orderBy(this.$store.state.empresas.list.map(
+    //     data =>
+    //       ({
+    //         label: data.razao_social,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // tipos () {
+    //   return _.orderBy(this.$store.state.tipos.list.map(
+    //     data =>
+    //       ({
+    //         label: data.tipo,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+
+    this.$store.dispatch('empresas/loadList',
+      {}).then((data) => {
+      this.empresas = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.empresa_id)) {
+          this.selectEmpresas.value = data.id
+          this.selectEmpresas.label = data.nome_fantasia
+        }
+        return {
+          label: data.nome_fantasia,
+          value: data.id
+        }
+      })
+    })
+    this.tipos = this.$store.state.empresas.tipos.map(data => {
+      if (data.value === this.model.tipo) {
+        this.selectTipos.value = data.value
+        this.selectTipos.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
   }
 }
 </script>

@@ -14,5 +14,15 @@ export default {
   item: {},
   list: [],
   currentId: '',
-  loading: true
+  loading: true,
+  tipos: [
+    {
+      label: 'Serviços',
+      value: 'S'
+    },
+    {
+      label: 'Projetos',
+      value: 'P'
+    }
+  ]
 }
