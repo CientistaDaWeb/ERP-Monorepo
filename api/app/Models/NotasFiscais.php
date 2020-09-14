@@ -22,6 +22,11 @@ class NotasFiscais extends LogTrait
     ];
 
     public $filters = [
+        'numero' =>
+            [
+                'column' => 'numero',
+                'type' => 'like'
+            ],
     ];
 
     protected $_tipo;
