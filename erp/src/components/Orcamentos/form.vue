@@ -5,32 +5,36 @@
         <div class="row q-col-gutter-md">
           <div class="col col-sm-6 col-xs-12">
             <q-select
-              ref="empresa_id"
-              v-model="model.empresa_id"
+
               :options="empresas"
+              v-model="selectEmpresas"
               label="Empresa"
-              emit-value map-options
-              :rules="[val => !!val || 'Epresa Requerida']"
+              data-vv-name="Empresa"
+              v-validate="'required'"
+              :error="errors.has('Empresa')"
+              :error-message="errors.first('Empresa')"
             />
           </div>
           <div class="col col-sm-6 col-xs-12">
             <q-select
-              ref="cliente_id"
-              v-model="model.cliente_id"
               :options="clientes"
+              v-model="selectClientes"
               label="Cliente"
-              emit-value map-options
-              :rules="[val => !!val || 'Cliente Requerido']"
+              data-vv-name="Cliente"
+              v-validate="'required'"
+              :error="errors.has('Cliente')"
+              :error-message="errors.first('Cliente')"
             />
           </div>
           <div class="col col-sm-4 col-xs-12">
             <q-select
-              ref="usuario_id"
-              v-model="model.usuario_id"
               :options="usuarios"
-              label="Usuário"
-              emit-value map-options
-              :rules="[val => !!val || 'Usuário Requerido']"
+              v-model="selectUsuarios"
+              label="Usuario"
+              data-vv-name="Usuario"
+              v-validate="'required'"
+              :error="errors.has('Usuario')"
+              :error-message="errors.first('Usuario')"
             />
           </div>
           <div class="col col-sm-4 col-xs-12">
@@ -46,13 +50,12 @@
           </div>
           <div class="col col-sm-4 col-xs-12">
             <q-input
-              ref="data_emissao"
               v-model="model.data_emissao"
               label="Data de Emissão"
               data-vv-name="Data de Emissão"
+              v-validate="'required'"
               :error="errors.has('Data de Emissão')"
               :error-message="errors.first('Data de Emissão')"
-              :rules="[val => !!val || 'Data Emissao Requerida']"
             >
               <template v-slot:append>
                 <q-icon
@@ -77,20 +80,24 @@
           </div>
           <div class="col col-sm-4 col-xs-12">
             <q-select
-              v-model="model.vantagens"
               :options="vantagens"
+              v-model="selectVantagens"
               label="Exibir as Vantagens no Orçamento"
-              emit-value
-              map-options
+              data-vv-name="Vantagem"
+              v-validate="'required'"
+              :error="errors.has('Vantagem')"
+              :error-message="errors.first('Vantagem')"
             />
           </div>
           <div class="col col-sm-8 col-xs-12">
             <q-select
-              v-model="model.status"
               :options="status"
+              v-model="selectStatus"
               label="Status do Orçamento"
-              emit-value
-              map-options
+              data-vv-name="Status"
+              v-validate="'required'"
+              :error="errors.has('Status')"
+              :error-message="errors.first('Status')"
             />
           </div>
         </div>
@@ -130,7 +137,8 @@ import {
   QDate,
   QPopupProxy
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
+import moment from 'moment'
 
 export default {
   name: 'OrcamentosForm',
@@ -154,29 +162,45 @@ export default {
   data: () => ({
     submitting: false,
     filterCliente: '',
-    model: {
-      empresa_id: '',
-      cliente_id: '',
-      usuario_id: '',
-      valor_total: 0,
-      data_emissao: null,
-      vantagens: 'N',
-      status: 2
+    empresas: [],
+    selectEmpresas: {
+      label: '',
+      value: ''
+    },
+    status: [],
+    selectStatus: {
+      label: '',
+      value: ''
+    },
+    clientes: [],
+    selectClientes: {
+      label: '',
+      value: ''
+    },
+    usuarios: [],
+    selectUsuarios: {
+      label: '',
+      value: ''
+    },
+    vantagens: [],
+    selectVantagens: {
+      label: '',
+      value: ''
     }
   }),
   methods: {
     getData () {
-      this.$store.dispatch('empresas/loadList', {})
-      this.$store.dispatch('clientes/loadList', {})
-      this.$store.dispatch('usuarios/loadList', {})
+      // this.$store.dispatch('empresas/loadList', {})
+      // this.$store.dispatch('clientes/loadList', {})
+      // this.$store.dispatch('usuarios/loadList', {})
       if (this.id) {
         this.$store.dispatch('orcamentos/loadItem', this.id).then(() => {
-          this.setModel()
+          // this.setModel()
         })
       } else {
         this.$store.commit('orcamentos/setItem', {
-          empresa_id: '',
-          cliente_id: '',
+          // empresa_id: '',
+          // cliente_id: '',
           usuario_id: '',
           valor_total: 0,
           data_emissao: null,
@@ -185,13 +209,13 @@ export default {
         })
       }
     },
-    setModel () {
-      this.model = this.$store.state.orcamentos.item
-      this.model.data_emissao = this.model.data_emissao.split('-').reverse().join('/')
-      if (this.model.valor_total) {
-        this.model.valor_total = parseFloat(this.model.valor_total).toFixed(2)
-      }
-    },
+    // setModel () {
+    //   this.model = this.$store.state.orcamentos.item
+    //   this.model.data_emissao = this.model.data_emissao.split('-').reverse().join('/')
+    //   if (this.model.valor_total) {
+    //     this.model.valor_total = parseFloat(this.model.valor_total).toFixed(2)
+    //   }
+    // },
     save () {
       this.$refs.empresa_id.validate()
       this.$refs.cliente_id.validate()
@@ -211,8 +235,8 @@ export default {
       } else {
         this.submitting = true
         let data = {
-          empresa_id: this.model.empresa_id,
-          cliente_id: this.model.cliente_id,
+          // empresa_id: this.model.empresa_id,
+          // cliente_id: this.model.cliente_id,
           usuario_id: this.model.usuario_id,
           valor_total: this.model.valor_total,
           data_emissao: this.model.data_emissao.split('/').reverse().join('-'),
@@ -240,55 +264,114 @@ export default {
     }
   },
   computed: {
-    empresas () {
-      return _.orderBy(
-        this.$store.state.empresas.list.map(data => ({
-          label: data.razao_social,
-          value: data.id
-        })),
-        'label',
-        'ASC'
-      ).filter(data => {
-        return data.label.indexOf(this.filterCliente) > -1
-      })
-    },
-    clientes () {
-      return _.orderBy(
-        this.$store.state.clientes.list.map(data => ({
-          label: data.razao_social,
-          value: data.id
-        })),
-        'label',
-        'ASC'
-      )
-    },
-    usuarios () {
-      return _.orderBy(
-        this.$store.state.usuarios.list.map(data => ({
-          label: data.nome,
-          value: data.id
-        })),
-        'label',
-        'ASC'
-      )
-    },
-    vantagens () {
-      return _.orderBy(
-        this.$store.state.orcamentos.vantagensOptions,
-        'label',
-        'ASC'
-      )
-    },
-    status () {
-      return _.orderBy(
-        this.$store.state.orcamentos.statusOptions,
-        'label',
-        'ASC'
-      )
+    model () {
+      let store = this.$store.state.orcamentos.item
+      if (store.data_emissao) {
+        store.data_emissao = moment(store.data_emissao).format('DD/MM/YYYY')
+      }
+      return store
     }
+
+    // clientes () {
+    //   return _.orderBy(
+    //     this.$store.state.clientes.list.map(data => ({
+    //       label: data.razao_social,
+    //       value: data.id
+    //     })),
+    //     'label',
+    //     'ASC'
+    //   )
+    // },
+    // usuarios () {
+    //   return _.orderBy(
+    //     this.$store.state.usuarios.list.map(data => ({
+    //       label: data.nome,
+    //       value: data.id
+    //     })),
+    //     'label',
+    //     'ASC'
+    //   )
+    // },
+    // vantagens () {
+    //   return _.orderBy(
+    //     this.$store.state.orcamentos.vantagensOptions,
+    //     'label',
+    //     'ASC'
+    //   )
+    // },
+  //   status () {
+  //     return _.orderBy(
+  //       this.$store.state.orcamentos.statusOptions,
+  //       'label',
+  //       'ASC'
+  //     )
+  //   }
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('empresas/loadList',
+      {}).then((data) => {
+      this.empresas = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.empresa_id)) {
+          this.selectEmpresas.value = data.id
+          this.selectEmpresas.label = data.nome_fantasia
+        }
+        return {
+          label: data.nome_fantasia,
+          value: data.id
+        }
+      })
+    })
+
+    this.$store.dispatch('clientes/loadList',
+      {}).then((data) => {
+      this.clientes = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.cliente_id)) {
+          this.selectClientes.value = data.id
+          this.selectClientes.label = data.nome_fantasia
+        }
+        return {
+          label: data.nome_fantasia,
+          value: data.id
+        }
+      })
+    })
+    this.$store.dispatch('usuarios/loadList',
+      {}).then((data) => {
+      this.usuarios = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.usuario_id)) {
+          this.selectUsuarios.value = data.id
+          this.selectUsuarios.label = data.nome
+        }
+        return {
+          label: data.nome,
+          value: data.id
+        }
+      })
+    })
+    this.vantagens = this.$store.state.orcamentos.vantagensOptions.map(data => {
+      if (data.value === this.model.vantagens) {
+        this.selectVantagens.value = data.value
+        this.selectVantagens.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+    this.status = this.$store.state.orcamentos.statusOptions.map(data => {
+      console.log(data.value)
+      console.log(this.model)
+
+      if (data.value === this.model.status) {
+        this.selectStatus.value = data.value
+        this.selectStatus.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
   }
 }
 </script>

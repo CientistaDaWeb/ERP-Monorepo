@@ -90,13 +90,13 @@
             key="cliente"
             :props="props"
           >
-            {{ props.row.cliente.razao_social }}
+            {{ props.row.cliente.nome_fantasia }}
           </q-td>
           <q-td
             key="empresa"
             :props="props"
           >
-            {{ props.row.empresa.razao_social }}
+            {{ props.row.cliente.razao_social }}
           </q-td>
           <q-td
             key="data_emissao"

@@ -314,9 +314,6 @@ export default {
     white-space: nowrap !important
 
 .table
-  height: 580px
-  width: 1000px !important
-
   td:first-child
     background-color: #bbd3df !important
 
