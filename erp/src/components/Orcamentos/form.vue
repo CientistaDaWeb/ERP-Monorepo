@@ -18,6 +18,7 @@
           <div class="col col-sm-6 col-xs-12">
             <q-select
               :options="clientes"
+              :loading="loading"
               v-model="selectClientes"
               label="Cliente"
               data-vv-name="Cliente"
@@ -50,7 +51,7 @@
           </div>
           <div class="col col-sm-4 col-xs-12">
             <q-input
-              v-model="model.data_emissao"
+              v-model="data_emissao"
               label="Data de Emissão"
               data-vv-name="Data de Emissão"
               v-validate="'required'"
@@ -70,7 +71,7 @@
                     <q-date
                       today-btn
                       mask="DD/MM/YYYY"
-                      v-model="model.data_emissao"
+                      v-model="data_emissao"
                       @input="() => $refs.qDateProxy.hide()"
                     />
                   </q-popup-proxy>
@@ -160,6 +161,8 @@ export default {
     QPopupProxy
   },
   data: () => ({
+    data_emissao: '',
+    loading: false,
     submitting: false,
     filterCliente: '',
     empresas: [],
@@ -201,11 +204,11 @@ export default {
         this.$store.commit('orcamentos/setItem', {
           // empresa_id: '',
           // cliente_id: '',
-          usuario_id: '',
-          valor_total: 0,
-          data_emissao: null,
-          vantagens: 'N',
-          status: 2
+          // usuario_id: '',
+          // valor_total: 0,
+          // data_emissao: null,
+          // vantagens: 'N',
+          // status: 2
         })
       }
     },
@@ -217,58 +220,50 @@ export default {
     //   }
     // },
     save () {
-      this.$refs.empresa_id.validate()
-      this.$refs.cliente_id.validate()
-      this.$refs.usuario_id.validate()
-      this.$refs.data_emissao.validate()
-      if (
-        this.$refs.empresa_id.hasError ||
-        this.$refs.cliente_id.hasError ||
-        this.$refs.usuario_id.hasError ||
-        this.$refs.data_emissao.hasError
-      ) {
-        this.$q.notify({
-          message:
-              'O registro não foi salvo, verifique os campos incorretos.',
-          icon: 'fa fa-exclamation-triangle'
-        })
-      } else {
-        this.submitting = true
-        let data = {
-          // empresa_id: this.model.empresa_id,
-          // cliente_id: this.model.cliente_id,
-          usuario_id: this.model.usuario_id,
-          valor_total: this.model.valor_total,
-          data_emissao: this.model.data_emissao.split('/').reverse().join('-'),
-          vantagens: this.model.vantagens,
-          status: this.model.status
-        }
-        if (this.action === 'edit') {
-          this.$store.dispatch('orcamentos/updateItem', {
-            data: data,
-            id: this.id
-          }).finally(() => {
-            this.submitting = false
-          })
-        } else {
-          this.$store.dispatch('orcamentos/saveItem', data).then(() => {
-            this.$router.push({
-              name: 'orcamentos.editar',
-              params: { id: this.$store.state.orcamentos.currentId }
-            }).finally(() => {
-              this.submitting = false
+      this.$validator.validate()
+        .then(result => {
+          if (!result) {
+            this.$q.notify({
+              message: 'O registro não foi salvo, verifique os campos incorretos.',
+              icon: 'fa fa-exclamation-triangle'
             })
-          })
-        }
-      }
+          } else {
+            this.submitting = true
+
+            let data = {
+              empresa_id: this.selectEmpresas.value,
+              cliente_id: this.selectClientes.value,
+              usuario_id: this.selectUsuarios.value,
+              valor_total: this.model.valor_total,
+              data_emissao: this.data_emissao.split('/').reverse().join('-'),
+              vantagens: this.selectVantagens.value,
+              status: this.selectStatus.value
+            }
+            if (this.action === 'edit') {
+              this.$store.dispatch('orcamentos/updateItem', {
+                data: data,
+                id: this.id
+              }).finally(() => {
+                this.submitting = false
+              })
+            } else {
+              this.$store.dispatch('orcamentos/saveItem', data).then(() => {
+                this.$router.push({
+                  name: 'orcamentos.editar',
+                  params: { id: this.$store.state.orcamentos.currentId }
+                }).finally(() => {
+                  this.submitting = false
+                })
+              })
+            }
+          }
+        })
     }
+
   },
   computed: {
     model () {
       let store = this.$store.state.orcamentos.item
-      if (store.data_emissao) {
-        store.data_emissao = moment(store.data_emissao).format('DD/MM/YYYY')
-      }
       return store
     }
 
@@ -324,7 +319,10 @@ export default {
     })
 
     this.$store.dispatch('clientes/loadList',
-      {}).then((data) => {
+
+      {
+        limit: 30
+      }).then((data) => {
       this.clientes = data.data.map(data => {
         if (parseInt(data.id) === parseInt(this.model.cliente_id)) {
           this.selectClientes.value = data.id
@@ -360,9 +358,6 @@ export default {
       }
     })
     this.status = this.$store.state.orcamentos.statusOptions.map(data => {
-      console.log(data.value)
-      console.log(this.model)
-
       if (data.value === this.model.status) {
         this.selectStatus.value = data.value
         this.selectStatus.label = data.label
@@ -372,6 +367,8 @@ export default {
         value: data.value
       }
     })
+
+    this.data_emissao = moment(this.model.data_emissao).format('DD/MM/YYYY')
   }
 }
 </script>

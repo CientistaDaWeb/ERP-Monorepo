@@ -253,7 +253,6 @@ export default {
       }
     },
     searchList (payload) {
-      console.log(payload)
       this.$store.dispatch('notasFiscais/searchList', payload)
         .then((data) => {
           this.pagination = data
@@ -278,7 +277,6 @@ export default {
       },
       set (value) {
         this.$store.commit('notasFiscais/setFilter', value)
-        console.log('teste')
       }
     },
     module () {
