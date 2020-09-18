@@ -234,7 +234,7 @@ export default {
             ok: 'Sim, tenho certeza',
             cancel: 'Não'
           })
-          .then(() => {
+          .onOk(() => {
             let id = ''
             for (var i = 0; i < this.selected.length; i++) {
               id = this.selected[i]['id']

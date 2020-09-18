@@ -244,6 +244,7 @@ export default {
                 data: data,
                 id: this.id
               }).finally(() => {
+                this.$validator.reset()
                 this.submitting = false
               })
             } else {
@@ -252,6 +253,7 @@ export default {
                   name: 'orcamentos.editar',
                   params: { id: this.$store.state.orcamentos.currentId }
                 }).finally(() => {
+                  this.$validator.reset()
                   this.submitting = false
                 })
               })
