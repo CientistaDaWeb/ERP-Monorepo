@@ -5,7 +5,7 @@
         <div class="col col-sm-5 col-xs-12">
           <q-select
             ref="empresa_id"
-            v-model="model.servico_id"
+            v-model="selectServicos"
             :options="servicos"
             label="Serviço"
             emit-value
@@ -138,7 +138,7 @@ import {
   QTable,
   QInput
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 export default {
   components: {
@@ -160,6 +160,11 @@ export default {
   name: 'OrcamentosServicosDatatable',
   data: () => ({
     selected: [],
+    servicos: [],
+    selectServicos: {
+      label: '',
+      value: ''
+    },
     pagination: {
       sortBy: 'id',
       descending: true,
@@ -260,7 +265,6 @@ export default {
           cancel: 'Não'
         })
         .onOk(() => {
-          console.log(id)
           this.$store.dispatch('orcamentosServicos/deleteItem', id)
             .then(() => {
               this.searchList({
@@ -302,20 +306,33 @@ export default {
     },
     module () {
       return this.$store.state.orcamentosServicos.module
-    },
-    servicos () {
-      return _.orderBy(this.$store.state.servicos.list.map(
-        data =>
-          ({
-            label: '[' + data.id + '] ' + data.servico,
-            value: data.id,
-            order: data.servico
-          })
-      ), 'order', 'ASC')
     }
+    // servicos () {
+    //   return _.orderBy(this.$store.state.servicos.list.map(
+    //     data =>
+    //       ({
+    //         label: '[' + data.id + '] ' + data.servico,
+    //         value: data.id,
+    //         order: data.servico
+    //       })
+    //   ), 'order', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('servicos/loadList',
+      {}).then((data) => {
+      this.servicos = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.servico_id)) {
+          this.selectServicos.value = data.servico
+          this.selectServicos.label = '[' + data.id + '] ' + data.servico
+        }
+        return {
+          label: '[' + data.id + '] ' + data.servico,
+          value: data.servico
+        }
+      })
+    })
     this.searchList(
       {
         pagination: this.pagination,
