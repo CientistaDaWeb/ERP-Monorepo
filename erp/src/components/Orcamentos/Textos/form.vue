@@ -126,14 +126,15 @@ export default {
     titulos: [],
     condicoes: [],
     validades: [],
-    observacoes: [],
-    model: {
-      titulo_id: '',
-      condicao_id: '',
-      validade_id: '',
-      observacao_id: ''
-    }
+    observacoes: []
+
   }),
+  computed: {
+    model () {
+      let store = this.$store.state.orcamentos.item
+      return store
+    }
+  },
   methods: {
     getData () {
       if (this.id) {
@@ -141,6 +142,7 @@ export default {
       } else {
         this.$store.commit('orcamentos/setItem', {})
       }
+
       this.$store.dispatch('textos/loadList',
         {
           where: {
@@ -258,6 +260,7 @@ export default {
       }
     }
   },
+
   mounted () {
     this.getData()
   }
