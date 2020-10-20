@@ -5,8 +5,8 @@
         <div class="row q-col-gutter-md">
           <div class="col col-sm-6 col-xs-12">
             <q-select
-              :options="enderecos"
-              v-model="model.endereco"
+              :options="clientesEnderecos"
+              v-model="selectClientesEnderecos"
               label="Endereço"
               data-vv-name="endereco"
               v-validate="'required'"
@@ -16,8 +16,8 @@
           </div>
           <div class="col col-sm-6 col-xs-12">
             <q-select
-              :options="empresas"
-              v-model="model.empresa"
+              :options="empresa"
+              v-model="selectEmpresa"
               label="Empresa"
               data-vv-name="empresa"
               v-validate="'required'"
@@ -28,7 +28,7 @@
           <div class="col col-sm-6 col-xs-12">
             <q-select
               :options="transportadores"
-              v-model="model.transportador"
+              v-model="selectTransportadores"
               label="Transportador"
               data-vv-name="transportador"
               v-validate="'required'"
@@ -38,7 +38,7 @@
           </div>
           <div class="col col-sm-3 col-xs-12">
             <q-input
-              v-model="model.data_coleta"
+              v-model="data_coleta"
               label="Data de Coleta"
               data-vv-name="data_coleta"
               v-validate="'required'"
@@ -58,7 +58,7 @@
                     <q-date
                       today-btn
                       mask="DD/MM/YYYY"
-                      v-model="model.data_coleta"
+                      v-model="data_coleta"
                       @input="() => $refs.qDateProxy.hide()"
                     />
                   </q-popup-proxy>
@@ -99,8 +99,8 @@
           </div>
           <div class="col col-sm-3 col-xs-12">
             <q-select
-              :options="numero_coletas"
-              v-model="model.numero_coletas"
+              :options="coletas"
+              v-model="selectColetas"
               label="Nº Coletas Programadas"
               data-vv-name="numero_coletas"
               v-validate="'required'"
@@ -110,8 +110,8 @@
           </div>
           <div class="col col-sm-3 col-xs-12">
             <q-select
-              :options="status"
-              v-model="model.status"
+              :options="statusOptions"
+              v-model="selectStatusOptions"
               label="Status"
               data-vv-name="status"
               v-validate="'required'"
@@ -145,8 +145,8 @@
           </div>
           <div class="col col-sm-3 col-xs-12">
             <q-select
-              :options="tipo_reservatorio"
-              v-model="model.tipo_reservatorio"
+              :options="tipoReservatorios"
+              v-model="selectTipoReservatorios"
               label="Tipo de Reservatório"
               data-vv-name="tipo_reservatorio"
               v-validate="'required'"
@@ -156,8 +156,8 @@
           </div>
           <div class="col col-sm-3 col-xs-12">
             <q-select
-              :options="ponto_coleta"
-              v-model="model.ponto_coleta"
+              :options="coletas"
+              v-model="selectColetas"
               label="Acesso Ponto de Coleta"
               data-vv-name="ponto_coleta"
               v-validate="'required'"
@@ -187,8 +187,8 @@
           </div>
           <div class="col col-sm-3 col-xs-12">
             <q-select
-              :options="situacao_efluentes"
-              v-model="model.situacao_efluentes"
+              :options="situacaoEfluentes"
+              v-model="selectSituacaoEfluentes"
               label="Situação dos Efluentes"
               data-vv-name="situacao_efluentes"
               v-validate="'required'"
@@ -220,8 +220,8 @@
           </div>
           <div class="col col-sm-4 col-xs-12">
             <q-select
-              :options="checagem_final"
-              v-model="model.checagem_final"
+              :options="checagemFinal"
+              v-model="selectChecagemFinal"
               label="Checagem Final"
               data-vv-name="checagem_final"
               v-validate="'required'"
@@ -232,7 +232,7 @@
           <div class="col col-sm-4 col-xs-12">
             <q-select
               :options="faturada"
-              v-model="model.faturada"
+              v-model="selectFaturada"
               label="Faturada"
               data-vv-name="faturada"
               v-validate="'required'"
@@ -289,7 +289,9 @@ import {
   QDate,
   QPopupProxy
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
+import moment from 'moment'
+// import datatableVue from '../Certificados/datatable.vue'
 export default {
   name: 'OrdensServicoForm',
   props: {
@@ -310,7 +312,54 @@ export default {
     QPopupProxy
   },
   data: () => ({
-    submitting: false
+    data_coleta: '',
+    submitting: false,
+    clientesEnderecos: [],
+    selectClientesEnderecos: {
+      label: '',
+      value: ''
+    },
+    statusOptions: [],
+    selectStatusOptions: {
+      label: '',
+      value: ''
+    },
+    transportadores: [],
+    selectTransportadores: {
+      label: '',
+      value: ''
+    },
+    coletas: [],
+    selectColetas: {
+      label: '',
+      value: ''
+    },
+    tipoReservatorios: [],
+    selectTipoReservatorios: {
+      label: '',
+      value: ''
+    },
+    situacaoEfluentes: [],
+    selectSituacaoEfluentes: {
+      label: '',
+      value: ''
+    },
+    checagemFinal: [],
+    selectChecagemFinal: {
+      label: '',
+      value: ''
+    },
+    faturada: [],
+    selectFaturada: {
+      label: '',
+      value: ''
+    },
+
+    empresa: [],
+    selectEmpresa: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -335,29 +384,30 @@ export default {
             this.submitting = true
 
             let data = {
-              endereco: this.model.endereco,
-              empresa: this.model.empresa,
-              transportador: this.model.transportador,
-              data_coleta: this.model.data_coleta,
+              endereco: this.selectClientesEnderecos.value,
+              empresa: this.selectEmpresa.value,
+              transportador: this.selectTransportadores.value,
+              data_coleta: this.data_coleta.split('/').reverse().join('-'),
               hora_coleta: this.model.hora_coleta,
               valor: this.model.valor,
               desconto: this.model.desconto,
-              numero_coletas: this.model.numero_coletas,
-              status: this.model.status,
+              numero_coletas: this.selectColetas.value,
+              status: this.selectStatusOptions.value,
               obs_coleta: this.model.obs_coleta,
               ordem_compra: this.model.ordem_compra,
-              tipo_reservatorio: this.model.tipo_reservatorio,
-              ponto_coleta: this.model.ponto_coleta,
+              tipo_reservatorio: this.selectTipoReservatorios.value,
+              ponto_coleta: this.selectColetas.value,
               metragem_mangueira: this.model.metragem_mangueira,
               situacao_tampas: this.model.situacao_tampas,
-              situacao_efluentes: this.model.situacao_efluentes,
+              situacao_efluentes: this.selectSituacaoEfluentes.value,
               obs_pos_coleta: this.model.obs_pos_coleta,
               horas_trabalhadas: this.model.horas_trabalhadas,
-              checagem_final: this.model.checagem_final,
-              faturada: this.model.faturada,
+              checagem_final: this.selectChecagemFinal.value,
+              faturada: this.selectFaturada.value,
               obs_faturamento: this.model.obs_faturamento
             }
             if (this.action === 'edit') {
+              console.log(data)
               this.$store.dispatch('ordensServico/updateItem', { data: data, id: this.id })
             } else {
               this.$store.dispatch('ordensServico/saveItem', data)
@@ -377,100 +427,224 @@ export default {
   computed: {
     model () {
       return this.$store.state.ordensServico.item
-    },
-    enderecos () {
-      return _.orderBy(this.$store.state.clientesEnderecos.list.map(
-        data =>
-          ({
-            label: data.endereco,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    empresas () {
-      return _.orderBy(this.$store.state.empresas.list.map(
-        data =>
-          ({
-            label: data.razao_social,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    transportadores () {
-      return _.orderBy(this.$store.state.transportadores.list.map(
-        data =>
-          ({
-            label: data.razao_social,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    numero_coletas () {
-      return _.orderBy(this.$store.state.ordensServico.coletasOptions.map(
-        data =>
-          ({
-            label: data.label,
-            value: data.value
-          })
-      ), 'label', 'ASC')
-    },
-    status () {
-      return _.orderBy(this.$store.state.ordensServico.statusOptions.map(
-        data =>
-          ({
-            label: data.label,
-            value: data.value
-          })
-      ), 'label', 'ASC')
-    },
-    tipo_reservatorio () {
-      return _.orderBy(this.$store.state.ordensServico.tipoReservatorio.map(
-        data =>
-          ({
-            label: data.label,
-            value: data.value
-          })
-      ), 'label', 'ASC')
-    },
-    ponto_coleta () {
-      return _.orderBy(this.$store.state.ordensServico.acesso.map(
-        data =>
-          ({
-            label: data.label,
-            value: data.value
-          })
-      ), 'label', 'ASC')
-    },
-    situacao_efluentes () {
-      return _.orderBy(this.$store.state.ordensServico.situacaoEfluentes.map(
-        data =>
-          ({
-            label: data.label,
-            value: data.value
-          })
-      ), 'label', 'ASC')
-    },
-    checagem_final () {
-      return _.orderBy(this.$store.state.ordensServico.checagemFinal.map(
-        data =>
-          ({
-            label: data.label,
-            value: data.value
-          })
-      ), 'label', 'ASC')
-    },
-    faturada () {
-      return _.orderBy(this.$store.state.ordensServico.faturado.map(
-        data =>
-          ({
-            label: data.label,
-            value: data.value
-          })
-      ), 'label', 'ASC')
     }
+    // enderecos () {
+    //   return _.orderBy(this.$store.state.clientesEnderecos.list.map(
+    //     data =>
+    //       ({
+    //         label: data.endereco,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // empresas () {
+    //   return _.orderBy(this.$store.state.empresas.list.map(
+    //     data =>
+    //       ({
+    //         label: data.razao_social,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // transportadores () {
+    //   return _.orderBy(this.$store.state.transportadores.list.map(
+    //     data =>
+    //       ({
+    //         label: data.razao_social,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // numero_coletas () {
+    //   return _.orderBy(this.$store.state.ordensServico.coletasOptions.map(
+    //     data =>
+    //       ({
+    //         label: data.label,
+    //         value: data.value
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // status () {
+    //   return _.orderBy(this.$store.state.ordensServico.statusOptions.map(
+    //     data =>
+    //       ({
+    //         label: data.label,
+    //         value: data.value
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // tipo_reservatorio () {
+    //   return _.orderBy(this.$store.state.ordensServico.tipoReservatorio.map(
+    //     data =>
+    //       ({
+    //         label: data.label,
+    //         value: data.value
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // ponto_coleta () {
+    //   return _.orderBy(this.$store.state.ordensServico.acesso.map(
+    //     data =>
+    //       ({
+    //         label: data.label,
+    //         value: data.value
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // situacao_efluentes () {
+    //   return _.orderBy(this.$store.state.ordensServico.situacaoEfluentes.map(
+    //     data =>
+    //       ({
+    //         label: data.label,
+    //         value: data.value
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // checagem_final () {
+    //   return _.orderBy(this.$store.state.ordensServico.checagemFinal.map(
+    //     data =>
+    //       ({
+    //         label: data.label,
+    //         value: data.value
+    //       })
+    //   ), 'label', 'ASC')
+    // }
+    // faturada () {
+    //   return _.orderBy(this.$store.state.ordensServico.faturado.map(
+    //     data =>
+    //       ({
+    //         label: data.label,
+    //         value: data.value
+    //       })
+    //   ), 'label', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('clientesEnderecos/loadList',
+      {
+        limit: 30
+        // where: {
+        //   cliente_id: this.model.ordem_servico.orcamento.cliente_id
+        // }
+      }).then((data) => {
+      this.clientesEnderecos = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.endereco_id)) {
+          this.selectClientesEnderecos.value = data.id
+          this.selectClientesEnderecos.label = data.endereco + ' ' + data.numero + ' - ' + data.bairro
+        }
+        return {
+          label: data.endereco + ' ' + data.numero + ' - ' + data.bairro,
+          value: data.id
+        }
+      }
+      )
+    })
+    this.$store.dispatch('empresas/loadList',
+      {
+        limit: 30
+        // where: {
+        //   cliente_id: this.model.ordem_servico.orcamento.cliente_id
+        // }
+      }).then((data) => {
+      this.empresa = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.empresa_id)) {
+          this.selectEmpresa.value = data.id
+          this.selectEmpresa.label = data.razao_social
+        }
+        return {
+          label: data.razao_social,
+          value: data.id
+        }
+      }
+      )
+    })
+    this.$store.dispatch('transportadores/loadList',
+      {
+        limit: 30
+        // where: {
+        //   cliente_id: this.model.ordem_servico.orcamento.cliente_id
+        // }
+      }).then((data) => {
+      this.transportadores = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.transportador_id)) {
+          this.selectTransportadores.value = data.id
+          this.selectTransportadores.label = data.razao_social
+        }
+        return {
+          label: data.razao_social,
+          value: data.id
+        }
+      })
+    })
+
+    this.statusOptions = this.$store.state.ordensServico.statusOptions.map(data => {
+      if (parseInt(data.value) === parseInt(this.model.status)) {
+        this.selectStatusOptions.value = data.value
+        this.selectStatusOptions.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+
+    this.coletas = this.$store.state.ordensServico.coletasOptions.map(data => {
+      if (parseInt(data.value) === parseInt(this.model.numero_coletas)) {
+        this.selectColetas.value = data.value
+        this.selectColetas.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+
+    this.tipoReservatorios = this.$store.state.ordensServico.tipoReservatorio.map(data => {
+      if (data.value === this.model.tipo_reservatorio) {
+        this.selectTipoReservatorios.value = data.value
+        this.selectTipoReservatorios.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+
+    this.situacaoEfluentes = this.$store.state.ordensServico.situacaoEfluentes.map(data => {
+      if (data.value === this.model.situacao_efluentes) {
+        this.selectSituacaoEfluentes.value = data.value
+        this.selectSituacaoEfluentes.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+
+    this.checagemFinal = this.$store.state.ordensServico.checagemFinal.map(data => {
+      if (data.value === this.model.checagem_final) {
+        this.selectChecagemFinal.value = data.value
+        this.selectChecagemFinal.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+
+    this.faturada = this.$store.state.ordensServico.faturado.map(data => {
+      if (data.value === this.model.faturado) {
+        this.selectFaturada.value = data.value
+        this.selectFaturada.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+    this.data_coleta = moment(this.model.data_emissao).format('DD/MM/YYYY')
+    console.log(this.model)
   }
 }
 </script>

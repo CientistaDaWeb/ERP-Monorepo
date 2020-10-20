@@ -554,17 +554,18 @@ export default {
               icon: 'fa fa-exclamation-triangle'
             })
           } else {
-            this.submitting = true
+            // this.submitting = true
             let data = {
-              os: this.os,
+              os: this.model.os,
               orcamento_id: this.orcamentoId,
-              empresa_id: this.model.empresa_id,
-              forma_pagamento_id: this.model.forma_pagamento_id,
-              endereco_id: this.model.endereco_id,
+              empresa_id: this.model.empresa_id.value,
+              forma_pagamento_id: this.model.forma_pagamento_id.value,
+              endereco_id: this.model.endereco_id.value,
               descricao: this.model.descricao,
               observacoes: this.model.observacoes,
-              parcelas: this.faturas
+              parcelas: this.model.parcelas
             }
+            console.log(data)
             this.$store.dispatch('contasReceber/salvaFaturas', data)
               .then(() => {
                 this.searchList({
@@ -577,7 +578,7 @@ export default {
             this.faturas = []
             this.os = []
             this.$validator.reset()
-            this.submitting = false
+            // this.submitting = false
           }
         })
     }
@@ -672,6 +673,7 @@ export default {
       }
     )
     this.getData()
+    console.log(this.orcamento)
   }
 }
 </script>
