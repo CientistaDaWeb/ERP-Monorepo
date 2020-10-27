@@ -123,12 +123,12 @@
             <q-input
               type="textarea"
               rows="3"
-              v-model="model.obs_coleta"
+              v-model="model.observacoes"
               label="Observações"
-              data-vv-name="obs_coleta"
+              data-vv-name="observacoes"
               v-validate="'required'"
-              :error="errors.has('obs_coleta')"
-              :error-message="errors.first('obs_coleta')"
+              :error="errors.has('observacoes')"
+              :error-message="errors.first('observacoes')"
             />
           </div>
         </div>
@@ -200,7 +200,7 @@
             <q-input
               type="textarea"
               rows="3"
-              v-model="model.obs_pos_coleta"
+              v-model="model.observacoes_poscoleta"
               label="Observações Pós Coleta"
               data-vv-name="obs_pos_coleta"
               v-validate="'required'"
@@ -244,12 +244,12 @@
             <q-input
               type="textarea"
               rows="3"
-              v-model="model.obs_faturamento"
+              v-model="model.observacao_faturamento"
               label="Observações para Faturamento"
-              data-vv-name="obs_faturamento"
+              data-vv-name="observacao_faturamento"
               v-validate="'required'"
-              :error="errors.has('obs_faturamento')"
-              :error-message="errors.first('obs_faturamento')"
+              :error="errors.has('observacao_faturamento')"
+              :error-message="errors.first('observacao_faturamento')"
             />
           </div>
         </div>
@@ -369,6 +369,7 @@ export default {
         this.$store.dispatch('clientesEnderecos/loadList', {})
         this.$store.dispatch('ordensServico/loadItem', this.id)
       } else {
+        // console.log(this.$route.params.orcamento_id)
         this.$store.commit('ordensServico/setItem', {})
       }
     },
@@ -385,38 +386,42 @@ export default {
 
             let data = {
               endereco: this.selectClientesEnderecos.value,
-              empresa: this.selectEmpresa.value,
-              transportador: this.selectTransportadores.value,
+              empresa_id: this.selectEmpresa.value,
+              transportador_id: this.selectTransportadores.value,
               data_coleta: this.data_coleta.split('/').reverse().join('-'),
               hora_coleta: this.model.hora_coleta,
               valor: this.model.valor,
               desconto: this.model.desconto,
               numero_coletas: this.selectColetas.value,
               status: this.selectStatusOptions.value,
-              obs_coleta: this.model.obs_coleta,
+              observacoes_poscoleta: this.model.observacoes_poscoleta,
               ordem_compra: this.model.ordem_compra,
               tipo_reservatorio: this.selectTipoReservatorios.value,
               ponto_coleta: this.selectColetas.value,
               metragem_mangueira: this.model.metragem_mangueira,
               situacao_tampas: this.model.situacao_tampas,
               situacao_efluentes: this.selectSituacaoEfluentes.value,
-              obs_pos_coleta: this.model.obs_pos_coleta,
+              observacoes: this.model.observacoes,
               horas_trabalhadas: this.model.horas_trabalhadas,
               checagem_final: this.selectChecagemFinal.value,
               faturada: this.selectFaturada.value,
-              obs_faturamento: this.model.obs_faturamento
+              orcamento_id: this.$route.params.orcamento_id,
+              observacao_faturamento: this.model.observacao_faturamento
             }
             if (this.action === 'edit') {
-              console.log(data)
-              this.$store.dispatch('ordensServico/updateItem', { data: data, id: this.id })
+              // .log(data)
+              this.$store.dispatch('ordensServico/updateItem', {
+                data: data,
+                id: this.id
+              })
             } else {
-              this.$store.dispatch('ordensServico/saveItem', data)
-                .then(() => {
-                  this.$router.push({
-                    name: 'ordens-servico.editar',
-                    params: { id: this.$store.state.ordensServico.currentId }
-                  })
+            //  console.log(data)
+              this.$store.dispatch('ordensServico/saveItem', data).then(() => {
+                this.$router.push({
+                  name: 'ordens-servico.editar',
+                  params: { id: this.$store.state.ordensServico.currentId }
                 })
+              })
             }
             this.$validator.reset()
             this.submitting = false
@@ -644,7 +649,7 @@ export default {
       }
     })
     this.data_coleta = moment(this.model.data_emissao).format('DD/MM/YYYY')
-    console.log(this.model)
+    // console.log(this.model)
   }
 }
 </script>

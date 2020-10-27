@@ -75,6 +75,7 @@ export default {
     ({ commit, state }, payload) => {
       const module = state.module
       const url = `${process.env.DATA_URL}api/${module.url}`
+      console.log(url)
       return axios
         .post(url, payload)
         .then(({ data }) => {

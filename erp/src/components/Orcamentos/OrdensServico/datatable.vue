@@ -215,7 +215,7 @@ export default {
     },
     searchList (payload) {
       payload.where = {
-        orcamento_id: this.orcamento_id
+        orcamento_id: this.orcamentoId
       }
       this.$store.dispatch('ordensServico/searchList', payload)
         .then((data) => {
