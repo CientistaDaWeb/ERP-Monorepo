@@ -42,7 +42,12 @@ class Mtrs extends LogTrait
             [
                 'column' => 'dono',
                 'type' => 'like'
-            ]
+            ],
+        'id' =>
+            [
+                'column' => 'id',
+                'type' => 'like'
+            ],
     ];
 
     public function ordemServico()
