@@ -19,5 +19,5 @@ return [
     'allowedMethods' => ['*'],
     'exposedHeaders' => [],
     'maxAge' => 0,
-    'paths' => ['api/*']
+    'paths' => ['api/*', 'oauth/*']
 ];
