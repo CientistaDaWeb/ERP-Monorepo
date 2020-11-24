@@ -12,36 +12,36 @@
 */
 
 Route::get(
-  '/',
-  function () {
-    echo 'API da Acquasana';
-  }
+    '/',
+    function () {
+        echo 'API ' . env('APP_NAME');
+    }
 );
 
 Route::get(
-  '/password',
-  function () {
-    $random = \Illuminate\Support\Str::random(12);
-    echo 'Senha: ' . $random . '<br />';
-    $hash = Hash::make($random);
-    echo 'Hash: ' . $hash;
-  }
+    '/password',
+    function () {
+        $random = \Illuminate\Support\Str::random(12);
+        echo 'Senha: ' . $random . '<br />';
+        $hash = Hash::make($random);
+        echo 'Hash: ' . $hash;
+    }
 );
 
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get(
-  '/oauth/verify/client-token',
-  function (Request $request) {
-  }
+    '/oauth/verify/client-token',
+    function (Request $request) {
+    }
 )->middleware('client.token');
 
 Route::get(
-  '/oauth/verify/user-token',
-  function (Request $request) {
-    return response(['client_id' => $request["oauth_client_id"]], 200);
-  }
+    '/oauth/verify/user-token',
+    function (Request $request) {
+        return response(['client_id' => $request["oauth_client_id"]], 200);
+    }
 )->middleware('client');
 
 Auth::routes();

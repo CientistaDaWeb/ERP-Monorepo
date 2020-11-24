@@ -56,7 +56,7 @@ RUN rm -rf /var/cache/apk/*
 RUN usermod -u 1000 www-data
 
 # Copy existing application directory permissions
-COPY --chown=www-data:www-data . /var/www/html
+#COPY --chown=www-data:www-data . /var/www/html
 
 # Change current user to www
 USER www-data

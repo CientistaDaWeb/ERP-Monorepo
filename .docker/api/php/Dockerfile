@@ -27,6 +27,7 @@ RUN apk update && apk add --no-cache \
     php7-dom \
     php7-session \
     php7-zlib \
+    supervisor \
     bash
 
 # Add and Enable PHP-PDO Extenstions
@@ -45,6 +46,9 @@ RUN apk add --no-cache $PHPIZE_DEPS \
 # Install PHP Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+# Add Supervisor config
+COPY ./.docker/api/supervisor/supervisord.conf /etc/supervisord.conf
+
 # Add Entrypoint
 COPY /.docker/api/php/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
@@ -56,7 +60,7 @@ RUN rm -rf /var/cache/apk/*
 RUN usermod -u 1000 www-data
 
 # Copy existing application directory permissions
-COPY --chown=www-data:www-data . /var/www/html
+#COPY --chown=www-data:www-data . /var/www/html
 
 # Change current user to www
 USER www-data

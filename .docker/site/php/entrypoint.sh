@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e
 
-composer install -o && php-fpm
+/usr/bin/supervisord -c /etc/supervisord.conf
