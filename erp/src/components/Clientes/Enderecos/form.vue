@@ -6,7 +6,7 @@
           <div class="col col-sm-3 col-xs-12">
             <q-select
               filter
-              v-model="model.categoria_id"
+              v-model="selectCategorias"
               :options="categorias"
               label="Categoria"
               data-vv-name="Categoria"
@@ -135,10 +135,7 @@ import {
 export default {
   name: 'ClientesEnderecosForm',
   props: {
-    clienteId: {
-      type: Number,
-      required: true
-    },
+
     action: {
       type: String,
       default: 'new'
@@ -154,7 +151,12 @@ export default {
     QSelect
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    categorias: [],
+    selectCategorias: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -179,7 +181,7 @@ export default {
             this.submitting = true
 
             let data = {
-              cliente_id: this.$route.params.cliente_id,
+              cliente_id: this.cliente_id,
               categoria_id: this.model.categoria_id.value,
               estado_id: this.model.estado_id.value,
               municipio_id: this.model.municipio_id.value,
@@ -239,6 +241,19 @@ export default {
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('enderecosCategorias/loadList',
+      {}).then((data) => {
+      this.categorias = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.categoria_id)) {
+          this.selectCategorias.value = data.id
+          this.selectCategorias.label = data.categoria
+        }
+        return {
+          label: data.categoria,
+          value: data.id
+        }
+      })
+    })
   }
 }
 </script>

@@ -65,7 +65,7 @@
             >
               <q-btn-group flat>
                 <q-btn
-                  @click="$router.push({name:'clientes-enderecos.editar', params: {id: props.row.id, cliente_id: cliente_id }})"
+                  @click="$router.push({name:'clientes-enderecos.editar', params: {id: props.row.id }})"
                   icon="fa fa-edit"
                   size="sm"
                   color="primary"
@@ -121,12 +121,7 @@ export default {
     QCheckbox
   },
   name: 'ClientesEnderecosDatatable',
-  props: {
-    clienteId: {
-      type: Number,
-      required: true
-    }
-  },
+
   data: () => ({
     selected: [],
     filter: '',
