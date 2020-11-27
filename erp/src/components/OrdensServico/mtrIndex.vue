@@ -14,6 +14,28 @@
       color="primary"
     >
       <template
+        slot="top-left"
+      >
+        <q-btn-group outline>
+          <q-btn
+            color="positive"
+            @click="$router.push(
+              {name:'mtrs.novo', params: {ordem_servico_id: $route.params.id,orcamento_id: $route.params.orcamento_id }}
+            )"
+            icon="fa fa-plus-circle"
+            glossy
+            :label="module.btn.new"
+          />
+          <q-btn
+            color="negative"
+            @click="deleteItem"
+            icon="fa fa-trash"
+            glossy
+            :label="module.btn.del"
+          />
+        </q-btn-group>
+      </template>
+      <template
         slot="top-right"
       >
         <q-input
@@ -48,7 +70,7 @@
           >
             <q-btn-group flat>
               <q-btn
-                @click="$router.push({name:'mtrs.editar', params: {id: props.row.id }})"
+                @click="$router.push({name:'mtrs.editar', params: {id: props.row.id,orcamento_id:$route.params.orcamento_id,ordem_servico_id:$route.params.id }})"
                 icon="fa fa-edit"
                 size="sm"
                 color="primary"
@@ -168,12 +190,53 @@ export default {
     ]
   }),
   methods: {
+    deleteItem () {
+      if (this.selected.length > 0) {
+        this.$q.dialog(
+          {
+            title: this.module.btn.del,
+            message: 'Deseja excluir esses ' + this.module.plural + '?',
+            ok: 'Sim, tenho certeza',
+            cancel: 'Não'
+          })
+          .onOk(() => {
+            let id = ''
+            for (var i = 0; i < this.selected.length; i++) {
+              id = this.selected[i]['id']
+              this.$store.dispatch('ordensServico/deleteItem', id)
+                .then(() => {
+                  this.searchList({
+                    pagination: this.pagination,
+                    filter: this.filter
+                  })
+                })
+            }
+            this.selected = []
+          })
+      } else {
+        this.$q.notify({
+          message: 'Nenhum registro selecionado',
+          color: 'negative',
+          icon: 'fa fa-ban'
+        })
+      }
+    },
     searchList (payload) {
+      payload.where = {
+        ordem_servico_id: this.$route.params.id // this.orcamentoId
+      }
       this.$store.dispatch('mtrs/searchList', payload)
         .then((data) => {
           this.pagination = data
         })
     }
+
+    // searchList (payload) {
+    //   this.$store.dispatch('mtrs/searchList', payload)
+    //     .then((data) => {
+    //       this.pagination = data
+    //     })
+    // }
   },
   computed: {
     list () {
@@ -194,7 +257,11 @@ export default {
       set (value) {
         this.$store.commit('mtrs/setFilter', value)
       }
+    },
+    module () {
+      return this.$store.state.mtrs.module
     }
+
   },
   mounted () {
     this.searchList(
@@ -203,6 +270,7 @@ export default {
         filter: this.filter
       }
     )
+    console.log(this.$route)
   }
 }
 </script>

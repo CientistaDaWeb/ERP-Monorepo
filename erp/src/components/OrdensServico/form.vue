@@ -525,13 +525,14 @@ export default {
     // }
   },
   mounted () {
+    // console.log(this.$store.state.orcamentos.item.cliente_id)
     this.getData()
     this.$store.dispatch('clientesEnderecos/loadList',
       {
-        limit: 30
-        // where: {
-        //   cliente_id: this.model.ordem_servico.orcamento.cliente_id
-        // }
+        // limit: 30
+        where: {
+          cliente_id: this.$store.state.orcamentos.item.cliente_id
+        }
       }).then((data) => {
       this.clientesEnderecos = data.data.map(data => {
         if (parseInt(data.id) === parseInt(this.model.endereco_id)) {

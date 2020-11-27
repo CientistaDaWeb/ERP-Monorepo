@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <q-breadcrumbs>
+    <q-breadcrumbs class="print-hide">
       <q-breadcrumbs-el
         label="Ordem de Seviço"
         icon="fa fa-align-justify"

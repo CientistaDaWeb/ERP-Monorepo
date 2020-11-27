@@ -5,7 +5,7 @@
         label="Orçamentos"
         icon="fa fa-align-justify"
       />
-      <q-breadcrumbs-el>Editar Orçamento</q-breadcrumbs-el>
+      <q-breadcrumbs-el>Editar Orçamento {{ $route.params.id }}</q-breadcrumbs-el>
       <q-breadcrumbs-el>{{ model.name }}</q-breadcrumbs-el>
     </q-breadcrumbs>
     <br>
@@ -66,7 +66,7 @@
         class="tab-pane-content"
       >
         <OrcamentosServicosDatatable
-          :orcamentoId="id"
+          :orcamento-id="id"
         />
       </q-tab-panel>
       <q-tab-panel
@@ -91,7 +91,7 @@
         class="tab-pane-content"
       >
         <OrcamentosContasReceberDatatable
-          :orcamentoId="id"
+          :orcamento-id="id"
         />
       </q-tab-panel>
       <q-tab-panel
@@ -99,7 +99,7 @@
         class="tab-pane-content"
       >
         <OrcamentosOrdensServicoDatatable
-          :orcamentoId="id"
+          :orcamento-id="id"
         />
       </q-tab-panel>
       <q-tab-panel
@@ -107,7 +107,7 @@
         class="tab-pane-content"
       >
         <OrcamentosNotasFiscaisDatatable
-          :orcamentoId="id"
+          :orcamento-id="id"
         />
       </q-tab-panel>
       <q-tab-panel
@@ -115,7 +115,7 @@
         class="tab-pane-content"
       >
         <OrcamentosContratosDatatable
-          :orcamentoId="id"
+          :orcamento-id="id"
         />
       </q-tab-panel>
     </q-tab-panels>

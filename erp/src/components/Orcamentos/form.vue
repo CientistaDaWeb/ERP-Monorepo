@@ -305,6 +305,7 @@ export default {
   //   }
   },
   mounted () {
+    // console.log(this.model.cliente_id)
     this.getData()
     this.$store.dispatch('empresas/loadList',
       {}).then((data) => {

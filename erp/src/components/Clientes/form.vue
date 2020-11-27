@@ -17,7 +17,7 @@
           <div class="col col-sm-2 col-xs-12">
             <q-input
               v-model="model.documento"
-              label="Dcoumento"
+              label="Documento"
               data-vv-name="Documento"
               v-validate="'required'"
               :error="errors.has('Documento')"
@@ -71,7 +71,7 @@
           <div class="col col-sm-3 col-xs-12">
             <q-input
               type="email"
-              v-model="model.email_cobrança"
+              v-model="model.email_cobranca"
               label="E-mail de Cobrança"
             />
           </div>
@@ -234,7 +234,7 @@ export default {
             this.submitting = true
 
             let data = {
-              documento_tipo: this.model.documento_tipo,
+              documento_tipo: this.model.documento_tipo.value,
               documento: this.model.documento,
               razao_social: this.model.razao_social,
               nome_fantasia: this.model.nome_fantasia,
@@ -247,15 +247,17 @@ export default {
               numero_fepan: this.model.numero_fepan,
               sindico: this.model.sindico,
               zelador: this.model.zelador,
-              administrador_id: this.model.administrador_id,
+              administrador_id: this.model.administrador_id.value,
               usuario: this.model.usuario,
               senha: this.model.senha,
               observacoes: this.model.observacoes,
+              categoria_id: 3,
               observacoes_faturamento: this.model.observacoes_faturamento
             }
             if (this.action === 'edit') {
               this.$store.dispatch('clientes/updateItem', { data: data, id: this.id })
             } else {
+              console.log(data)
               this.$store.dispatch('clientes/saveItem', data)
                 .then(() => {
                   this.$router.push({

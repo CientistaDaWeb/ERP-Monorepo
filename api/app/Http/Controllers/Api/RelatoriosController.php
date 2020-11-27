@@ -603,21 +603,23 @@ class RelatoriosController extends Controller
     if (isset($data['data_final'])) {
       $dataFinal = new Carbon($data['data_final']);
     }
-    $query->whereBetween('data_coleta', [$dataInicial, $dataFinal]);
+    //$query->whereBetween('data_coleta', [$dataInicial, $dataFinal]);
+    $query->limit(10);
+    // if (isset($data["status"])){ 
+    //   if ($data['status']) {
+    //     $query->where('status',$data['status']);
+    //   }
+    // }
+    
+    // if ($data['empresa_id']) {
+    //   $query->where('empresa_id', $data['empresa_id']);
+    // }
 
-    if ($data['status']) {
-      $query->where('status', $data['status']);
-    }
-
-    if ($data['empresa_id']) {
-      $query->where('empresa_id', $data['empresa_id']);
-    }
-
-    if ($data['cliente_id']) {
-      $query->whereHas('orcamento', function ($query) use ($data) {
-        $query->where('cliente_id', $data['cliente_id']);
-      });
-    }
+    // if ($data['cliente_id']) {
+    //   $query->whereHas('orcamento', function ($query) use ($data) {
+    //     $query->where('cliente_id', $data['cliente_id']);
+    //   });
+    // }
 
     return $query->get();
   }

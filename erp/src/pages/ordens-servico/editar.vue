@@ -2,10 +2,16 @@
   <q-page padding>
     <q-breadcrumbs>
       <q-breadcrumbs-el
-        label="Ordens de Serviço"
+        :to="`/orcamentos/${$route.params.orcamento_id} /editar`"
         icon="fa fa-align-justify"
-      />
-      <q-breadcrumbs-el>Editar Ordem de Serviço</q-breadcrumbs-el>
+      >
+        Orçamento {{ $route.params.orcamento_id }}
+      </q-breadcrumbs-el>
+      <q-breadcrumbs-el>
+        Ordens de Serviço
+      </q-breadcrumbs-el>
+
+      <q-breadcrumbs-el>Editar Ordem de Serviço {{ $route.params.id }}</q-breadcrumbs-el>
       <q-breadcrumbs-el>{{ model.name }}</q-breadcrumbs-el>
     </q-breadcrumbs>
     <br>
@@ -132,6 +138,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.$route.params.orcamento_id)
     this.initTabs()
   }
 }

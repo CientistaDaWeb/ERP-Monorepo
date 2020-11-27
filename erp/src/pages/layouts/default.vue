@@ -1,9 +1,11 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout
+    view="lHh Lpr lFf"
+  >
     <Loader />
     <q-header>
       <q-toolbar
-        class="bg-primary text-white print-hide"
+        class="bg-primary text-white"
         :inverted="$q.theme === 'ios'"
       >
         <q-btn
@@ -28,12 +30,16 @@
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
+
     <q-drawer
       v-model="leftDrawerOpen"
       content-class="bg-primary text-white"
+      class="print-hide"
     >
       <q-card
-        class="bg-primary text-white"
+        class="
+      bg-primary
+      text-white"
       >
         <q-card-section>
           <img
@@ -50,10 +56,10 @@
         <q-separator />
         <div class="row">
           <div class="col col-sm-7">
-            <!--
+          <!--
             // TODO: Desenvolver o formulário corretamente
             -->
-            <!--
+          <!--
             <q-btn
               @click="$router.push({name:'meus-dados.index'})"
               icon="fa fa-user"
@@ -83,13 +89,22 @@
         :user_id="currentUser.id"
       />
     </q-drawer>
+    <img
+      src="~assets/logo.png"
+      class="print-only"
+      style="max-height: 75px"
+    >
     <q-page-container>
       <transition
+        id="teste"
+
         appear
         enter-active-class="animated slideInLeft"
         leave-active-class="animated slideOutRight"
       >
-        <router-view :key="$route.fullPath" />
+        <router-view
+          :key="$route.fullPath"
+        />
       </transition>
     </q-page-container>
   </q-layout>
@@ -144,4 +159,35 @@ export default {
 </script>
 
 <style>
+@media print {
+
+  header,
+  footer {
+    display:none;
+  }
+  body {
+    overflow: auto;
+    height: auto;
+  }
+  .scroll-y {
+     height: auto;
+     overflow: visible;
+  }
+  #q-app:id(div) {
+    color: red;
+}
+
+  .table th{
+    background-color: rgb(202, 202, 202) !important;
+    -webkit-print-color-adjust: exact;
+    color:black;
+}
+
+  aside > div {
+    display: hide !important;
+    background-color: blue !important;
+  }
+  main {left:-300px !important;}
+
+}
 </style>

@@ -146,17 +146,19 @@ export default {
             this.submitting = true
 
             let data = {
-              numero_mtr: this.model.mtr,
-              nome: this.model.terceiro,
-              mtr_gerado: this.selectMTRGerado.value,
-              gerar_certificado: this.selectMtrGerarCertificado.value,
-              endereco: this.selectClientesEnderecos.value
+              mtr: this.model.mtr,
+              ordem_servico_id: this.$route.params.ordem_servico_id,
+              terceiro: this.model.terceiro,
+              dono: this.selectMTRGerado.value,
+              certificado: this.selectMtrGerarCertificado.value,
+              endereco_id: this.selectClientesEnderecos.value
             }
             if (this.action === 'edit') {
-              console.log(this.id)
-              this.$store.dispatch('mtrs/updateItem', { data: data, id: this.id })
+              // console.log(this.id)
+              this.$store.dispatch('mtrs/updateItem', { data: data, id: this.id, orcamento_id: this.$route.params.orcamento_id, ordem_servico_id: this.$route.params.ordem_servico_id })
               // console.log(data)
             } else {
+              console.log(data)
               this.$store.dispatch('mtrs/saveItem', data)
                 .then(() => {
                   this.$router.push({
@@ -178,20 +180,23 @@ export default {
 
   },
   mounted () {
+    console.log(this.$route.params.ordem_servico_id)
     this.getData()
     this.$store.dispatch('clientesEnderecos/loadList',
       {
         where: {
-          cliente_id: this.model.ordem_servico.orcamento.cliente_id
+          cliente_id: this.$store.state.orcamentos.item.cliente_id
         }
       }).then((data) => {
       this.clientesEnderecos = data.data.map(data => {
-        if (parseInt(data.id) === parseInt(this.model.ordem_servico.endereco_id)) {
+        console.log(this.model.endereco_id)
+        console.log(data.id)
+        if (data.id === this.model.endereco_id) {
           this.selectClientesEnderecos.value = data.id
-          this.selectClientesEnderecos.label = data.endereco + ' ' + data.numero + ' - ' + data.bairro
+          this.selectClientesEnderecos.label = data.id + ' ' + data.numero + ' - ' + data.bairro
         }
         return {
-          label: data.endereco,
+          label: data.id + ' ' + data.numero + ' - ' + data.bairro,
           value: data.id
         }
       }

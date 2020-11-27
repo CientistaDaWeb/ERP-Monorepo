@@ -160,6 +160,7 @@ export default {
     }
   },
   mounted () {
+    console.log('sdasd')
     this.getData()
   }
 }

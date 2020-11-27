@@ -1,9 +1,10 @@
 <template>
-  <div>
+  <div class="print-hide">
     <q-list
       no-border
       link
       inset-delimiter
+      class="print-hide"
     >
       <q-item-label
         header

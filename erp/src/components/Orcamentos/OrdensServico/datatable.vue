@@ -47,7 +47,7 @@
           >
             <q-btn-group flat>
               <q-btn
-                @click="$router.push({name:'ordens-servico.editar', params: {id: props.row.id, orcamento_id: orcamento_id }})"
+                @click="$router.push({name:'ordens-servico.editar', params: {id: props.row.id, orcamento_id: props.row.orcamento_id }})"
                 icon="fa fa-edit"
                 size="sm"
                 color="primary"

@@ -39,6 +39,7 @@ export default {
     const module = state.module
     const limit = payload.limit ? payload.limit : '10000'
     const url = `${process.env.DATA_URL}api/${module.url}?limit=${limit}&filter=${filter}` + where
+    console.log(url)
     commit('setList', [])
     return axios
       .get(url)
