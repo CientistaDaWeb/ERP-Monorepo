@@ -179,10 +179,10 @@ export default {
             this.submitting = true
 
             let data = {
-              cliente_id: this.cliente_id,
-              categoria_id: this.model.categoria_id,
-              estado_id: this.model.estado_id,
-              municipio_id: this.model.municipio_id,
+              cliente_id: this.$route.params.cliente_id,
+              categoria_id: this.model.categoria_id.value,
+              estado_id: this.model.estado_id.value,
+              municipio_id: this.model.municipio_id.value,
               cep: this.model.cep,
               endereco: this.model.endereco,
               numero: this.model.numero,

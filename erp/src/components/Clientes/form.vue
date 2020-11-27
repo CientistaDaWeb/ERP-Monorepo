@@ -291,6 +291,7 @@ export default {
   },
   mounted () {
     this.getData()
+    console.log(this.$route.params.id)
   }
 }
 </script>

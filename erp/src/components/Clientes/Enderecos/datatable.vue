@@ -19,7 +19,7 @@
           <q-btn-group outline>
             <q-btn
               color="positive"
-              @click="$router.push({name:'clientes-enderecos.novo', params: {cliente_id: cliente_id}})"
+              @click="$router.push({name:'clientes-enderecos.novo', params: {cliente_id: $route.params.id}})"
               icon="fa fa-plus-circle"
               glossy
               label="Novo Endereço"
@@ -198,7 +198,7 @@ export default {
     },
     searchList (payload) {
       payload.where = {
-        cliente_id: this.cliente_id
+        cliente_id: 1892
       }
       this.$store.dispatch('clientesEnderecos/searchList', payload)
         .then((data) => {
