@@ -66,7 +66,7 @@
           <div class="col col-sm-5 col-xs-12">
             <q-select
               filter
-              v-model="model.municipio_id"
+              v-model="selectMunicipios"
               :options="municipios"
               label="Município"
               data-vv-name="Município"
@@ -78,9 +78,9 @@
           <div class="col col-sm-3 col-xs-12">
             <q-select
               filter
-              v-model="model.estado_id"
+              v-model="selectEstados"
               label="Estado"
-              :options="ufs"
+              :options="estados"
               data-vv-name="Estado"
               v-validate="'required'"
               :error="errors.has('Estado')"
@@ -156,6 +156,16 @@ export default {
     selectCategorias: {
       label: '',
       value: ''
+    },
+    estados: [],
+    selectEstados: {
+      label: '',
+      value: ''
+    },
+    municipios: [],
+    selectMunicipios: {
+      label: '',
+      value: ''
     }
   }),
   methods: {
@@ -165,9 +175,9 @@ export default {
       } else {
         this.$store.commit('clientesEnderecos/setItem', {})
       }
-      this.$store.dispatch('enderecosCategorias/loadList', {})
-      this.$store.dispatch('estados/loadList', {})
-      this.$store.dispatch('municipios/loadList', {})
+      // this.$store.dispatch('enderecosCategorias/loadList', {})
+      // this.$store.dispatch('estados/loadList', {})
+      // this.$store.dispatch('municipios/loadList', {})
     },
     save () {
       this.$validator.validate()
@@ -181,10 +191,10 @@ export default {
             this.submitting = true
 
             let data = {
-              cliente_id: this.cliente_id,
-              categoria_id: this.model.categoria_id.value,
-              estado_id: this.model.estado_id.value,
-              municipio_id: this.model.municipio_id.value,
+              cliente_id: this.$route.params.cliente_id,
+              categoria_id: this.selectCategorias.value,
+              estado_id: this.selectEstados.value,
+              municipio_id: this.selectMunicipios.value,
               cep: this.model.cep,
               endereco: this.model.endereco,
               numero: this.model.numero,
@@ -213,34 +223,35 @@ export default {
   computed: {
     model () {
       return this.$store.state.clientesEnderecos.item
-    },
-    ufs () {
-      return this.$store.state.estados.list.map(d =>
-        ({
-          label: d.estado + ' (' + d.uf + ')',
-          value: d.id
-        })
-      )
-    },
-    municipios () {
-      return this.$store.state.municipios.list.map(d =>
-        ({
-          label: d.nome,
-          value: d.id
-        })
-      )
-    },
-    categorias () {
-      return this.$store.state.enderecosCategorias.list.map(d =>
-        ({
-          label: d.categoria,
-          value: d.id
-        })
-      )
     }
+    // ufs () {
+    //   return this.$store.state.estados.list.map(d =>
+    //     ({
+    //       label: d.estado + ' (' + d.uf + ')',
+    //       value: d.id
+    //     })
+    //   )
+    // },
+    // municipios () {
+    //   return this.$store.state.municipios.list.map(d =>
+    //     ({
+    //       label: d.nome,
+    //       value: d.id
+    //     })
+    //   )
+    // },
+    // categorias () {
+    //   return this.$store.state.enderecosCategorias.list.map(d =>
+    //     ({
+    //       label: d.categoria,
+    //       value: d.id
+    //     })
+    //   )
+    // }
   },
   mounted () {
     this.getData()
+    console.log(this.$route.params)
     this.$store.dispatch('enderecosCategorias/loadList',
       {}).then((data) => {
       this.categorias = data.data.map(data => {
@@ -250,6 +261,34 @@ export default {
         }
         return {
           label: data.categoria,
+          value: data.id
+        }
+      })
+    })
+
+    this.$store.dispatch('estados/loadList',
+      {}).then((data) => {
+      this.estados = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.estado_id)) {
+          this.selectEstados.value = data.id
+          this.selectEstados.label = data.estado
+        }
+        return {
+          label: data.estado,
+          value: data.id
+        }
+      })
+    })
+
+    this.$store.dispatch('municipios/loadList',
+      {}).then((data) => {
+      this.municipios = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.municipio_id)) {
+          this.selectMunicipios.value = data.id
+          this.selectMunicipios.label = data.nome
+        }
+        return {
+          label: data.nome,
           value: data.id
         }
       })

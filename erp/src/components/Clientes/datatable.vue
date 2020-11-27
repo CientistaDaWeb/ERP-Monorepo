@@ -218,7 +218,7 @@ export default {
             ok: 'Sim, tenho certeza',
             cancel: 'Não'
           })
-          .then(() => {
+          .onOk(() => {
             let id = ''
             for (var i = 0; i < this.selected.length; i++) {
               id = this.selected[i]['id']
@@ -230,15 +230,6 @@ export default {
                   })
                 })
             }
-            this.selected = []
-          })
-          .catch(error => {
-            console.log(error)
-            this.$q.notify({
-              message: 'Ação cancelada',
-              color: 'info',
-              icon: 'fa fa-check-circle'
-            })
             this.selected = []
           })
       } else {

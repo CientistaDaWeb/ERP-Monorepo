@@ -65,7 +65,7 @@
             >
               <q-btn-group flat>
                 <q-btn
-                  @click="$router.push({name:'clientes-enderecos.editar', params: {id: props.row.id }})"
+                  @click="$router.push({name:'clientes-enderecos.editar', params: {id: props.row.id, cliente_id:$route.params.id }})"
                   icon="fa fa-edit"
                   size="sm"
                   color="primary"
@@ -160,9 +160,8 @@ export default {
             ok: 'Sim, tenho certeza',
             cancel: 'Não'
           })
-          .then(() => {
+          .onOk(() => {
             let id = ''
-            console.log(this.selected)
             for (var i = 0; i < this.selected.length; i++) {
               id = this.selected[i]['id']
               this.$store.dispatch('clientesEnderecos/deleteItem', id)
@@ -174,14 +173,6 @@ export default {
                 })
             }
             this.selected = []
-          })
-          .catch(error => {
-            console.log(error)
-            this.$q.notify({
-              message: 'Ação cancelada',
-              color: 'info',
-              icon: 'fa fa-check-circle'
-            })
           })
       } else {
         this.$q.notify({
@@ -220,6 +211,7 @@ export default {
         pagination: this.pagination,
         filter: this.filter
       }
+
     )
   }
 }
