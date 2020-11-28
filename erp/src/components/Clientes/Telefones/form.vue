@@ -6,7 +6,7 @@
           <div class="col col-sm-3 col-xs-12">
             <q-select
               filter
-              v-model="model.categoria_id"
+              v-model="selectCategorias"
               :options="categorias"
               label="Categoria"
               data-vv-name="Categoria"
@@ -48,7 +48,7 @@
           <div class="col col-sm-2 col-xs-12">
             <q-select
               filter
-              v-model="model.padrao"
+              v-model="selectPadroes"
               :options="padroes"
               label="Padrão"
               data-vv-name="Padrão"
@@ -96,10 +96,7 @@ import {
 export default {
   name: 'ClientesTelefonesForm',
   props: {
-    clienteId: {
-      type: Number,
-      required: true
-    },
+
     action: {
       type: String,
       default: 'new'
@@ -115,7 +112,17 @@ export default {
     QSelect
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    padroes: [],
+    selectPadroes: {
+      label: '',
+      value: ''
+    },
+    categorias: [],
+    selectCategorias: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -138,13 +145,13 @@ export default {
             this.submitting = true
 
             let data = {
-              cliente_id: this.cliente_id,
-              categoria_id: this.model.categoria_id,
+              cliente_id: this.$route.params.cliente_id,
+              categoria_id: this.selectCategorias.value,
               telefone: this.model.telefone,
               informacao: this.model.informacao,
               email: this.model.email,
               contato: this.model.contato,
-              padrao: this.model.padrao
+              padrao: this.selectPadroes.value
             }
             if (this.action === 'edit') {
               this.$store.dispatch('clientesTelefones/updateItem', { data: data, id: this.id })
@@ -166,21 +173,45 @@ export default {
   computed: {
     model () {
       return this.$store.state.clientesTelefones.item
-    },
-    categorias () {
-      return this.$store.state.telefonesCategorias.list.map(d =>
-        ({
-          label: d.categoria,
-          value: d.id
-        })
-      )
-    },
-    padroes () {
-      return this.$store.state.clientesTelefones.padroes
     }
+    // categorias () {
+    //   return this.$store.state.telefonesCategorias.list.map(d =>
+    //     ({
+    //       label: d.categoria,
+    //       value: d.id
+    //     })
+    //   )
+    // },
+    // padroes () {
+    //   return this.$store.state.clientesTelefones.padroes
+    // }
   },
   mounted () {
     this.getData()
+    this.padroes = this.$store.state.clientesTelefones.padroes.map(data => {
+      if (data.value === this.model.padrao) {
+        this.selectPadroes.value = data.value
+        this.selectPadroes.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+
+    this.$store.dispatch('telefonesCategorias/loadList',
+      {}).then((data) => {
+      this.categorias = data.data.map(data => {
+        if (data.id === this.model.categoria_id) {
+          this.selectCategorias.value = data.id
+          this.selectCategorias.label = data.categoria
+        }
+        return {
+          label: data.categoria,
+          value: data.id
+        }
+      })
+    })
   }
 }
 </script>

@@ -251,7 +251,7 @@ export default {
   },
   mounted () {
     this.getData()
-    console.log(this.$route.params)
+    //  console.log(this.$route.params)
     this.$store.dispatch('enderecosCategorias/loadList',
       {}).then((data) => {
       this.categorias = data.data.map(data => {

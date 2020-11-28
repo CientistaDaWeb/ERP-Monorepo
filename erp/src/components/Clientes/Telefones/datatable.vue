@@ -19,7 +19,7 @@
           <q-btn-group outline>
             <q-btn
               color="positive"
-              @click="$router.push({name:'clientes-telefones.novo', params: {cliente_id: cliente_id}})"
+              @click="$router.push({name:'clientes-telefones.novo', params: {cliente_id: $route.params.id}})"
               icon="fa fa-plus-circle"
               glossy
               label="Novo Telefone"
@@ -65,7 +65,7 @@
             >
               <q-btn-group flat>
                 <q-btn
-                  @click="$router.push({name:'clientes-telefones.editar', params: {id: props.row.id, cliente_id: cliente_id }})"
+                  @click="$router.push({name:'clientes-telefones.editar', params: {id: props.row.id, cliente_id: $route.params.id }})"
                   icon="fa fa-edit"
                   size="sm"
                   color="primary"
@@ -134,10 +134,7 @@ export default {
   },
   name: 'ClientesTelefonesDatatable',
   props: {
-    clienteId: {
-      type: Number,
-      required: true
-    }
+
   },
   data: () => ({
     selected: [],
@@ -184,14 +181,13 @@ export default {
       if (this.selected.length > 0) {
         this.$q.dialog(
           {
-            title: 'Excluir Endereço',
+            title: 'Excluir Telefone',
             message: 'Deseja excluir esses registros?',
             ok: 'Sim, tenho certeza',
             cancel: 'Não'
           })
-          .then(() => {
+          .onOk(() => {
             let id = ''
-            console.log(this.selected)
             for (var i = 0; i < this.selected.length; i++) {
               id = this.selected[i]['id']
               this.$store.dispatch('clientesTelefones/deleteItem', id)
@@ -204,14 +200,6 @@ export default {
             }
             this.selected = []
           })
-          .catch(error => {
-            console.log(error)
-            this.$q.notify({
-              message: 'Ação cancelada',
-              color: 'info',
-              icon: 'fa fa-check-circle'
-            })
-          })
       } else {
         this.$q.notify({
           message: 'Nenhum registro selecionado',
@@ -222,7 +210,7 @@ export default {
     },
     searchList (payload) {
       payload.where = {
-        cliente_id: this.cliente_id
+        cliente_id: this.$route.params.id
       }
       this.$store.dispatch('clientesTelefones/searchList', payload)
         .then((data) => {

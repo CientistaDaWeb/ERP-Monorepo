@@ -6,7 +6,7 @@
           <div class="col col-sm-2 col-xs-12">
             <q-select
               :options="tipos"
-              v-model="model.documento_tipo"
+              v-model="selectTipos"
               label="Tipo"
               data-vv-name="Tipo"
               v-validate="'required'"
@@ -112,7 +112,7 @@
             <q-select
               filter
               :options="administradores"
-              v-model="model.administrador_id"
+              v-model="selectAdministradores"
               label="Administrador de Condomínio"
               data-vv-name="Admnistrador de Condomínio"
               v-validate="'required'"
@@ -191,7 +191,7 @@ import {
   QBtn,
   QSelect
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 export default {
   name: 'ClientesForm',
@@ -211,7 +211,18 @@ export default {
     QSelect
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    tipos: [],
+    selectTipos: {
+      label: '',
+      value: ''
+    },
+    administradores: [],
+    selectAdministradores: {
+      label: '',
+      value: ''
+    }
+
   }),
   methods: {
     getData () {
@@ -220,7 +231,7 @@ export default {
       } else {
         this.$store.commit('clientes/setItem', {})
       }
-      this.$store.dispatch('administradoresCondominio/loadList', {})
+      // this.$store.dispatch('administradoresCondominio/loadList', {})
     },
     save () {
       this.$validator.validate()
@@ -234,7 +245,7 @@ export default {
             this.submitting = true
 
             let data = {
-              documento_tipo: this.model.documento_tipo.value,
+              documento_tipo: this.selectTipos.value,
               documento: this.model.documento,
               razao_social: this.model.razao_social,
               nome_fantasia: this.model.nome_fantasia,
@@ -247,7 +258,7 @@ export default {
               numero_fepan: this.model.numero_fepan,
               sindico: this.model.sindico,
               zelador: this.model.zelador,
-              administrador_id: this.model.administrador_id.value,
+              administrador_id: this.selectAdministradores.value,
               usuario: this.model.usuario,
               senha: this.model.senha,
               observacoes: this.model.observacoes,
@@ -257,7 +268,7 @@ export default {
             if (this.action === 'edit') {
               this.$store.dispatch('clientes/updateItem', { data: data, id: this.id })
             } else {
-              console.log(data)
+            //  console.log(data)
               this.$store.dispatch('clientes/saveItem', data)
                 .then(() => {
                   this.$router.push({
@@ -275,23 +286,49 @@ export default {
   computed: {
     model () {
       return this.$store.state.clientes.item
-    },
-    tipos () {
-      return this.$store.state.clientes.tipos
-    },
-    administradores () {
-      return _.orderBy(this.$store.state.administradoresCondominio.list.map(
-        data =>
-          ({
-            label: data.nome,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+    // tipos () {
+    //   return this.$store.state.clientes.tipos
+    // },
+    // administradores () {
+    //   return _.orderBy(this.$store.state.administradoresCondominio.list.map(
+    //     data =>
+    //       ({
+    //         label: data.nome,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+    this.tipos = this.$store.state.clientes.tipos.map(data => {
+      if (parseInt(data.value) === this.model.documento_tipo) {
+        this.selectTipos.value = data.value
+        this.selectTipos.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+
+    this.$store.dispatch('administradoresCondominio/loadList',
+      {}).then((data) => {
+      this.administradores = data.data.map(data => {
+        // console.log(this.model.administrador_id)
+        if (parseInt(data.id) === parseInt(this.model.administrador_id)) {
+          this.selectAdministradores.value = data.id
+          this.selectAdministradores.label = data.nome
+        }
+        return {
+          label: data.nome,
+          value: data.id
+        }
+      })
+    })
   }
+
 }
 </script>
 
