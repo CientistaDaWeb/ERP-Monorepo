@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "ERP Acquasana",
   "productName": "Acquasana ERP",
-  "cordovaId": "org.cordova.quasar.app",
   "author": "Fernando Henrique <fernando@webscientist.com.br>",
   "private": true,
   "scripts": {
@@ -18,18 +17,19 @@
     "@fullcalendar/interaction": "^4.2.0",
     "@fullcalendar/timegrid": "^4.2.0",
     "@fullcalendar/vue": "^4.2.2",
-    "@quasar/extras": "^1.8.2",
+    "@quasar/extras": "^1.9.10",
     "aws-sdk": "^2.307.0",
     "axios": "^0.18.1",
+    "core-js": "^3.8.0",
     "dayspan-vuetify": "^0.3.2",
     "easy-requests": "^1.2.2",
     "echarts": "^4.2.0-rc.2",
     "lodash": "^4.17.10",
     "module": "^1.2.5",
-    "moment": "^2.22.1",
+    "moment": "^2.27.0",
     "pug": "^2.0.3",
     "pug-loader": "^2.4.0",
-    "quasar": "^1.12.8",
+    "quasar": "^1.14.5",
     "tls": "0.0.1",
     "v-charts": "^1.19.0",
     "v-mask": "^1.3.2",
@@ -48,8 +48,7 @@
     "vuelidate": "^0.7.4"
   },
   "devDependencies": {
-    "@quasar/app": "^1.9.6",
-    "@quasar/quasar-app-extension-icon-genie": "^1.1.3",
+    "@quasar/app": "^2.1.8",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "dotenv": "^5.0.1",
@@ -68,7 +67,8 @@
     "webpack": "^4.17.2",
     "webpack-dev-middleware": "^2.0.6",
     "webpack-hot-middleware": "^2.23.1",
-    "webpack-merge": "^4.1.4"
+    "webpack-merge": "^4.1.4",
+    "workbox-webpack-plugin": "^5.1.4"
   },
   "engines": {
     "node": ">= 8.9.0",
@@ -76,6 +76,14 @@
     "yarn": ">= 1.6.0"
   },
   "browserslist": [
-    "last 1 version, not dead, ie >= 11"
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
   ]
 }

@@ -4,7 +4,7 @@ const parsedEnv = DotEnv.config().parsed
 module.exports = function () {
   for (key in parsedEnv) {
     if (typeof parsedEnv[key] === 'string') {
-      parsedEnv[key] = JSON.stringify(parsedEnv[key])
+      parsedEnv[key] = parsedEnv[key]
     }
   }
   return parsedEnv
