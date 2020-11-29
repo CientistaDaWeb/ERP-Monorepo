@@ -4,9 +4,10 @@
       <q-breadcrumbs-el
         label="Clientes"
         icon="fa fa-align-justify"
+        :to="`/clientes`"
       />
       <q-breadcrumbs-el>Editar Cliente</q-breadcrumbs-el>
-      <q-breadcrumbs-el>{{ model.razao_social }}</q-breadcrumbs-el>
+      <q-breadcrumbs-el>{{ model.id }}</q-breadcrumbs-el>
     </q-breadcrumbs>
     <br>
     <q-tabs

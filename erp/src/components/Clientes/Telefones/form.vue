@@ -65,7 +65,7 @@
             <q-btn
               color="negative"
               glossy
-              @click="$router.push({name:'clientes.editar', params: {id: cliente_id, view: 'telefones'}})"
+              @click="$router.push({name:'clientes.editar', params: {id: $route.params.cliente_id, tab: 'telefones'}})"
               label="Cancelar"
               icon="fa fa-times-circle"
             />
@@ -160,7 +160,7 @@ export default {
                 .then(() => {
                   this.$router.push({
                     name: 'clientes.editar',
-                    params: { id: this.cliente_id, view: 'telefones' }
+                    params: { id: this.$route.params.cliente_id, tab: 'telefones' }
                   })
                 })
             }
