@@ -19,7 +19,7 @@
           <q-btn-group outline>
             <q-btn
               color="positive"
-              @click="$router.push({name:'clientes-crm.novo', params: {cliente_id: cliente_id}})"
+              @click="$router.push({name:'clientes-crm.novo', params: {cliente_id: $route.params.id}})"
               icon="fa fa-plus-circle"
               glossy
               label="Novo Atendimento"
@@ -68,7 +68,7 @@
             >
               <q-btn-group flat>
                 <q-btn
-                  @click="$router.push({name:'clientes-crm.editar', params: {id: props.row.id, cliente_id: cliente_id }})"
+                  @click="$router.push({name:'clientes-crm.editar', params: {id: props.row.id, cliente_id: $route.params.id }})"
                   icon="fa fa-edit"
                   size="sm"
                   color="primary"
@@ -142,10 +142,7 @@ export default {
   },
   name: 'ClientesCrmDatatable',
   props: {
-    clienteId: {
-      type: Number,
-      required: true
-    }
+
   },
   data: () => ({
     selected: [],
@@ -191,9 +188,8 @@ export default {
             ok: 'Sim, tenho certeza',
             cancel: 'Não'
           })
-          .then(() => {
+          .onOk(() => {
             let id = ''
-            console.log(this.selected)
             for (var i = 0; i < this.selected.length; i++) {
               id = this.selected[i]['id']
               this.$store.dispatch('clientesCrm/deleteItem', id)
@@ -206,14 +202,6 @@ export default {
             }
             this.selected = []
           })
-          .catch(error => {
-            console.log(error)
-            this.$q.notify({
-              message: 'Ação cancelada',
-              color: 'info',
-              icon: 'fa fa-check-circle'
-            })
-          })
       } else {
         this.$q.notify({
           message: 'Nenhum registro selecionado',
@@ -224,7 +212,7 @@ export default {
     },
     searchList (payload) {
       payload.where = {
-        cliente_id: this.cliente_id
+        cliente_id: this.$route.params.id
       }
       this.$store.dispatch('clientesCrm/searchList', payload)
         .then((data) => {

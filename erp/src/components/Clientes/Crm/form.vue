@@ -6,7 +6,7 @@
           <div class="col col-sm-4 col-xs-12">
             <q-select
               filter
-              v-model="model.usuario_id"
+              v-model="selectUsuarios"
               :options="usuarios"
               label="Funcionário"
               data-vv-name="Funcionário"
@@ -48,7 +48,7 @@
           <div class="col col-sm-4 col-xs-12">
             <q-select
               filter
-              v-model="model.status"
+              v-model="selectStatusOptions"
               :options="statusOptions"
               label="Status do Atendimento"
               data-vv-name="Status do Atendimento"
@@ -77,7 +77,7 @@
             <q-btn
               color="negative"
               glossy
-              @click="$router.push({name:'clientes.editar', params: {id: cliente_id, view: 'atendimentos'}})"
+              @click="$router.push({name:'clientes.editar', params: {id: $route.params.cliente_id, tab: 'atendimentos'}})"
               label="Cancelar"
               icon="fa fa-times-circle"
             />
@@ -113,10 +113,7 @@ import moment from 'moment'
 export default {
   name: 'ClientesCrmForm',
   props: {
-    clienteId: {
-      type: Number,
-      required: true
-    },
+
     action: {
       type: String,
       default: 'new'
@@ -134,7 +131,18 @@ export default {
     QPopupProxy
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    statusOptions: [],
+    selectStatusOptions: {
+      label: '',
+      value: ''
+    },
+    usuarios: [],
+    selectUsuarios: {
+      label: '',
+      value: ''
+    }
+
   }),
   methods: {
     getData () {
@@ -161,20 +169,21 @@ export default {
             this.submitting = true
 
             let data = {
-              cliente_id: this.cliente_id,
-              usuario_id: this.model.usuario_id,
+              cliente_id: this.$route.params.cliente_id,
+              usuario_id: this.selectUsuarios.value,
               data: date.formatDate(this.model.data, 'YYYY-MM-DD'),
               descricao: this.model.descricao,
-              status: this.model.status
+              status: this.selectStatusOptions.value
             }
             if (this.action === 'edit') {
               this.$store.dispatch('clientesCrm/updateItem', { data: data, id: this.id })
             } else {
+              console.log(data)
               this.$store.dispatch('clientesCrm/saveItem', data)
                 .then(() => {
                   this.$router.push({
                     name: 'clientes.editar',
-                    params: { id: this.cliente_id, view: 'atendimentos' }
+                    params: { id: this.$route.params.cliente_id, tab: 'atendimentos' }
                   })
                 })
             }
@@ -199,13 +208,37 @@ export default {
           value: d.id
         })
       ), 'label')
-    },
-    statusOptions () {
-      return this.$store.state.clientesCrm.statusOptions
     }
+    // statusOptions () {
+    //   return this.$store.state.clientesCrm.statusOptions
+    // }
   },
   mounted () {
     this.getData()
+    this.statusOptions = this.$store.state.clientesCrm.statusOptions.map(data => {
+      if (data.value === this.model.status) {
+        this.selectStatusOptions.value = data.value
+        this.selectStatusOptions.label = data.label
+      }
+      return {
+        label: data.label,
+        value: data.value
+      }
+    })
+
+    this.$store.dispatch('usuarios/loadList',
+      {}).then((data) => {
+      this.usuarios = data.data.map(data => {
+        if (data.id === this.model.usuario_id) {
+          this.selectUsuarios.value = data.id
+          this.selectUsuarios.label = data.nome
+        }
+        return {
+          label: data.nome,
+          value: data.id
+        }
+      })
+    })
   }
 }
 </script>
