@@ -9,12 +9,13 @@ export default {
     commit('setFilter', filter)
     const where = urlEncodeSearch(payload.where, 'where')
     const whereHas = urlEncodeSearch(payload.whereHas, 'whereHas')
+    const like = payload.like
     const module = state.module
     // const orderDirection = (pagination.descending) ? 'DESC' : 'ASC'
     // const url = `${process.env.DATA_URL}api/${module.url}?page=${pagination.page}&limit=${pagination.rowsPerPage}&order=${pagination.sortBy},${orderDirection}&filter=${filter}${where}${whereHas}`
-    const url = `${process.env.DATA_URL}api/${module.url}?page=${pagination.page}&limit=${pagination.rowsPerPage}&order=${pagination.sortBy}&filter=${filter}${where}${whereHas}`
 
-    // console.log(url)
+    const url = payload.like !== undefined ? `${process.env.DATA_URL}api/${module.url}?page=${pagination.page}&like=${like}&limit=${pagination.rowsPerPage}&order=${pagination.sortBy}` : `${process.env.DATA_URL}api/${module.url}?page=${pagination.page}&limit=${pagination.rowsPerPage}&order=${pagination.sortBy}&filter=${filter}${where}${whereHas}`
+
     commit('setList', [])
     return axios
       .get(url)
@@ -39,7 +40,7 @@ export default {
     const module = state.module
     const limit = payload.limit ? payload.limit : '10000'
     const url = `${process.env.DATA_URL}api/${module.url}?limit=${limit}&filter=${filter}` + where
-    console.log(url)
+
     commit('setList', [])
     return axios
       .get(url)
@@ -76,7 +77,7 @@ export default {
     ({ commit, state }, payload) => {
       const module = state.module
       const url = `${process.env.DATA_URL}api/${module.url}`
-      console.log(url)
+
       return axios
         .post(url, payload)
         .then(({ data }) => {

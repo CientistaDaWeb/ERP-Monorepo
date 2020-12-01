@@ -184,7 +184,7 @@ export default {
     },
     searchList (payload) {
       payload.where = {
-        cliente_id: 1892
+        cliente_id: this.$route.params.id
       }
       this.$store.dispatch('clientesEnderecos/searchList', payload)
         .then((data) => {

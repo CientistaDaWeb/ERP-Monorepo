@@ -2,10 +2,20 @@
   <q-page padding>
     <q-breadcrumbs>
       <q-breadcrumbs-el
-        label="Atendimentos de Clientes"
         icon="fa fa-align-justify"
+        :to="`/clientes/${model.cliente_id} /editar`"
+      >
+        Editar Cliente {{ model.cliente_id }}
+      </q-breadcrumbs-el>
+      <q-breadcrumbs-el
+        label="Atendimentos de Clientes"
+        :to="{
+          name: 'clientes.editar',
+          params: { id: model.cliente_id, tab: 'atendimentos' }
+        }"
       />
-      <q-breadcrumbs-el>Editar Atendimento de Clientes</q-breadcrumbs-el>
+
+      <q-breadcrumbs-el>Editar Atendimento de Clientes {{ model.id }}</q-breadcrumbs-el>
     </q-breadcrumbs>
     <br>
     <q-tabs

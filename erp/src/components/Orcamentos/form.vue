@@ -5,6 +5,31 @@
         <div class="row q-col-gutter-md">
           <div class="col col-sm-6 col-xs-12">
             <q-select
+              filled
+              fill-input
+              use-input
+              hide-selected
+              input-debounce="0"
+              v-model="searchCliente"
+              :loading="loading"
+              :options="optionsCliente"
+              @filter="filterClientFn"
+              new-value-mode="add"
+              style="width: 250px; padding-bottom: 32px"
+              class="text-uppercase full-width"
+              label="Cliente"
+              data-vv-name="Cliente"
+              v-validate="'required'"
+              :error="errors.has('Cliente')"
+              :error-message="errors.first('Cliente')"
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey" />
+                </q-item>
+              </template>
+            </q-select>
+            <q-select
 
               :options="empresas"
               v-model="selectEmpresas"
@@ -15,7 +40,7 @@
               :error-message="errors.first('Empresa')"
             />
           </div>
-          <div class="col col-sm-6 col-xs-12">
+          <!-- <div class="col col-sm-6 col-xs-12">
             <q-select
               :options="clientes"
               :loading="loading"
@@ -26,7 +51,7 @@
               :error="errors.has('Cliente')"
               :error-message="errors.first('Cliente')"
             />
-          </div>
+          </div> -->
           <div class="col col-sm-4 col-xs-12">
             <q-select
               :options="usuarios"
@@ -140,7 +165,7 @@ import {
 } from 'quasar'
 // import _ from 'lodash'
 import moment from 'moment'
-
+// import axios from 'axios'
 export default {
   name: 'OrcamentosForm',
   props: {
@@ -189,8 +214,24 @@ export default {
     selectVantagens: {
       label: '',
       value: ''
-    }
+    },
+    searchCliente: {
+      label: '',
+      value: ''
+    },
+    optionsCliente: [],
+    testeValor: []
   }),
+  watch: {
+    searchCliente: function (val) {
+      if (val != null) {
+        this.searchCliente.value = val.value
+        this.searchCliente.label = val.label
+      }
+      // this.searchCliente.value = val.value
+      // this.searchCliente.label = val.label
+    }
+  },
   methods: {
     getData () {
       // this.$store.dispatch('empresas/loadList', {})
@@ -212,6 +253,36 @@ export default {
         })
       }
     },
+
+    filterClientFn (val, update, abort) {
+      if (val.length < 6) {
+        abort()
+        return
+      }
+      update(() => {
+        if (val === '') { this.optionsCliente = [] } else {
+          this.$store.dispatch('clientes/searchList',
+            {
+              like: 'razao_social,' + val,
+              pagination: { 'page': 1, 'rowsPerPage': 10, 'sortBy': 'id' }
+            }).then((data) => {
+            this.optionsCliente = this.$store.state.clientes.list.map(data => {
+              // console.log(data.razao_social)
+              return {
+                value: data.id,
+                label: data.razao_social
+              }
+            })
+            // console.log(this.$store.state.clientes['list'])
+            // this.optionsCliente = this.$store.state.clientes.list.razao_social
+          })
+          // axios.get('https://localhost:4461/api/clientes?page=1&limit=100&order=id&filter=&like=razao_social,' + encodeURIComponent(val), { crossDomain: true }).then((response) => {
+          //   console.log(response.data.data)
+          //   _this.optionsCliente = response.data[1]
+          // })
+        }
+      })
+    },
     // setModel () {
     //   this.model = this.$store.state.orcamentos.item
     //   this.model.data_emissao = this.model.data_emissao.split('-').reverse().join('/')
@@ -232,7 +303,7 @@ export default {
 
             let data = {
               empresa_id: this.selectEmpresas.value,
-              cliente_id: this.selectClientes.value,
+              cliente_id: this.searchCliente.value,
               usuario_id: this.selectUsuarios.value,
               valor_total: this.model.valor_total,
               data_emissao: this.data_emissao.split('/').reverse().join('-'),
@@ -321,22 +392,41 @@ export default {
       })
     })
 
-    this.$store.dispatch('clientes/loadList',
+    // this.$store.dispatch('clientes/loadList',
 
+    //   {
+    //     limit: 10
+    //   }).then((data) => {
+    //   this.clientes = data.data.map(data => {
+    //     if (parseInt(data.id) === parseInt(this.model.cliente_id)) {
+    //       this.selectClientes.value = data.id
+    //       this.selectClientes.label = data.nome_fantasia
+    //     }
+    //     return {
+    //       label: data.nome_fantasia,
+    //       value: data.id
+    //     }
+    //   })
+    // })
+    this.$store.dispatch('clientes/searchList',
       {
-        limit: 30
+        where: { 'id': 4 },
+        filter: 0,
+        pagination: { 'page': 1, 'rowsPerPage': 10, 'sortBy': 'id' }
       }).then((data) => {
-      this.clientes = data.data.map(data => {
+      this.optionsCliente = this.$store.state.clientes.list.map(data => {
         if (parseInt(data.id) === parseInt(this.model.cliente_id)) {
-          this.selectClientes.value = data.id
-          this.selectClientes.label = data.nome_fantasia
+          console.log(data.id)
+          this.searchCliente.value = data.id
+          this.searchCliente.label = data.nome_fantasia
         }
         return {
-          label: data.nome_fantasia,
-          value: data.id
+          value: data.id,
+          label: data.razao_social
         }
       })
     })
+
     this.$store.dispatch('usuarios/loadList',
       {}).then((data) => {
       this.usuarios = data.data.map(data => {

@@ -107,7 +107,7 @@ import {
   QPopupProxy,
   date
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
 import moment from 'moment'
 
 export default {
@@ -200,15 +200,15 @@ export default {
         store.data = date.formatDate(moment(store.data), 'DD/MM/YYYY')
       }
       return store
-    },
-    usuarios () {
-      return _.orderBy(this.$store.state.usuarios.list.map(d =>
-        ({
-          label: d.nome,
-          value: d.id
-        })
-      ), 'label')
     }
+    // usuarios () {
+    //   return _.orderBy(this.$store.state.usuarios.list.map(d =>
+    //     ({
+    //       label: d.nome,
+    //       value: d.id
+    //     })
+    //   ), 'label')
+    // }
     // statusOptions () {
     //   return this.$store.state.clientesCrm.statusOptions
     // }

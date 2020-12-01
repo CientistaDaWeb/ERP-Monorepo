@@ -12,6 +12,41 @@
       color="primary"
     >
       <template
+        slot="top-left"
+      >
+        <q-btn-group outline>
+          <q-btn
+            color="positive"
+            @click="$router.push({name:'orcamentos.novo', params: {cliente_id: $route.params.id}})"
+            icon="fa fa-plus-circle"
+            glossy
+            label="Novo Orçamento"
+          />
+          <q-btn
+            color="negative"
+            @click="deleteItem"
+            icon="fa fa-trash"
+            glossy
+            label="Excluir Orçamento"
+          />
+        </q-btn-group>
+      </template>
+      <template
+        slot="top-right"
+      >
+        <q-input
+          borderless
+          dense
+          debounce="300"
+          v-model="filter"
+          placeholder="Buscar"
+        >
+          <template v-slot:append>
+            <q-icon name="fa fa-search" />
+          </template>
+        </q-input>
+      </template>
+      <template
         slot="body"
         slot-scope="props"
       >
@@ -104,10 +139,7 @@ export default {
     QTable
   },
   props: {
-    clienteId: {
-      type: Number,
-      required: true
-    }
+
   },
   name: 'ClientesOrcamentosDatatable',
   data: () => ({
@@ -202,8 +234,9 @@ export default {
       }
     },
     searchList (payload) {
+      // console.log(payload)
       payload.where = {
-        cliente_id: this.cliente_id
+        cliente_id: this.$route.params.id
       }
       this.$store.dispatch('orcamentos/searchList', payload)
         .then((data) => {
@@ -242,6 +275,7 @@ export default {
   mounted () {
     this.searchList(
       {
+
         pagination: this.pagination,
         filter: this.filter
       }
