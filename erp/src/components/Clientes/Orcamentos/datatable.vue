@@ -20,14 +20,7 @@
             @click="$router.push({name:'orcamentos.novo', params: {cliente_id: $route.params.id}})"
             icon="fa fa-plus-circle"
             glossy
-            label="Novo Orçamento"
-          />
-          <q-btn
-            color="negative"
-            @click="deleteItem"
-            icon="fa fa-trash"
-            glossy
-            label="Excluir Orçamento"
+            label="Criar orçamento"
           />
         </q-btn-group>
       </template>

@@ -3,8 +3,34 @@
     <div class="row q-col-gutter-md">
       <div class="col col-xs-12">
         <div class="row q-col-gutter-md">
-          <div class="col col-sm-6 col-xs-12">
+          <div
+            class="col col-sm-6 col-xs-12"
+            v-if="$route.params.cliente_id!=null"
+          >
+            <q-input
+
+              filled
+              v-model="this.searchCliente.label"
+              label="Cliente"
+              disable
+              readonly
+            />
+          </div>
+          <div
+            class="col col-sm-6 col-xs-12"
+            v-if="$route.params.cliente_id==null"
+          >
+            {{ $route.params.cliente_id }}
+            <q-input
+              v-if="$route.name=='orcamentos.editar'"
+              filled
+              v-model="this.searchCliente.label"
+              label="Cliente"
+              disable
+              readonly
+            />
             <q-select
+              v-if="$route.name!='orcamentos.editar'"
               filled
               fill-input
               use-input
@@ -29,6 +55,19 @@
                 </q-item>
               </template>
             </q-select>
+
+            <q-select
+
+              :options="empresas"
+              v-model="selectEmpresas"
+              label="Empresa"
+              data-vv-name="Empresa"
+              v-validate="'required'"
+              :error="errors.has('Empresa')"
+              :error-message="errors.first('Empresa')"
+            />
+          </div>
+          <div class="col col-sm-6 col-xs-12">
             <q-select
 
               :options="empresas"
@@ -410,12 +449,13 @@ export default {
     // })
     this.$store.dispatch('clientes/searchList',
       {
-        where: { 'id': 4 },
+        where: { 'id': this.$route.params.cliente_id == null ? this.model.cliente_id : this.$route.params.cliente_id },
         filter: 0,
         pagination: { 'page': 1, 'rowsPerPage': 10, 'sortBy': 'id' }
       }).then((data) => {
       this.optionsCliente = this.$store.state.clientes.list.map(data => {
-        if (parseInt(data.id) === parseInt(this.model.cliente_id)) {
+        console.log(data.id)
+        if (parseInt(data.id) === parseInt(this.model.cliente_id) || parseInt(data.id) === parseInt(this.$route.params.cliente_id)) {
           console.log(data.id)
           this.searchCliente.value = data.id
           this.searchCliente.label = data.nome_fantasia
@@ -462,7 +502,9 @@ export default {
     })
 
     this.data_emissao = moment(this.model.data_emissao).format('DD/MM/YYYY')
+    // console.log(this.model.cliente_id)
   }
+
 }
 </script>
 
