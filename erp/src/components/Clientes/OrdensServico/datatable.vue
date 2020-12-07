@@ -25,7 +25,7 @@
           >
             <q-btn-group flat>
               <q-btn
-                @click="$router.push({name:'ordens-servico.editar', params: {id: props.row.id, cliente_id: this.cliente_id }})"
+                @click="$router.push({name:'ordens-servico.editar', params: {id: props.row.id, cliente_id: $route.params.id}})"
                 icon="fa fa-edit"
                 size="sm"
                 color="primary"
@@ -194,7 +194,7 @@ export default {
     searchList (payload) {
       payload.whereHas = {
         orcamento: {
-          cliente_id: this.cliente_id
+          cliente_id: this.$route.params.id
         }
       }
       this.$store.dispatch('ordensServico/searchList', payload)

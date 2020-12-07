@@ -53,7 +53,7 @@
           >
             <q-btn-group flat>
               <q-btn
-                @click="$router.push({name:'orcamentos.editar', params: {id: props.row.id }})"
+                @click="$router.push({name:'orcamentos.editar', params: {id: props.row.id, cliente_id: $route.params.id }})"
                 icon="fa fa-edit"
                 size="sm"
                 color="primary"
