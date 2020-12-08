@@ -91,12 +91,16 @@ export default {
             }
             if (this.action === 'edit') {
               this.$store.dispatch('aditivos/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'aditivos.index'
+                  })
+                })
             } else {
               this.$store.dispatch('aditivos/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'aditivos.editar',
-                    params: { id: this.$store.state.aditivos.currentId }
+                    name: 'aditivos.index'
                   })
                 })
             }

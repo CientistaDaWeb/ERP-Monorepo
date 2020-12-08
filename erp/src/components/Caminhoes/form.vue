@@ -102,12 +102,16 @@ export default {
             }
             if (this.action === 'edit') {
               this.$store.dispatch('caminhoes/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'caminhoes.index'
+                  })
+                })
             } else {
               this.$store.dispatch('caminhoes/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'caminhoes.editar',
-                    params: { id: this.$store.state.caminhoes.currentId }
+                    name: 'caminhoes.index'
                   })
                 })
             }

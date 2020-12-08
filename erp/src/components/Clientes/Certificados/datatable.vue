@@ -150,10 +150,10 @@ export default {
       */
       payload.whereHas = {
         orcamento: {
-          cliente_id: this.cliente_id
+          cliente_id: this.$route.params.id
         }
       }
-      this.$store.dispatch('certificados/searchList', payload)
+      this.$store.dispatch('mtrs/searchList', payload)
         .then((data) => {
           this.pagination = data
         })
@@ -186,7 +186,9 @@ export default {
         pagination: this.pagination,
         filter: this.filter
       }
+
     )
+    console.log(this.$store.state)
   }
 }
 </script>

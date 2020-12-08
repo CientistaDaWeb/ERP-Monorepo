@@ -98,10 +98,7 @@ export default {
     QTable
   },
   props: {
-    clienteId: {
-      type: Number,
-      required: true
-    }
+
   },
   name: 'ClientesOrdensServicoDatatable',
   data: () => ({

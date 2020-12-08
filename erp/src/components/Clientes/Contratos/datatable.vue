@@ -136,10 +136,7 @@ export default {
     QCheckbox
   },
   props: {
-    clienteId: {
-      type: Number,
-      required: true
-    }
+
   },
   name: 'ClientesContratosDatatable',
   data: () => ({
@@ -243,7 +240,7 @@ export default {
     searchList (payload) {
       payload.whereHas = {
         orcamento: {
-          cliente_id: this.cliente_id
+          cliente_id: this.$route.params.id
         }
       }
       this.$store.dispatch('contratos/searchList', payload)

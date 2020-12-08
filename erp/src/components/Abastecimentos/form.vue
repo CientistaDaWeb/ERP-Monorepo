@@ -4,25 +4,52 @@
       <div class="col col-xs-12">
         <div class="row q-col-gutter-md">
           <div class="col col-sm-2 col-xs-12">
-            <FormSelectWithFilter
+            <q-select
+              :options="caminhoes"
+              v-model="selectCaminhoes"
+              label="Caminhão"
+              data-vv-name="Caminhão"
+              v-validate="'required'"
+              :error="errors.has('Caminhão')"
+              :error-message="errors.first('Caminhão')"
+            />
+            <!-- <FormSelectWithFilter
               :options-list="caminhoes"
               float-label="Caminhão"
               :model="model.caminhao_id"
-            />
+            /> -->
           </div>
           <div class="col col-sm-4 col-xs-12">
-            <FormSelectWithFilter
+            <q-select
+              :options="aditivos"
+              v-model="selectAditivos"
+              label="Aditivos"
+              data-vv-name="Aditivos"
+              v-validate="'required'"
+              :error="errors.has('Aditivos')"
+              :error-message="errors.first('Aditivos')"
+            />
+            <!-- <FormSelectWithFilter
               :options-list="aditivos"
               float-label="Aditivos"
               :model="model.aditivo_id"
-            />
+            /> -->
           </div>
           <div class="col col-sm-6 col-xs-12">
-            <FormSelectWithFilter
+            <q-select
+              :options="fornecedores"
+              v-model="selectFornecedores"
+              label="Fornecedores"
+              data-vv-name="Fornecedores"
+              v-validate="'required'"
+              :error="errors.has('Fornecedores')"
+              :error-message="errors.first('Fornecedores')"
+            />
+            <!-- <FormSelectWithFilter
               :options-list="fornecedores"
               float-label="Fornecedores"
               :model="model.fornecedor_id"
-            />
+            /> -->
           </div>
           <div class="col col-sm-2 col-xs-12">
             <q-input
@@ -143,9 +170,9 @@ import {
   QDate,
   QPopupProxy
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
 import moment from 'moment'
-import FormSelectWithFilter from '../_Form/selectWithFilter'
+// import FormSelectWithFilter from '../_Form/selectWithFilter'
 
 export default {
   name: 'AbastecimentosForm',
@@ -160,14 +187,29 @@ export default {
     }
   },
   components: {
-    FormSelectWithFilter,
+    // FormSelectWithFilter,
     QInput,
     QBtn,
     QDate,
     QPopupProxy
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    caminhoes: [],
+    selectCaminhoes: {
+      label: '',
+      value: ''
+    },
+    aditivos: [],
+    selectAditivos: {
+      label: '',
+      value: ''
+    },
+    fornecedores: [],
+    selectFornecedores: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -176,9 +218,9 @@ export default {
       } else {
         this.$store.commit('abastecimentos/setItem', {})
       }
-      this.$store.dispatch('caminhoes/loadList', {})
-      this.$store.dispatch('aditivos/loadList', {})
-      this.$store.dispatch('fornecedores/loadList', {})
+      // this.$store.dispatch('caminhoes/loadList', {})
+      // this.$store.dispatch('aditivos/loadList', {})
+      // this.$store.dispatch('fornecedores/loadList', {})
     },
     save () {
       this.$validator.validate()
@@ -226,38 +268,95 @@ export default {
         store.data = date.formatDate(moment(store.data), 'DD/MM/YYYY')
       }
       return store
-    },
-    caminhoes () {
-      return _.orderBy(this.$store.state.caminhoes.list.map(
-        data =>
-          ({
-            label: data.placa,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    aditivos () {
-      return _.orderBy(this.$store.state.aditivos.list.map(
-        data =>
-          ({
-            label: data.nome,
-            value: data.id
-          })
-      ), 'label', 'ASC')
-    },
-    fornecedores () {
-      return _.orderBy(this.$store.state.fornecedores.list.map(
-        data =>
-          ({
-            label: data.razao_social,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+    // caminhoes () {
+    //   return _.orderBy(this.$store.state.caminhoes.list.map(
+    //     data =>
+    //       ({
+    //         label: data.placa,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // aditivos () {
+    //   return _.orderBy(this.$store.state.aditivos.list.map(
+    //     data =>
+    //       ({
+    //         label: data.nome,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // },
+    // fornecedores () {
+    //   return _.orderBy(this.$store.state.fornecedores.list.map(
+    //     data =>
+    //       ({
+    //         label: data.razao_social,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('fornecedores/loadList',
+      {
+        limit: 5
+        // where: {
+        //   cliente_id: this.model.ordem_servico.orcamento.cliente_id
+        // }
+      }).then((data) => {
+      this.fornecedores = data.data.map(data => {
+        // console.log(data)
+        if (parseInt(data.id) === parseInt(this.model.caminhao_id)) {
+          this.selectFornecedores.value = data.id
+          this.selectFornecedores.label = data.nome_fantasia
+        }
+        return {
+          label: data.nome_fantasia,
+          value: data.id
+        }
+      })
+    })
+    this.$store.dispatch('caminhoes/loadList',
+      {
+        // limit: 30
+        // where: {
+        //   cliente_id: this.model.ordem_servico.orcamento.cliente_id
+        // }
+      }).then((data) => {
+      this.caminhoes = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.caminhao_id)) {
+          this.selectCaminhoes.value = data.id
+          this.selectCaminhoes.label = data.nome
+        }
+        return {
+          label: data.nome,
+          value: data.id
+        }
+      })
+    })
+
+    this.$store.dispatch('aditivos/loadList',
+      {
+        // limit: 30
+        // where: {
+        //   cliente_id: this.model.ordem_servico.orcamento.cliente_id
+        // }
+      }).then((data) => {
+      this.aditivos = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.aditivo_id)) {
+          this.selectAditivos.value = data.id
+          this.selectAditivos.label = data.nome
+        }
+        return {
+          label: data.nome,
+          value: data.id
+        }
+      })
+    })
   }
+
 }
 </script>
 

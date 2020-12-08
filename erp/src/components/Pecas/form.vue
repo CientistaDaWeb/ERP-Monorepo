@@ -91,12 +91,16 @@ export default {
             }
             if (this.action === 'edit') {
               this.$store.dispatch('pecas/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'pecas.index'
+                  })
+                })
             } else {
               this.$store.dispatch('pecas/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'pecas.editar',
-                    params: { id: this.$store.state.pecas.currentId }
+                    name: 'pecas.index'
                   })
                 })
             }
