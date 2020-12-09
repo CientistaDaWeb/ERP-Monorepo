@@ -113,12 +113,16 @@ export default {
             }
             if (this.action === 'edit') {
               this.$store.dispatch('estados/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'estados.index'
+                  })
+                })
             } else {
               this.$store.dispatch('estados/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'estados.editar',
-                    params: { id: this.$store.state.estados.currentId }
+                    name: 'estados.index'
                   })
                 })
             }

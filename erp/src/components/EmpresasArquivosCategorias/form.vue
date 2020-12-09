@@ -91,12 +91,16 @@ export default {
             }
             if (this.action === 'edit') {
               this.$store.dispatch('empresasArquivosCategorias/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'empresas-arquivos-categorias.index'
+                  })
+                })
             } else {
               this.$store.dispatch('empresasArquivosCategorias/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'empresas-arquivos-categorias.editar',
-                    params: { id: this.$store.state.empresasArquivosCategorias.currentId }
+                    name: 'empresas-arquivos-categorias.index'
                   })
                 })
             }

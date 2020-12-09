@@ -102,12 +102,16 @@ export default {
             }
             if (this.action === 'edit') {
               this.$store.dispatch('cfops/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'cfops.index'
+                  })
+                })
             } else {
               this.$store.dispatch('cfops/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'cfops.editar',
-                    params: { id: this.$store.state.cfops.currentId }
+                    name: 'cfops.index'
                   })
                 })
             }

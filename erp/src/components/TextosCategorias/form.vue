@@ -91,12 +91,16 @@ export default {
             }
             if (this.action === 'edit') {
               this.$store.dispatch('textosCategorias/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'textos-categorias.index'
+                  })
+                })
             } else {
               this.$store.dispatch('textosCategorias/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'textos-categorias.editar',
-                    params: { id: this.$store.state.textosCategorias.currentId }
+                    name: 'textos-categorias.index'
                   })
                 })
             }

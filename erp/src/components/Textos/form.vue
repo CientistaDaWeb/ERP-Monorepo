@@ -5,9 +5,8 @@
         <div class="row q-col-gutter-md">
           <div class="col col-sm-6 col-xs-12">
             <q-select
-              filter
               :options="categorias"
-              v-model="model.categoria_id"
+              v-model="selectCategorias"
               label="Categoria"
               data-vv-name="Categoria"
               v-validate="'required'"
@@ -72,7 +71,6 @@ import {
   QBtn,
   QSelect
 } from 'quasar'
-import _ from 'lodash'
 
 export default {
   name: 'TextosForm',
@@ -92,7 +90,12 @@ export default {
     QSelect
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    categorias: [],
+    selectCategorias: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -115,18 +118,22 @@ export default {
             this.submitting = true
 
             let data = {
-              categoria_id: this.model.categoria_id,
+              categoria_id: this.selectCategorias.value,
               titulo: this.model.titulo,
               descricao: this.model.descricao
             }
             if (this.action === 'edit') {
               this.$store.dispatch('textos/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'textos.index'
+                  })
+                })
             } else {
               this.$store.dispatch('textos/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'textos.editar',
-                    params: { id: this.$store.state.textos.currentId }
+                    name: 'textos.index'
                   })
                 })
             }
@@ -139,19 +146,31 @@ export default {
   computed: {
     model () {
       return this.$store.state.textos.item
-    },
-    categorias () {
-      return _.orderBy(this.$store.state.textosCategorias.list.map(
-        data =>
-          ({
-            label: data.categoria,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+    // categorias () {
+    //   return _.orderBy(this.$store.state.textosCategorias.list.map(
+    //     data =>
+    //       ({
+    //         label: data.categoria,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('textosCategorias/loadList', {}).then((data) => {
+      this.categorias = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.categoria_id)) {
+          this.selectCategorias.value = data.id
+          this.selectCategorias.label = data.categoria
+        }
+        return {
+          label: data.categoria,
+          value: data.id
+        }
+      })
+    })
   }
 }
 </script>
