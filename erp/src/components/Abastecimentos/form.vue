@@ -234,24 +234,28 @@ export default {
             this.submitting = true
 
             let data = {
-              aditivo_id: this.model.aditivo_id,
+              aditivo_id: this.selectAditivos.value,
               data: date.formatDate(this.model.data, 'YYYY-MM-DD'),
               litros: this.model.litros,
               km: this.model.km,
               valor: this.model.valor,
               media: this.model.media,
               valor_litro: this.model.valor_litro,
-              fornecedor_id: this.model.fornecedor_id,
-              caminhao_id: this.model.caminhao_id
+              fornecedor_id: this.selectFornecedores.value,
+              caminhao_id: this.selectCaminhoes.value
             }
             if (this.action === 'edit') {
               this.$store.dispatch('abastecimentos/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'abastecimentos.index'
+                  })
+                })
             } else {
               this.$store.dispatch('abastecimentos/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'abastecimentos.editar',
-                    params: { id: this.$store.state.abastecimentos.currentId }
+                    name: 'abastecimentos.index'
                   })
                 })
             }
