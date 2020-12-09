@@ -196,15 +196,6 @@ export default {
             }
             this.selected = []
           })
-          .catch(error => {
-            console.log(error)
-            this.$q.notify({
-              message: 'Ação cancelada',
-              color: 'info',
-              icon: 'fa fa-check-circle'
-            })
-            this.selected = []
-          })
       } else {
         this.$q.notify({
           message: 'Nenhum registro selecionado',
