@@ -46,11 +46,27 @@ RUN apk add --no-cache $PHPIZE_DEPS \
 # Install PHP Composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+# Install Láravel
+RUN curl -sS https://getcomposer.org/installer | php \
+&& mv composer.phar /usr/bin/composer \
+&& chmod +x /usr/bin/composer
+RUN composer install -o
+
+# Add UID '1000' to www-data
+RUN usermod -u 1000 www-data
+RUN usermod -a -G root www-data
+RUN chown www-data:www-data /var/www/html -R
+RUN chmod 2775 /var/www/html
+RUN find /var/www/html -type d -exec chmod 2775 {} \;
+RUN find /var/www/html -type f -exec chmod 0664 {} \;
+RUN chmod 777 /var/www/html/storage -R \
+    && chmod 777 /var/www/html/bootstrap -R
+
 # Add Supervisor config
-COPY ./.docker/api/supervisor/supervisord.conf /etc/supervisord.conf
+COPY ./.docker/ecs/api/supervisor/supervisord.conf /etc/supervisord.conf
 
 # Add Entrypoint
-COPY /.docker/api/php/entrypoint.sh /
+COPY ./.docker/ecs/api/php/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
 # Remove Cache
@@ -60,7 +76,7 @@ RUN rm -rf /var/cache/apk/*
 RUN usermod -u 1000 www-data
 
 # Copy existing application directory permissions
-#COPY --chown=www-data:www-data . /var/www/html
+COPY --chown=www-data:www-data . /var/www/html
 
 # Change current user to www
 USER www-data

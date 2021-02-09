@@ -3,7 +3,7 @@ services:
   api_php:
     build:
       context: .
-      dockerfile: ./.docker/api/php/Dockerfile
+      dockerfile: ./.docker/dev/api/php/Dockerfile
     restart: unless-stopped
     tty: true
     working_dir: /var/www/html
@@ -28,8 +28,8 @@ services:
       - "4461:443"
     volumes:
       - ./api/:/var/www/html
-      - ./.docker/api/nginx/conf.d/:/etc/nginx/conf.d/
-      - ./.docker/api/nginx/ssl/:/etc/nginx/ssl/
+      - ./.docker/dev/api/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/dev/api/nginx/ssl/:/etc/nginx/ssl/
     networks:
       - acquasana_net
 
@@ -51,7 +51,7 @@ services:
   site_php:
     build:
       context: .
-      dockerfile: ./.docker/site/php/Dockerfile
+      dockerfile: ./.docker/dev/site/php/Dockerfile
     restart: unless-stopped
     tty: true
     working_dir: /var/www/html
@@ -76,15 +76,15 @@ services:
       - "4463:443"
     volumes:
       - ./site/:/var/www/html
-      - ./.docker/site/nginx/conf.d/:/etc/nginx/conf.d/
-      - ./.docker/site/nginx/ssl/:/etc/nginx/ssl/
+      - ./.docker/dev/site/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/dev/site/nginx/ssl/:/etc/nginx/ssl/
     networks:
       - acquasana_net
 
   legado_php:
     build:
       context: .
-      dockerfile: ./.docker/legado/php/Dockerfile
+      dockerfile: ./.docker/dev/legado/php/Dockerfile
     restart: unless-stopped
     tty: true
     working_dir: /var/www/html
