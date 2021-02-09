@@ -211,24 +211,27 @@ export default {
               ativo: this.selectAtivo.value,
               nome: this.model.nome,
               usuario: this.model.usuario,
-              senha: this.model.senha,
+              password: this.model.senha,
               cargo: this.model.cargo,
               pis: this.model.pis,
               telefone: this.model.telefone,
               email: this.model.email,
               ponto: this.selectPonto.value,
-              token: this.model.token,
+              token_ponto: this.model.token,
               administrador: this.selectAdministrador.value
             }
             if (this.action === 'edit') {
-              console.log(data)
               this.$store.dispatch('usuarios/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'usuarios.index'
+                  })
+                })
             } else {
               this.$store.dispatch('usuarios/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'usuarios.editar',
-                    params: { id: this.$store.state.usuarios.currentId }
+                    name: 'usuarios.index'
                   })
                 })
             }

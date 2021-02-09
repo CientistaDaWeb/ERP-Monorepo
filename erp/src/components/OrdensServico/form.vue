@@ -260,7 +260,7 @@
             <q-btn
               color="negative"
               glossy
-              @click="$router.push({name:'ordens-servico.index'})"
+              @click="$route.params.cliente_id == null ? $router.push({name:'ordens-servico.index'}) : $router.push({name:'clientes.editar', params: {id: $route.params.cliente_id, tab: 'ordens-servico'}})"
               label="Cancelar"
               icon="fa fa-times-circle"
             />
@@ -365,8 +365,8 @@ export default {
     getData () {
       if (this.id) {
         this.$store.dispatch('empresas/loadList', {})
-        this.$store.dispatch('transportadores/loadList', {})
-        this.$store.dispatch('clientesEnderecos/loadList', {})
+        // this.$store.dispatch('transportadores/loadList', {})
+        // this.$store.dispatch('clientesEnderecos/loadList', {})
         this.$store.dispatch('ordensServico/loadItem', this.id)
       } else {
         // console.log(this.$route.params.orcamento_id)
@@ -385,7 +385,7 @@ export default {
             this.submitting = true
 
             let data = {
-              endereco: this.selectClientesEnderecos.value,
+              endereco_id: this.selectClientesEnderecos.value,
               empresa_id: this.selectEmpresa.value,
               transportador_id: this.selectTransportadores.value,
               data_coleta: this.data_coleta.split('/').reverse().join('-'),
@@ -413,14 +413,39 @@ export default {
               this.$store.dispatch('ordensServico/updateItem', {
                 data: data,
                 id: this.id
+              }).then(() => {
+                // cliente nulo go to orcamento
+                this.$route.params.cliente_id == null
+                  ? this.$router.push({
+                    name: 'ordens-servico.index'
+                  }).finally(() => {
+                    this.$validator.reset()
+                    this.submitting = false
+                  })
+                  : this.$router.push({
+                    name: 'clientes.editar',
+                    params: { id: this.$route.params.cliente_id, tab: 'ordens-servico' }
+                  }).finally(() => {
+                    this.$validator.reset()
+                    this.submitting = false
+                  })
               })
             } else {
             //  console.log(data)
               this.$store.dispatch('ordensServico/saveItem', data).then(() => {
-                this.$router.push({
-                  name: 'ordens-servico.editar',
-                  params: { id: this.$store.state.ordensServico.currentId }
-                })
+                this.$route.params.cliente_id == null
+                  ? this.$router.push({
+                    name: 'ordens-servico.index',
+                    params: { id: this.$store.state.ordensServico.currentId }
+                  })
+
+                  : this.$router.push({
+                    name: 'clientes.editar',
+                    params: { id: this.$route.params.cliente_id, tab: 'ordens-servico' }
+                  }).finally(() => {
+                    this.$validator.reset()
+                    this.submitting = false
+                  })
               })
             }
             this.$validator.reset()
@@ -531,10 +556,11 @@ export default {
       {
         // limit: 30
         where: {
-          cliente_id: this.$store.state.orcamentos.item.cliente_id
+          cliente_id: this.$route.params.cliente_id == null ? this.$store.state.orcamentos.item.cliente_id : this.$route.params.cliente_id
         }
       }).then((data) => {
       this.clientesEnderecos = data.data.map(data => {
+        console.log(this.model)
         if (parseInt(data.id) === parseInt(this.model.endereco_id)) {
           this.selectClientesEnderecos.value = data.id
           this.selectClientesEnderecos.label = data.endereco + ' ' + data.numero + ' - ' + data.bairro

@@ -7,7 +7,7 @@
             <q-select
               filter
               :options="categorias"
-              v-model="model.categoria_id"
+              v-model="selectCategorias"
               label="Categoria"
               data-vv-name="Categoria"
               v-validate="'required'"
@@ -91,7 +91,7 @@ import {
   QBtn,
   QSelect
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 export default {
   name: 'ModulosForm',
@@ -111,7 +111,12 @@ export default {
     QSelect
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    categorias: [],
+    selectCategorias: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -134,7 +139,7 @@ export default {
             this.submitting = true
 
             let data = {
-              categoria_id: this.model.categoria_id,
+              categoria_id: this.selectCategorias.value,
               titulo: this.model.titulo,
               controller: this.model.controller,
               ordem: this.model.ordem,
@@ -142,12 +147,16 @@ export default {
             }
             if (this.action === 'edit') {
               this.$store.dispatch('modulos/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'modulos.index'
+                  })
+                })
             } else {
               this.$store.dispatch('modulos/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'modulos.editar',
-                    params: { id: this.$store.state.modulos.currentId }
+                    name: 'modulos.index'
                   })
                 })
             }
@@ -160,19 +169,31 @@ export default {
   computed: {
     model () {
       return this.$store.state.modulos.item
-    },
-    categorias () {
-      return _.orderBy(this.$store.state.modulosCategorias.list.map(
-        data =>
-          ({
-            label: data.categoria,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+    // categorias () {
+    //   return _.orderBy(this.$store.state.modulosCategorias.list.map(
+    //     data =>
+    //       ({
+    //         label: data.categoria,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('modulosCategorias/loadList', {}).then((data) => {
+      this.categorias = data.data.map(data => {
+        if (parseInt(data.id) === parseInt(this.model.categoria_id)) {
+          this.selectCategorias.value = data.id
+          this.selectCategorias.label = data.categoria
+        }
+        return {
+          label: data.categoria,
+          value: data.id
+        }
+      })
+    })
   }
 }
 </script>

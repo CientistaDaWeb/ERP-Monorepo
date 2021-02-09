@@ -102,12 +102,16 @@ export default {
             }
             if (this.action === 'edit') {
               this.$store.dispatch('modulosCategorias/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'modulos-categorias.index'
+                  })
+                })
             } else {
               this.$store.dispatch('modulosCategorias/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'modulos-categorias.editar',
-                    params: { id: this.$store.state.modulosCategorias.currentId }
+                    name: 'modulos-categorias.index'
                   })
                 })
             }

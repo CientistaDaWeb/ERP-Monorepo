@@ -173,7 +173,7 @@
             <q-btn
               color="negative"
               glossy
-              @click="$router.push({name:'orcamentos.index'})"
+              @click="$route.params.cliente_id == null ? $router.push({name:'orcamentos.index'}) : $router.push({name:'clientes.editar', params: {id: $route.params.cliente_id, tab: 'orcamentos'}})"
               label="Cancelar"
               icon="fa fa-times-circle"
             />
@@ -353,19 +353,40 @@ export default {
               this.$store.dispatch('orcamentos/updateItem', {
                 data: data,
                 id: this.id
-              }).finally(() => {
-                this.$validator.reset()
-                this.submitting = false
+              }).then(() => {
+                // cliente nulo go to orcamento
+                this.$route.params.cliente_id == null
+                  ? this.$router.push({
+                    name: 'orcamentos.index'
+                  }).finally(() => {
+                    this.$validator.reset()
+                    this.submitting = false
+                  })
+                  : this.$router.push({
+                    name: 'clientes.editar',
+                    params: { id: this.$route.params.cliente_id, tab: 'orcamentos' }
+                  }).finally(() => {
+                    this.$validator.reset()
+                    this.submitting = false
+                  })
               })
             } else {
               this.$store.dispatch('orcamentos/saveItem', data).then(() => {
-                this.$router.push({
-                  name: 'orcamentos.editar',
-                  params: { id: this.$store.state.orcamentos.currentId }
-                }).finally(() => {
-                  this.$validator.reset()
-                  this.submitting = false
-                })
+                // cliente nulo go to orcamento
+                this.$route.params.cliente_id == null
+                  ? this.$router.push({
+                    name: 'orcamentos.index'
+                  }).finally(() => {
+                    this.$validator.reset()
+                    this.submitting = false
+                  })
+                  : this.$router.push({
+                    name: 'clientes.editar',
+                    params: { id: this.$route.params.cliente_id, tab: 'orcamentos' }
+                  }).finally(() => {
+                    this.$validator.reset()
+                    this.submitting = false
+                  })
               })
             }
           }
@@ -503,6 +524,7 @@ export default {
 
     this.data_emissao = moment(this.model.data_emissao).format('DD/MM/YYYY')
     // console.log(this.model.cliente_id)
+    console.log(this.$route.params.cliente_id)
   }
 
 }

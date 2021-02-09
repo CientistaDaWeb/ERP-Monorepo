@@ -17,7 +17,7 @@
             <q-select
               filter
               :options="estados"
-              v-model="model.estado_id"
+              v-model="selectEstados"
               label="Estado"
               data-vv-name="Estado"
               v-validate="'required'"
@@ -70,7 +70,7 @@ import {
   QBtn,
   QSelect
 } from 'quasar'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 export default {
   name: 'MunicipiosForm',
@@ -90,7 +90,12 @@ export default {
     QSelect
   },
   data: () => ({
-    submitting: false
+    submitting: false,
+    estados: [],
+    selectEstados: {
+      label: '',
+      value: ''
+    }
   }),
   methods: {
     getData () {
@@ -99,7 +104,7 @@ export default {
       } else {
         this.$store.commit('municipios/setItem', {})
       }
-      this.$store.dispatch('estados/loadList', {})
+      // this.$store.dispatch('estados/loadList', {})
     },
     save () {
       this.$validator.validate()
@@ -113,18 +118,22 @@ export default {
             this.submitting = true
 
             let data = {
-              estado_id: this.model.estado_id,
+              estado_id: this.selectEstados.value,
               nome: this.model.nome,
               codigo: this.model.codigo
             }
             if (this.action === 'edit') {
               this.$store.dispatch('municipios/updateItem', { data: data, id: this.id })
+                .then(() => {
+                  this.$router.push({
+                    name: 'municipios.index'
+                  })
+                })
             } else {
               this.$store.dispatch('municipios/saveItem', data)
                 .then(() => {
                   this.$router.push({
-                    name: 'municipios.editar',
-                    params: { id: this.$store.state.municipios.currentId }
+                    name: 'municipios.index'
                   })
                 })
             }
@@ -137,19 +146,38 @@ export default {
   computed: {
     model () {
       return this.$store.state.municipios.item
-    },
-    estados () {
-      return _.orderBy(this.$store.state.estados.list.map(
-        data =>
-          ({
-            label: data.estado,
-            value: data.id
-          })
-      ), 'label', 'ASC')
     }
+    // estados () {
+    //   return _.orderBy(this.$store.state.estados.list.map(
+    //     data =>
+    //       ({
+    //         label: data.estado,
+    //         value: data.id
+    //       })
+    //   ), 'label', 'ASC')
+    // }
   },
   mounted () {
     this.getData()
+    this.$store.dispatch('estados/loadList',
+      {
+        // limit: 30
+        // where: {
+        //   cliente_id: this.model.ordem_servico.orcamento.cliente_id
+        // }
+      }).then((data) => {
+      this.estados = data.data.map(data => {
+        console.log(data)
+        if (parseInt(data.id) === parseInt(this.model.estado_id)) {
+          this.selectEstados.value = data.id
+          this.selectEstados.label = data.estado
+        }
+        return {
+          label: data.estado,
+          value: data.id
+        }
+      })
+    })
   }
 }
 </script>
