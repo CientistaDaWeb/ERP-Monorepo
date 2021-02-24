@@ -1,7 +1,7 @@
 # develop stage
 FROM node:12.18.3 as develop-stage
 WORKDIR /app
-COPY ./erp/package*.json /
+COPY ./erp/package*.json /app
 RUN yarn global add @quasar/cli
 
 # build stage
