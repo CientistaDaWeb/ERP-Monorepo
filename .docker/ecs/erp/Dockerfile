@@ -10,6 +10,8 @@ RUN yarn global add @quasar/cli
 
 # build stage
 FROM develop-stage as build-stage
+RUN ls -lha /
+
 RUN yarn
 RUN quasar build
 
