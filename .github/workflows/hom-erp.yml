@@ -52,20 +52,6 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Get Parameter SSM FIREBASE CONFIG Homologa
-      if: ${{ github.ref == env.HOM_BRANCH }}
-      uses: "marvinpinto/action-inject-ssm-secrets@latest"
-      with:
-        ssm_parameter: "HOM_ERP_FIREBASE_CONFIG"
-        env_variable_name: "FIREBASE_CONFIG"
-
-    - name: Get Parameter SSM FIREBASE CREDENTIALS Homologa
-      if: ${{ github.ref == env.HOM_BRANCH }}
-      uses: "marvinpinto/action-inject-ssm-secrets@latest"
-      with:
-        ssm_parameter: "HOM_ERP_FIREBASE_CREDENTIALS"
-        env_variable_name: "FIREBASE_CREDENTIALS"
-
     - name: Setup Build Node Homologa
       if: ${{ github.ref == env.HOM_BRANCH }}
       uses: actions/setup-node@v1
