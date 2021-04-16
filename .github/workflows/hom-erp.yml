@@ -145,6 +145,10 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
+    - name: Download task definition ERP Homologa
+      run: |
+        aws ecs describe-task-definition --task-definition HomErp --query taskDefinition > .docker/ecs/tasks/task-erp-hom.json
+
     - name: Amazon ECS Update Task Definition ERP Homologa
       if: ${{ github.ref == env.HOM_BRANCH }}
       id: task-def-erp-nginx-hom
