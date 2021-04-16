@@ -17,69 +17,9 @@ env:
   HOM_BRANCH: ${{ secrets.HOM_BRANCH }}
 
 jobs:
-  delete-artifacts-before-flow:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Deleta Artifacts
-      if: ${{ github.ref == env.HOM_BRANCH }}
-      uses: kolpav/purge-artifacts-action@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        expire-in: 0days # Set this to 0 to delete all artifacts
-
-  build_node_erp:
-    name: Build ERP - Node Artifact
-    needs: delete-artifacts-before-flow
-    runs-on: ubuntu-latest
-
-    steps:
-
-    - name: Checkout ERP
-      if: ${{ github.ref == env.HOM_BRANCH }}
-      uses: actions/checkout@v2
-
-    - name: Get Credentials AWS
-      if: ${{ github.ref == env.HOM_BRANCH }}
-      uses: "aws-actions/configure-aws-credentials@v1"
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: "us-east-1"
-
-    - name: Login to Amazon ECR
-      if: ${{ github.ref == env.HOM_BRANCH }}
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Setup Build Node Homologa
-      if: ${{ github.ref == env.HOM_BRANCH }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.18.3'
-
-    - name: Install Dependencies Node Homologa
-      if: ${{ github.ref == env.HOM_BRANCH }} 
-      run: |
-        ls -lha
-        cd erp/
-        ls -lha
-        yarn global add @quasar/cli
-        yarn
-        quasar build
-
-    - name: Armazena Node Artifact Homologa
-      if: ${{ github.ref == env.HOM_BRANCH }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: erp-node-artifact-homologa
-        path: |
-          erp/public/
-        retention-days: 1
 
   build_docker_erp:
     name: Build ERP - Nginx
-    needs: build_node_erp
     runs-on: ubuntu-latest
 
     steps:
@@ -100,21 +40,6 @@ jobs:
       if: ${{ github.ref == env.HOM_BRANCH }}
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Download erp-node-artifact-homologa
-      if: ${{ github.ref == env.HOM_BRANCH }}    
-      uses: actions/download-artifact@v2
-      with:
-        name: erp-node-artifact-homologa
-        path: node-erp-artifact
-
-    - name: Lista Checkout Homologa
-      if: ${{ github.ref == env.HOM_BRANCH }}
-      run: |
-        ls -lha
-        ls -lha node-erp-artifact
-        cp -af node-erp-artifact/* erp/public/
-        rm -rfv node-erp-artifact
 
     - name: Build, tag, and push image ERP Nginx Homologa
       if: ${{ github.ref == env.HOM_BRANCH }}
