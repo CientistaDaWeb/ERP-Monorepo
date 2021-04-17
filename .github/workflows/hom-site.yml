@@ -1,0 +1,80 @@
+name: API Homologa
+
+on:
+  workflow_dispatch:
+    branches:
+      - master
+
+  push:
+    paths:
+    - 'api/**'
+    - '.docker/ecs/api/**'
+    branches:
+      - '*'
+      - '!master'
+
+env:
+  HOM_BRANCH: ${{ secrets.HOM_BRANCH }}
+
+jobs:
+
+  build_docker_api:
+    name: Build API - Nginx
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout API
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      uses: actions/checkout@v2
+
+    - name: Get Credentials AWS
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      uses: "aws-actions/configure-aws-credentials@v1"
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: "us-east-1"
+
+    - name: Login to Amazon ECR
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image API Nginx Homologa
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      id: build-api-nginx-homologa
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: api_nginx_ecs
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -f .docker/ecs/api/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+    - name: Download task definition API Homologa
+      run: |
+        aws ecs describe-task-definition --task-definition HomApi --query taskDefinition > .docker/ecs/tasks/task-api-hom.json
+
+    - name: Amazon ECS Update Task Definition API Homologa
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      id: task-def-api-nginx-hom
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: .docker/ecs/tasks/task-api-hom.json
+        container-name: api_nginx
+        image: ${{ steps.build-api-nginx-homologa.outputs.image }}
+
+    - name: Deploy task API Homologa
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        force-new-deployment: true
+        wait-for-service-stability: false
+        task-definition: ${{ steps.task-def-api-nginx-hom.outputs.task-definition }}
+        service: HomApi
+        cluster: ERP
