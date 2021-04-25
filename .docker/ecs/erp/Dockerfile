@@ -14,7 +14,7 @@ RUN ls -lha /
 
 RUN yarn install
 RUN npm install @quasar/cli
-RUN quasar build
+RUN npx quasar build
 
 # production stage
 FROM nginx:1.17.5-alpine as production-stage
