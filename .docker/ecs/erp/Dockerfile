@@ -12,7 +12,8 @@ RUN yarn global add @quasar/cli
 FROM develop-stage as build-stage
 RUN ls -lha /
 
-RUN yarn
+RUN yarn install
+RUN npm install @quasar/cli
 RUN quasar build
 
 # production stage
