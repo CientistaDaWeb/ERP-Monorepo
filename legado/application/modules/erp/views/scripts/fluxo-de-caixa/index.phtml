@@ -32,7 +32,7 @@ endif;
             </th>
             <th>Ano</th>
             <th><select name="dataInicial[ano]" class="ui-corner-all filter ano">
-                    <?php for ($i = 2000; $i <= 2020; $i++): ?>
+                    <?php for ($i = 2000; $i <= date('Y') + 1; $i++): ?>
                         <option value="<?php echo $i; ?>" <?php echo ($this->data['dataInicial']['ano'] == $i) ? 'selected="selected"' : ''; ?>><?php echo $i; ?></option>
                     <?php endfor; ?>
                 </select>
@@ -46,7 +46,7 @@ endif;
             </th>
             <th>Ano</th>
             <th><select name="dataFinal[ano]" class="ui-corner-all filtro ano">
-                    <?php for ($i = 2000; $i <= 2020; $i++): ?>
+                    <?php for ($i = 2000; $i <= date('Y') + 1; $i++): ?>
                         <option value="<?php echo $i; ?>" <?php echo ($this->data['dataFinal']['ano'] == $i) ? 'selected="selected"' : ''; ?>><?php echo $i; ?></option>
                     <?php endfor; ?>
                 </select>

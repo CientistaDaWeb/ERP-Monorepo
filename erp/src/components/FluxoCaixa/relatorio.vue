@@ -7,7 +7,7 @@
             Filtro
           </div>
         </q-card-section>
-        <q-separator />
+        <q-separator/>
         <q-card-section class="bg-white text-black">
           <div class="row q-col-gutter-md q-mb-md">
             <div class="col col-sm-9 col-lg-10 col-xs-12 self-center">
@@ -17,20 +17,20 @@
                   <div class="row q-col-gutter-md">
                     <div class="col col-sm-6 col-xs-6">
                       <q-select
-                        filter
-                        type="radio"
-                        label="Mês"
-                        v-model="data.dataInicialMes"
-                        :options="mesesOptions"
+                          emit-value
+                          map-options
+                          label="Mês"
+                          v-model="data.dataInicialMes"
+                          :options="mesesOptions"
                       />
                     </div>
                     <div class="col col-sm-6 col-xs-6">
                       <q-select
-                        filter
-                        type="radio"
-                        label="Ano"
-                        v-model="data.dataInicialAno"
-                        :options="anosOptions"
+                          emit-value
+                          map-options
+                          label="Ano"
+                          v-model="data.dataInicialAno"
+                          :options="anosOptions"
                       />
                     </div>
                   </div>
@@ -40,20 +40,20 @@
                   <div class="row q-col-gutter-md">
                     <div class="col col-sm-6 col-xs-6">
                       <q-select
-                        filter
-                        type="radio"
-                        label="Mês"
-                        v-model="data.dataFinalMes"
-                        :options="mesesOptions"
+                          emit-value
+                          map-options
+                          label="Mês"
+                          v-model="data.dataFinalMes"
+                          :options="mesesOptions"
                       />
                     </div>
                     <div class="col col-sm-6 col-xs-6">
                       <q-select
-                        filter
-                        type="radio"
-                        label="Ano"
-                        v-model="data.dataFinalAno"
-                        :options="anosOptions"
+                          emit-value
+                          map-options
+                          label="Ano"
+                          v-model="data.dataFinalAno"
+                          :options="anosOptions"
                       />
                     </div>
                   </div>
@@ -61,12 +61,12 @@
                 <div class="col col-sm-6 col-lg-4 col-xs-12">
                   <label>Empresas</label>
                   <q-checkbox
-                    v-model="data.empresa_id"
-                    v-for="empresa in empresas"
-                    :key="empresa.value"
-                    :val="empresa.value"
-                    :label="empresa.label"
-                    class="full-width"
+                      v-model="data.empresa_id"
+                      v-for="empresa in empresas"
+                      :key="empresa.value"
+                      :val="empresa.value"
+                      :label="empresa.label"
+                      class="full-width"
                   />
                 </div>
               </div>
@@ -74,31 +74,31 @@
             <div class="col col-sm-3 col-lg-2 col-xs-12 text-right self-center">
               <q-btn-group>
                 <q-btn
-                  color="info"
-                  glossy
-                  @click="imprimir"
-                  icon="fa fa-print"
+                    color="info"
+                    glossy
+                    @click="imprimir"
+                    icon="fa fa-print"
                 >
                   <q-tooltip>
                     Imprimir
                   </q-tooltip>
                 </q-btn>
                 <q-btn
-                  color="info"
-                  glossy
-                  @click="exportar"
-                  icon="fa fa-file-export"
+                    color="info"
+                    glossy
+                    @click="exportar"
+                    icon="fa fa-file-export"
                 >
                   <q-tooltip>
                     Exportar em csv
                   </q-tooltip>
                 </q-btn>
                 <q-btn
-                  type="submit"
-                  :loading="loading"
-                  color="positive"
-                  glossy
-                  icon="fa fa-filter"
+                    type="submit"
+                    :loading="loading"
+                    color="positive"
+                    glossy
+                    icon="fa fa-filter"
                 >
                   <q-tooltip>
                     Filtrar
@@ -111,27 +111,27 @@
       </q-card>
     </form>
     <div
-      class="text-center"
-      style="padding-top: 200px"
-      v-if="loading"
+        class="text-center"
+        style="padding-top: 200px"
+        v-if="loading"
     >
       <q-spinner-gears
-        size="50px"
-        color="primary"
+          size="50px"
+          color="primary"
       />
     </div>
     <div
-      class="row q-col-gutter-md"
-      v-if="showContent"
+        class="row q-col-gutter-md"
+        v-if="showContent"
     >
       <div
-        class="col col-xs-12"
-        v-if="content.fluxo"
+          class="col col-xs-12"
+          v-if="content.fluxo"
       >
         <transition
-          enter-active-class="animated bounceInLeft"
-          leave-active-class="animated bounceOutRight"
-          appear
+            enter-active-class="animated bounceInLeft"
+            leave-active-class="animated bounceOutRight"
+            appear
         >
           <div class="row q-col-gutter-md">
             <div class="col col-xs-12">
@@ -141,69 +141,69 @@
                     Gráfico
                   </div>
                 </q-card-section>
-                <q-separator />
+                <q-separator/>
                 <q-card-section>
                   <div class="bg-white q-pt-md">
                     <ve-histogram
-                      :data="chartData"
-                      :colors="chartColors"
+                        :data="chartData"
+                        :colors="chartColors"
                     />
                   </div>
                   <table
-                    class="q-table table"
+                      class="q-table table"
                   >
                     <thead>
-                      <tr>
-                        <th>Mês/ano</th>
-                        <th>Recebido</th>
-                        <th>Pago</th>
-                        <th>Saldo</th>
-                      </tr>
+                    <tr>
+                      <th>Mês/ano</th>
+                      <th>Recebido</th>
+                      <th>Pago</th>
+                      <th>Saldo</th>
+                    </tr>
                     </thead>
                     <tbody>
-                      <tr
+                    <tr
                         v-for="d in chartData.rows"
                         :key="d.id"
-                      >
-                        <td>{{ d.date }}</td>
-                        <td align="right">
-                          {{ d.Recebido | currency }}
-                        </td>
-                        <td align="right">
-                          {{ d.Pago | currency }}
-                        </td>
-                        <td
+                    >
+                      <td>{{ d.date }}</td>
+                      <td align="right">
+                        {{ d.Recebido | currency }}
+                      </td>
+                      <td align="right">
+                        {{ d.Pago | currency }}
+                      </td>
+                      <td
                           align="right"
                           :class="(d.Saldo > 0)? 'success': 'error'"
-                        >
-                          {{ d.Saldo | currency }}
-                        </td>
-                      </tr>
+                      >
+                        {{ d.Saldo | currency }}
+                      </td>
+                    </tr>
                     </tbody>
                     <tfoot>
-                      <tr v-if="content.fluxoTotais">
-                        <th>Total</th>
-                        <td align="right">
-                          {{ content.fluxoTotais.Recebido | currency }}
-                        </td>
-                        <td align="right">
-                          {{ content.fluxoTotais.Pago | currency }}
-                        </td>
-                        <td
+                    <tr v-if="content.fluxoTotais">
+                      <th>Total</th>
+                      <td align="right">
+                        {{ content.fluxoTotais.Recebido | currency }}
+                      </td>
+                      <td align="right">
+                        {{ content.fluxoTotais.Pago | currency }}
+                      </td>
+                      <td
                           align="right"
                           :class="(content.fluxoTotais.Saldo > 0)? 'success': 'error'"
-                        >
-                          {{ content.fluxoTotais.Saldo | currency }}
-                        </td>
-                      </tr>
+                      >
+                        {{ content.fluxoTotais.Saldo | currency }}
+                      </td>
+                    </tr>
                     </tfoot>
                   </table>
                 </q-card-section>
               </q-card>
             </div>
             <div
-              class="col col-xs-12"
-              v-if="content.detalhamentoContasReceber"
+                class="col col-xs-12"
+                v-if="content.detalhamentoContasReceber"
             >
               <q-card class="bg-blue-curacao text-white">
                 <q-card-section>
@@ -211,40 +211,40 @@
                     Contas a Receber - Detalhamento por categoria
                   </div>
                 </q-card-section>
-                <q-separator />
+                <q-separator/>
                 <q-card-section>
                   <div class="row q-col-gutter-md">
                     <div class="col col-sm-6 col-xs-12">
                       <div class="bg-white">
                         <ve-pie
-                          :data="chartDataContasReceber"
+                            :data="chartDataContasReceber"
                         />
                       </div>
                     </div>
                     <div class="col col-sm-6 col-xs-12">
                       <table
-                        class="q-table table"
+                          class="q-table table"
                       >
                         <thead>
-                          <tr>
-                            <th>Categoria de Cliente</th>
-                            <th>% do Recebido</th>
-                            <th>Recebido</th>
-                          </tr>
+                        <tr>
+                          <th>Categoria de Cliente</th>
+                          <th>% do Recebido</th>
+                          <th>Recebido</th>
+                        </tr>
                         </thead>
                         <tbody>
-                          <tr
+                        <tr
                             v-for="d in ordenar(content.detalhamentoContasReceber)"
                             :key="d.id"
-                          >
-                            <td>{{ d.categoria }}</td>
-                            <td align="right">
-                              {{ (d.total*100/content.fluxoTotais.Recebido).toFixed(2) }}%
-                            </td>
-                            <td align="right">
-                              {{ d.total | currency }}
-                            </td>
-                          </tr>
+                        >
+                          <td>{{ d.categoria }}</td>
+                          <td align="right">
+                            {{ (d.total * 100 / content.fluxoTotais.Recebido).toFixed(2) }}%
+                          </td>
+                          <td align="right">
+                            {{ d.total | currency }}
+                          </td>
+                        </tr>
                         </tbody>
                       </table>
                     </div>
@@ -253,8 +253,8 @@
               </q-card>
             </div>
             <div
-              class="col col-xs-12"
-              v-if="content.detalhamentoContasPagar"
+                class="col col-xs-12"
+                v-if="content.detalhamentoContasPagar"
             >
               <q-card color="bg-deep-rose text-white">
                 <q-card-section>
@@ -262,40 +262,40 @@
                     Contas a Pagar - Detalhamento por categoria
                   </div>
                 </q-card-section>
-                <q-separator />
+                <q-separator/>
                 <q-card-section>
                   <div class="row q-col-gutter-md">
                     <div class="col col-sm-6 col-xs-12">
                       <div class="bg-white">
                         <ve-pie
-                          :data="chartDataContasPagar"
+                            :data="chartDataContasPagar"
                         />
                       </div>
                     </div>
                     <div class="col col-sm-6 col-xs-12">
                       <table
-                        class="q-table table"
+                          class="q-table table"
                       >
                         <thead>
-                          <tr>
-                            <th>Categoria de Conta</th>
-                            <th>% do Pago</th>
-                            <th>Pago</th>
-                          </tr>
+                        <tr>
+                          <th>Categoria de Conta</th>
+                          <th>% do Pago</th>
+                          <th>Pago</th>
+                        </tr>
                         </thead>
                         <tbody>
-                          <tr
+                        <tr
                             v-for="d in ordenar(content.detalhamentoContasPagar)"
                             :key="d.id"
-                          >
-                            <td>{{ d.categoria }}</td>
-                            <td align="right">
-                              {{ (d.total*100/content.fluxoTotais.Pago).toFixed(2) }}%
-                            </td>
-                            <td align="right">
-                              {{ d.total | currency }}
-                            </td>
-                          </tr>
+                        >
+                          <td>{{ d.categoria }}</td>
+                          <td align="right">
+                            {{ (d.total * 100 / content.fluxoTotais.Pago).toFixed(2) }}%
+                          </td>
+                          <td align="right">
+                            {{ d.total | currency }}
+                          </td>
+                        </tr>
                         </tbody>
                       </table>
                     </div>
@@ -307,10 +307,10 @@
         </transition>
       </div>
       <div
-        class="col col-xs-12"
-        v-else
+          class="col col-xs-12"
+          v-else
       >
-        <AlertEmptyContent />
+        <AlertEmptyContent/>
       </div>
     </div>
   </div>
@@ -372,7 +372,7 @@ export default {
   methods: {
     getData () {
       const hoje = new Date()
-      const passado = date.subtractFromDate(hoje, { month: 6 })
+      const passado = date.subtractFromDate(hoje, {month: 6})
       this.$store.dispatch('empresas/loadList', {})
       // this.$store.dispatch('mesesOptions/loadList', {})
       // this.$store.dispatch('anosOptions/loadList', {})
@@ -384,7 +384,7 @@ export default {
     },
     filtrar () {
       this.showContent = false
-      this.$store.dispatch('relatorios/relatorio', { relatorio: 'fluxo-caixa', data: this.data })
+      this.$store.dispatch('relatorios/relatorio', {relatorio: 'fluxo-caixa', data: this.data})
         .then(() => {
           this.chartData.rows = this.$store.state.relatorios.content.fluxo
           this.chartDataContasPagar.rows = this.$store.state.relatorios.content.detalhamentoContasPagar
@@ -396,7 +396,7 @@ export default {
     },
     exportar () {
       const data = Object.assign({}, this.data)
-      this.$store.dispatch('relatorios/csv', { relatorio: 'fluxo-caixacsv', data: data })
+      this.$store.dispatch('relatorios/csv', {relatorio: 'fluxo-caixacsv', data: data})
         .then(() => {
           const url = `${process.env.DATA_URL}api/download/fluxo-caixa/csv/${this.arqCsv}`
           let link = document.createElement('a')

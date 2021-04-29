@@ -20,7 +20,8 @@ class OrdensServico_Model extends WS_Model
 			2 => 'Executando',
 			3 => 'Concluido',
 			4 => 'Cancelada',
-			5 => 'Cortesia'
+			5 => 'Cortesia',
+      6 => 'Faturado para terceiros'
 		);
 		$this->_tipo_reservatorio = array(
 			'F' => 'FOSSA',
