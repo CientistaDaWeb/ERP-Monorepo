@@ -36,7 +36,7 @@ services:
   erp_node:
     build:
       context: .
-      dockerfile: ./.docker/erp/Dockerfile
+      dockerfile: ./.docker/dev/erp/Dockerfile
       target: 'develop-stage'
     restart: unless-stopped
     ports:
@@ -109,8 +109,8 @@ services:
       - "4464:443"
     volumes:
       - ./legado/:/var/www/html
-      - ./.docker/legado/nginx/conf.d/:/etc/nginx/conf.d/
-      - ./.docker/legado/nginx/ssl/:/etc/nginx/ssl/
+      - ./.docker/dev/legado/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/dev/legado/nginx/ssl/:/etc/nginx/ssl/
     networks:
       - acquasana_net
 
@@ -126,8 +126,8 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - ./.docker/mysql/dbdata:/var/lib/mysql/
-      - ./.docker/mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - ./.docker/dev/mysql/dbdata:/var/lib/mysql/
+      - ./.docker/dev/mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
     networks:
       - acquasana_net
 
@@ -143,8 +143,8 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - ./.docker/mysql_legado/dbdata:/var/lib/mysql/
-      - ./.docker/mysql_legado/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - ./.docker/dev/mysql_legado/dbdata:/var/lib/mysql/
+      - ./.docker/dev/mysql_legado/dump.sql:/docker-entrypoint-initdb.d/dump.sql
     networks:
       - acquasana_net
 

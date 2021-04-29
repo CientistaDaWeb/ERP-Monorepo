@@ -46,7 +46,7 @@ RUN apk add --no-cache $PHPIZE_DEPS \
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Add Entrypoint
-COPY /.docker/legado/php/entrypoint.sh /
+COPY /.docker/dev/legado/php/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
 # Remove Cache
