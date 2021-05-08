@@ -15,6 +15,7 @@ FROM nginx:1.17.5-alpine
 WORKDIR /app/
 COPY --from=build-stage /app/public /var/www/html/public
 COPY ./.docker/ecs/erp/nginx/conf.d/ /etc/nginx/conf.d
+RUN rm /etc/nginx/conf.d/default.conf
 RUN adduser -S www-data -u 1000
 RUN chown www-data:www-data /var/www/html
 
