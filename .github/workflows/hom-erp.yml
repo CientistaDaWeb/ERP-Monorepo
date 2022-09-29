@@ -1,0 +1,80 @@
+name: ERP Homologa
+
+on:
+  workflow_dispatch:
+    branches:
+      - master
+
+  push:
+    paths:
+    - 'erp/**'
+    - '.docker/ecs/erp/**'
+    branches:
+      - '*'
+      - '!master'
+
+env:
+  HOM_BRANCH: ${{ secrets.HOM_BRANCH }}
+
+jobs:
+
+  build_docker_erp:
+    name: Build ERP - Nginx
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout ERP
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      uses: actions/checkout@v2
+
+    - name: Get Credentials AWS
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      uses: "aws-actions/configure-aws-credentials@v1"
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: "us-east-1"
+
+    - name: Login to Amazon ECR
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image ERP Nginx Homologa
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      id: build-erp-nginx-homologa
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: erp_nginx_ecs
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -f .docker/ecs/erp/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+    - name: Download task definition ERP Homologa
+      run: |
+        aws ecs describe-task-definition --task-definition HomErp --query taskDefinition > .docker/ecs/tasks/task-erp-hom.json
+
+    - name: Amazon ECS Update Task Definition ERP Homologa
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      id: task-def-erp-nginx-hom
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: .docker/ecs/tasks/task-erp-hom.json
+        container-name: erp_nginx
+        image: ${{ steps.build-erp-nginx-homologa.outputs.image }}
+
+    - name: Deploy task ERP Homologa
+      if: ${{ github.ref == env.HOM_BRANCH }}
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        force-new-deployment: true
+        wait-for-service-stability: false
+        task-definition: ${{ steps.task-def-erp-nginx-hom.outputs.task-definition }}
+        service: HomErp
+        cluster: ERP

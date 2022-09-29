@@ -1,0 +1,156 @@
+version: '3.7'
+services:
+  api_php:
+    build:
+      context: .
+      dockerfile: ./.docker/dev/api/php/Dockerfile
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html
+    command: /entrypoint.sh
+    environment:
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./api/:/var/www/html
+    networks:
+      - acquasana_net
+
+  api_nginx:
+    image: nginx:1.19.0-alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "4461:443"
+    volumes:
+      - ./api/:/var/www/html
+      - ./.docker/dev/api/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/dev/api/nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - acquasana_net
+
+  erp_node:
+    build:
+      context: .
+      dockerfile: ./.docker/dev/erp/Dockerfile
+      target: 'develop-stage'
+    restart: unless-stopped
+    ports:
+      - "4462:4462"
+    tty: true
+    volumes:
+      - ./erp/:/app
+    command: /bin/sh -c "yarn && quasar dev"
+    networks:
+      - acquasana_net
+
+  site_php:
+    build:
+      context: .
+      dockerfile: ./.docker/dev/site/php/Dockerfile
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html
+    command: /entrypoint.sh
+    environment:
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./site/:/var/www/html
+    networks:
+      - acquasana_net
+
+  site_nginx:
+    image: nginx:1.19.0-alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "4463:443"
+    volumes:
+      - ./site/:/var/www/html
+      - ./.docker/dev/site/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/dev/site/nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - acquasana_net
+
+  legado_php:
+    build:
+      context: .
+      dockerfile: ./.docker/dev/legado/php/Dockerfile
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html
+    command: /entrypoint.sh
+    environment:
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_LEGADO_HOST}
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./legado/:/var/www/html
+    networks:
+      - acquasana_net
+
+  legado_nginx:
+    image: nginx:1.19.0-alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "4464:443"
+    volumes:
+      - ./legado/:/var/www/html
+      - ./.docker/dev/legado/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/dev/legado/nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - acquasana_net
+
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${DB_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./.docker/dev/mysql/dbdata:/var/lib/mysql/
+      - ./.docker/dev/mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - acquasana_net
+
+  db_legado:
+    image: mysql:5.5
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${DB_LEGADO_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./.docker/dev/mysql_legado/dbdata:/var/lib/mysql/
+      - ./.docker/dev/mysql_legado/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - acquasana_net
+
+networks:
+  acquasana_net:
+    driver: bridge
+volumes:
+  mysqldata:
+    driver: local

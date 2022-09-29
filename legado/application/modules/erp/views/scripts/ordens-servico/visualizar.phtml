@@ -1,0 +1,299 @@
+<?php
+if (!($this->noLayout)):
+  echo $this->partial('partials/title.phtml', array(
+    'title' => $this->model->getOption('title')
+  ));
+endif;
+if (!empty($this->ordemServico)):
+  $date = new WS_Date($this->ordemServico['data_coleta'], 'yyyy-MM-dd');
+  ?>
+  <div class="hidden">
+    <button type="button" id="btImprimir">
+      Imprimir
+    </button>
+  </div>
+  <div>
+    <div class="float left margemR">
+      <img src="/images/logos/<?php echo $this->empresa['logomarca']; ?>" border="0" height="80px" />
+    </div>
+    <div class="float left">
+      <p><b><?php echo $this->empresa['razao_social']; ?></b></p>
+      <p><?php echo $this->empresa['endereco']; ?>
+        , <?php echo $this->empresa['numero']; ?> <?php echo $this->empresa['complemento']; ?>
+        - <?php echo $this->ordemServico['bairro']; ?></p>
+      <p><?php echo $this->empresa['cep']; ?> <?php echo $this->empresa['cidade']; ?>
+        - <?php echo $this->empresa['uf']; ?></p>
+      <p>Fone: <?php echo $this->empresa['telefone']; ?><?php
+        if (!empty($this->empresa['telefone2'])): echo ' | ' . $this->empresa['telefone2'];
+        endif;
+        ?><?php
+        if (!empty($this->empresa['telefone3'])): echo ' | ' . $this->empresa['telefone3'];
+        endif;
+        ?></p>
+      <p>E-mail: <?php echo $this->empresa['email']; ?></p>
+      <p><?php echo $this->empresa['website']; ?></p>
+    </div>
+  </div>
+  <div class="clear"></div>
+  <hr />
+  <div class="float left margemR" id="endereco">
+    <div>
+      <p>Ordem de Serviço nº <b><?php echo $this->ordemServico['orcamento_id']; ?>
+          .<?php echo $this->ordemServico['sequencial']; ?></b> |
+        <span
+          style="font-size: 25px">Data da Coleta: <b><?php echo $date->toString('dd/MM/yyyy'); ?> - <?php echo $this->ordemServico['hora_coleta']; ?></b></span>
+        |
+        Ordem de Compra: <b><?php echo $this->ordemServico['ordem_compra']; ?></b></p>
+    </div>
+    <hr class="clear" />
+    <p><b style="font-size: 25px">Cliente: <?php echo $this->ordemServico['cliente']; ?></b></p>
+    <p>Contato: <?php echo $this->ordemServico['contato']; ?></p>
+    <?php if (!empty($this->ordemServico['sindico'])): ?>
+      <p>Síndico: <?php echo $this->ordemServico['sindico']; ?></p>
+    <?php endif; ?>
+    <?php if (!empty($this->ordemServico['zelador'])): ?>
+      <p>Zelador: <?php echo $this->ordemServico['zelador']; ?></p>
+    <?php endif; ?>
+    <hr class="clear" />
+    <?php
+    if (!empty($this->endereco)):
+      $endereco = $this->endereco;
+      ?>
+      <p><?php echo $endereco['endereco']; ?>
+        , <?php echo $endereco['numero']; ?> <?php echo $endereco['complemento']; ?>
+        - <?php echo $endereco['bairro']; ?> - <?php echo $endereco['cep']; ?> <?php echo $endereco['municipio']; ?>
+        - <?php echo $endereco['uf']; ?></p>
+      <br />
+    <?php
+    endif;
+    ?>
+  </div>
+  <div class="float right" id="fachada">
+    <?php if ($endereco['imagem']): ?><img
+      src="/storage/imagem/<?php echo $endereco['imagem']; ?>/clientes-enderecos?w=250&h=250&c=fill" /><?php endif; ?>
+  </div>
+  <hr class="clear" />
+  <?php if (!empty($this->endereco['coordenadas'])): ?>
+  <div id="mapa" class="margem-t" style="width: 750px; height: 250px"></div>
+  <script type="text/javascript"
+          src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyATQea9cjt5Jo1tsZcPwhZN9LcW5KDIxA4">
+  </script>
+  <script>
+  function initialize () {
+    var mapOptions = {
+      center: new google.maps.LatLng(<?php echo $endereco['coordenadas']; ?>),
+      zoom: 17
+    };
+    var map = new google.maps.Map(document.getElementById("mapa"),
+      mapOptions);
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(<?php echo $endereco['coordenadas']; ?>),
+      map: map,
+      title: '<?php echo $this->empresa['razao_social']; ?>'
+    });
+  }
+
+  google.maps.event.addDomListener(window, 'load', initialize);
+  </script>
+<?php
+endif;
+  ?>
+  <br /><br /><br />
+  <b>PROCEDIMENTOS PARA COLETA DE EFLUENTES</b>
+  <ul class="listaItens" style="margin-bottom: 20px">
+    <li>Após agendada a coleta, é imprescindível a presença de um responsável para supervisionar a prestação de serviço,
+      juntamente com número de telefone para contato do mesmo.
+    </li>
+    <li>É de responsabilidade do contratante, que o acesso as tampas e/ou tubos de inspeção para a coleta estejam
+      previamente localizados e desobstruídos, exemplo tampas cobertas pelo piso ou enterradas, etc.
+    </li>
+    <li>As tampas que estiverem localizadas em garagens, deve-se providenciar antecipadamente a retirada dos veículos
+      para facilitar a coleta.
+    </li>
+    <li>Caso seja realizada a coleta da fossa séptica e caixa de gordura no mesmo dia serão necessários dois
+      transportes, um para cada efluente. O efluente da fossa séptica e da caixa de gordura não podem ser misturados já
+      que o tratamento na estação de tratamento é diferenciado.
+    </li>
+    <li>Se houver contaminação/mistura do efluente da fossa séptica com a caixa de gordura, a cobrança será com o valor
+      da caixa de gordura.
+    </li>
+    <li>Caso o lodo a ser transportado estiver denso a ponto de dificultar a sucção, será necessário a diluição do
+      mesmo.
+    </li>
+    <li>A altura máxima de sucção é de 7 m.c.a.</li>
+    <li>A metragem máxima de mangueira para a coleta é de 70 metros.</li>
+    <li>Em caso da necessidade de desentupimentos, não possuímos os equipamentos necessários para realizar este tipo de
+      procedimento, aconselha-se a vistoria prévia de um encanador para diagnosticar o problema.
+    </li>
+    <li>Nas coletas as inspeções e/ou tampas, serão fechadas e lacradas conforme estado inicial das mesmas.</li>
+    <li>O valor cobrado é por metro cúbico coletado. O volume mínimo é de 1m³. Acrescentando a quantidade de transportes
+      necessários.
+    </li>
+    <li>Quando necessário o transporte de efluente até outra estação de tratamento licenciada, a empresa geradora é
+      responsável pela emissão da ficha de emergência, a nota fiscal de remessa para o transporte e o contato com a
+      estação de tratamento para confirmar dados e possibilidade de recebimento.
+    </li>
+    <li>Assinar e receber as vias da MTR, confirmar a quantidade de efluente coletado e assinar a ordem de serviço.</li>
+    <li>Após o término do tratamento será disponibilizado via e-mail, o certificado de tratamento, o relatório de
+      coleta, o conhecimento de transporte e o boleto bancário.
+    </li>
+  </ul>
+  <div class="page-break"></div>
+  <div>
+    <div class="float left margemR">
+      <img src="/images/logos/<?php echo $this->empresa['logomarca']; ?>" border="0" height="80px" />
+    </div>
+    <div class="float left">
+      <p><b><?php echo $this->empresa['razao_social']; ?></b></p>
+      <p><?php echo $this->empresa['endereco']; ?>
+        , <?php echo $this->empresa['numero']; ?> <?php echo $this->empresa['complemento']; ?>
+        - <?php echo $this->ordemServico['bairro']; ?></p>
+      <p><?php echo $this->empresa['cep']; ?> <?php echo $this->empresa['cidade']; ?>
+        - <?php echo $this->empresa['uf']; ?></p>
+      <p>Fone: <?php echo $this->empresa['telefone']; ?><?php
+        if (!empty($this->empresa['telefone2'])): echo ' | ' . $this->empresa['telefone2'];
+        endif;
+        ?><?php
+        if (!empty($this->empresa['telefone3'])): echo ' | ' . $this->empresa['telefone3'];
+        endif;
+        ?></p>
+      <p>E-mail: <?php echo $this->empresa['email']; ?></p>
+      <p><?php echo $this->empresa['website']; ?></p>
+    </div>
+  </div>
+  <div class="clear"></div>
+  <hr />
+  <p>Observações:<br /> <span style="font-size: 25px"><b><?php echo nl2br($this->ordemServico['observacoes']); ?></b></span></p>
+  <hr class="clear" />
+  <?php if (!empty($this->servicos)): ?>
+  <table class="listagem margemB">
+    <tr>
+      <th>Código</th>
+      <th>Serviço</th>
+      <th>Quantidade</th>
+    </tr>
+    <?php foreach ($this->servicos AS $servico): ?>
+      <tr>
+        <td><?php echo $servico['id']; ?></td>
+        <td><?php echo $servico['servico']; ?></td>
+        <td align="right"><?php echo $servico['unidade']; ?></td>
+      </tr>
+    <?php endforeach; ?>
+  </table>
+<?php endif; ?>
+  <br />
+  <hr class="clear" />
+  <p>Horas Trabalhadas: ____________</p>
+  <hr class="clear" />
+  <h3>Relatório de Execução</h3>
+  <table class="listagem">
+    <tbody>
+    <tr>
+      <th>TIPO DE RESERVATÓRIO COLETADO:</th>
+      <td><input type="checkbox" /> FOSSA</td>
+      <td><input type="checkbox" /> FILTRO</td>
+      <td><input type="checkbox" /> TANQUE</td>
+      <td><input type="checkbox" /> BOMBONA</td>
+      <td><input type="checkbox" /> OUTROS</td>
+    </tr>
+    <tr>
+      <th>ACESSO AO PONTO DE COLETA:</th>
+      <td><input type="checkbox" /> DIFÍCIL</td>
+      <td><input type="checkbox" /> REGULAR</td>
+      <td><input type="checkbox" /> FÁCIL</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>METRAGEM DE MANGUEIRA NECESSÁRIA</th>
+      <td><input type="checkbox" /> 0 à 35</td>
+      <td><input type="checkbox" /> 36 à 50</td>
+      <td><input type="checkbox" /> __________</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>SITUAÇÃO DAS TAMPAS</th>
+      <td><input type="checkbox" /> LACRADAS /</td>
+      <td><input type="checkbox" /> BOM ESTADO</td>
+      <td><input type="checkbox" /> C/ AVARIAS</td>
+      <td><input type="checkbox" /> __________</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>SITUAÇÃO DOS EFLUENTES</th>
+      <td><input type="checkbox" /> RESÍDUO NORMAL</td>
+      <td><input type="checkbox" /> RESÍDUOS COM MISTURAS</td>
+      <td><input type="checkbox" /> RESÍDUO ALTERADO</td>
+      <td></td>
+      <td></td>
+    </tr>
+    </tbody>
+  </table>
+  <br />
+  <p><b>OBSERVAÇÕES PÓS COLETA:</b><br /><br /><br /><br /><br /></p>
+  <div>
+    <?php
+    if (!empty($this->imagens)):
+      foreach ($this->imagens AS $item):
+        ?>
+        <img src="/storage/imagem/<?php echo $item['arquivo']; ?>/ordem-servico?w=150&h=150&c=crop"
+             class="float left margemR margemB" />
+      <?php
+      endforeach;
+    endif;
+    ?>
+  </div>
+  <br />
+  <table class="listagem">
+    <thead>
+    <tr>
+      <th>Data</th>
+      <th colspan="2">Nome e Assinatura do Responsável pelo Acompanhamento da Coleta</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    for ($i = 0; $i < $this->ordemServico['numero_coletas']; $i++):
+      ?>
+      <tr>
+        <td>&nbsp;<br /></td>
+        <td>&nbsp;<br /></td>
+        <td>&nbsp;<br /></td>
+      </tr>
+    <?php endfor; ?>
+    </tbody>
+  </table>
+  <table class="listagem">
+    <tbody>
+    <tr>
+      <th>CHECAGEM FINAL:</th>
+      <td><input type="checkbox" /> LACRE DA FOSSA</td>
+      <td><input type="checkbox" /> LIMPEZA DO LOCAL</td>
+      <td><input type="checkbox" /> MTR</td>
+      <td><input type="checkbox" /> FICHA DE EMERGÊNCIA</td>
+      <td><input type="checkbox" /> EPIs</td>
+      <td><input type="checkbox" /> PLACAS</td>
+    </tr>
+    </tbody>
+  </table>
+  <?php
+  $gerandoPDF = $_GET['gerandoPDF'];
+  if (!isset($gerandoPDF)):
+    ?>
+    <hr class="clear" />
+    <hr />
+    <h2>Faturamento</h2>
+    <p><b>OBSERVAÇÕES:</b> <?php echo nl2br($this->ordemServico['observacao_faturamento']); ?></p><br />
+    <p><b>Ligação pós Coleta</b> (______) Sim (______) Não</p><br />
+    <p><b>Dados de Faturamento</b> (______) Ok (______) Pendente</p><br />
+    <p><b>Relatório de coleta Online</b> (______) Sim (______) Não (______) Impresso</p><br />
+    <p><b>Data de Faturamento</b> ______/______/____________</p><br />
+    <p><b>Impressão CT-e</b> (______) Sim (______) Não</p><br />
+    <p><b>Parcelamento</b> (______) parcelas</p><br />
+    <p><b>Motorista:</b> ______________________________________________</p><br /><br />
+    <p><b>Assinatura:</b> ______________________________________________</p>
+  <?php
+  endif;
+endif;
+?>
